@@ -88,6 +88,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .container { max-width: 1280px; margin: 0 auto; padding: 0 var(--space-xl); }
 .container-sm { max-width: 900px; margin: 0 auto; padding: 0 var(--space-xl); }
 
+/* Responsive Layout Utilities */
+.grid-product-layout { display: grid; grid-template-columns: minmax(400px, 1fr) 1fr; gap: var(--space-3xl); }
+.grid-checkout-layout { display: grid; grid-template-columns: 1fr 380px; gap: var(--space-3xl); align-items: start; }
+.grid-contact-layout { display: grid; grid-template-columns: 1fr 2fr; gap: var(--space-2xl); }
+.grid-responsive-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+.grid-thumbnails { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md); }
+
 /* ============================================================
    NAVBAR
    ============================================================ */
@@ -444,6 +451,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .container { padding: 0 var(--space-lg); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .admin-stat-grid { grid-template-columns: 1fr 1fr; }
+  .grid-checkout-layout { grid-template-columns: 1fr; gap: var(--space-2xl); }
 }
 
 @media (max-width: 768px) {
@@ -464,6 +472,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .admin-content { padding: var(--space-md); }
   .admin-stat-grid { grid-template-columns: 1fr 1fr; }
   .form-row { grid-template-columns: 1fr; }
+  
+  /* Utilities Collapse */
+  .grid-product-layout,
+  .grid-contact-layout,
+  .grid-responsive-2 {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 600px) {

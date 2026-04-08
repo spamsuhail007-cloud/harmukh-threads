@@ -60,7 +60,7 @@ export default function CheckoutPage() {
       <div className="container">
         <h1 className="section-title" style={{ marginBottom: 'var(--space-xl)' }}>Secure Checkout</h1>
         
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: 'var(--space-3xl)', alignItems: 'start' }}>
+        <div className="grid-checkout-layout">
           
           <form onSubmit={handleSubmit} id="checkout-form">
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-lg)' }}>Shipping Information</h2>

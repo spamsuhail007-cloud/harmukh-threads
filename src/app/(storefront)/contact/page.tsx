@@ -40,7 +40,7 @@ export default function ContactPage() {
           Reach out to our team in Srinagar. We typically respond within 24 hours.
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'var(--space-2xl)' }}>
+        <div className="grid-contact-layout">
           <div>
             <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-md)' }}>Direct Contact</h3>
             <div style={{ color: 'var(--on-surface-variant)', fontSize: '0.9rem', marginBottom: 'var(--space-lg)', lineHeight: 1.8 }}>

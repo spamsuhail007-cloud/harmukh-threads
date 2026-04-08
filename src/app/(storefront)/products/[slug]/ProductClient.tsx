@@ -22,7 +22,7 @@ export function ProductClient({ product }: ProductClientProps) {
 
   return (
     <div style={{ padding: 'var(--space-2xl) 0' }}>
-      <div className="container" style={{ display: 'grid', gridTemplateColumns: 'minmax(400px, 1fr) 1fr', gap: 'var(--space-3xl)' }}>
+      <div className="container grid-product-layout">
         
         {/* Images */}
         <div>
@@ -36,7 +36,7 @@ export function ProductClient({ product }: ProductClientProps) {
               style={{ objectFit: 'cover', width: '100%', height: '100%' }}
             />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--space-md)' }}>
+          <div className="grid-thumbnails">
             {product.images.map((img, i) => (
               <button
                 key={i}
@@ -73,7 +73,7 @@ export function ProductClient({ product }: ProductClientProps) {
           </p>
 
           {/* Specs */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)', marginBottom: 'var(--space-xl)', background: 'var(--surface-container-low)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-md)' }}>
+          <div className="grid-responsive-2" style={{ marginBottom: 'var(--space-xl)', background: 'var(--surface-container-low)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-md)' }}>
             {product.dimensions && <div><span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dimensions</span><span style={{ fontWeight: 600 }}>{product.dimensions}</span></div>}
             {product.material && <div><span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Material</span><span style={{ fontWeight: 600 }}>{product.material}</span></div>}
             {product.origin && <div><span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Origin</span><span style={{ fontWeight: 600 }}>{product.origin}</span></div>}
