@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL || process.env.POSTGRES_PRISMA_URL,
+  log: ['error'], // Providing a valid PrismaClientOptions object for Prisma 7
 });
 
 async function main() {
