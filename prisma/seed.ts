@@ -1,9 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
-const prisma = new PrismaClient({
-  log: ['error'], // Providing a valid PrismaClientOptions object for Prisma 7
-});
+const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Seeding database...');
