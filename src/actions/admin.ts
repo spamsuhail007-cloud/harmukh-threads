@@ -1,0 +1,83 @@
+'use server';
+import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+import { slugify } from '@/lib/utils';
+
+export async function updateStock(productId: string, stock: number) {
+  await db.product.update({ where: { id: productId }, data: { stock } });
+  revalidatePath('/admin/inventory');
+}
+
+export async function toggleProductStatus(productId: string, isActive: boolean) {
+  await db.product.update({ where: { id: productId }, data: { isActive } });
+  revalidatePath('/admin/inventory');
+  revalidatePath('/collections');
+}
+
+const ProductSchema = z.object({
+  name: z.string().min(1),
+  category: z.string().min(1),
+  price: z.coerce.number().min(1),
+  originalPrice: z.coerce.number().optional(),
+  badge: z.string().optional(),
+  description: z.string().min(10),
+  dimensions: z.string().optional(),
+  material: z.string().optional(),
+  knotDensity: z.string().optional(),
+  origin: z.string().optional(),
+  weaveTime: z.string().optional(),
+  images: z.array(z.string().url()).min(1),
+  stock: z.coerce.number().min(0),
+});
+
+export async function createProduct(data: unknown) {
+  const parsed = ProductSchema.safeParse(data);
+  if (!parsed.success) return { success: false, error: 'Invalid product data' };
+
+  const slug = slugify(parsed.data.name);
+  try {
+    await db.product.create({ data: { ...parsed.data, slug } });
+    revalidatePath('/collections');
+    revalidatePath('/admin/inventory');
+    return { success: true };
+  } catch {
+    return { success: false, error: 'Failed to create product. Slug may already exist.' };
+  }
+}
+
+export async function updateProduct(id: string, data: unknown) {
+  const parsed = ProductSchema.safeParse(data);
+  if (!parsed.success) return { success: false, error: 'Invalid product data' };
+
+  try {
+    await db.product.update({ where: { id }, data: parsed.data });
+    revalidatePath('/collections');
+    revalidatePath('/admin/inventory');
+    return { success: true };
+  } catch {
+    return { success: false, error: 'Failed to update product.' };
+  }
+}
+
+export async function getAdminStats() {
+  const [totalOrders, totalProducts, pendingOrders, lowStockProducts] = await Promise.all([
+    db.order.count(),
+    db.product.count(),
+    db.order.count({ where: { status: 'PENDING' } }),
+    db.product.count({ where: { stock: { lte: 3 }, isActive: true } }),
+  ]);
+
+  const revenueAgg = await db.order.aggregate({
+    _sum: { total: true },
+    where: { paymentStatus: 'PAID' },
+  });
+
+  return {
+    totalOrders,
+    totalProducts,
+    pendingOrders,
+    lowStockProducts,
+    totalRevenue: revenueAgg._sum.total ?? 0,
+  };
+}
