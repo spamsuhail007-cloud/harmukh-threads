@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createProduct } from '@/actions/admin';
-import { uploadImage } from '@/actions/blob';
+import { upload } from '@vercel/blob/client';
 import Link from 'next/link';
 
 export default function NewProductPage() {
@@ -25,19 +25,15 @@ export default function NewProductPage() {
 
     if (file && file.size > 0) {
       try {
-        const uploadData = new FormData();
-        uploadData.append('file', file);
-        const uploadResult = await uploadImage(uploadData);
+        const uploadResult = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/upload',
+        });
         
-        if (!uploadResult.success) {
-          setError(`Blob Auth Error: ${uploadResult.error}. Did you redeploy your Vercel project after creating the Blob store?`);
-          setIsSubmitting(false);
-          return;
-        }
-        finalImageUrl = uploadResult.url!;
+        finalImageUrl = uploadResult.url;
       } catch (err: any) {
         console.error(err);
-        setError(err.message || 'Next.js Server limits exceeded. The image file might be larger than 4.5MB.');
+        setError(err.message || 'Client upload failed. Vercel Token issue?');
         setIsSubmitting(false);
         return;
       }
