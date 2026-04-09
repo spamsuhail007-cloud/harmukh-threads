@@ -6,51 +6,77 @@ import { updateProduct } from '@/actions/admin';
 import Link from 'next/link';
 import { type Product } from '@prisma/client';
 
+const MAX_IMAGES = 6;
+
+async function compressImage(file: File): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_SIZE = 1200;
+        let { width, height } = img;
+        if (width > height && width > MAX_SIZE) { height = Math.round(height * MAX_SIZE / width); width = MAX_SIZE; }
+        else if (height > MAX_SIZE) { width = Math.round(width * MAX_SIZE / height); height = MAX_SIZE; }
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d')?.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => {
+          if (blob) resolve(new File([blob], file.name.replace(/\.[^/.]+$/, '') + '.webp', { type: 'image/webp' }));
+          else reject(new Error('Compression failed'));
+        }, 'image/webp', 0.80);
+      };
+    };
+    reader.onerror = reject;
+  });
+}
+
+async function uploadFile(file: File): Promise<string> {
+  const optimized = await compressImage(file);
+  const fd = new FormData();
+  fd.append('file', optimized);
+  const res = await fetch('/api/upload', { method: 'POST', body: fd });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || `Upload failed (${res.status})`);
+  return json.url as string;
+}
+
+// An image slot is either an existing URL (already uploaded) or a new File (pending upload)
+type ImageSlot = { type: 'url'; url: string; preview: string } | { type: 'file'; file: File; preview: string };
+
 export default function EditProductForm({ product }: { product: Product }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
   const [error, setError] = useState('');
-  const [imagePreview, setImagePreview] = useState<string>(product.images[0] || '');
-  const [keepExistingImage, setKeepExistingImage] = useState(true);
+  const [dragging, setDragging] = useState<number | null>(null);
 
-  const compressImage = (file: File): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target?.result as string;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_SIZE = 800;
-          let width = img.width;
-          let height = img.height;
+  const [slots, setSlots] = useState<ImageSlot[]>(
+    product.images.map(url => ({ type: 'url' as const, url, preview: url }))
+  );
 
-          if (width > height && width > MAX_SIZE) {
-            height = Math.round(height * MAX_SIZE / width);
-            width = MAX_SIZE;
-          } else if (height > width && height > MAX_SIZE) {
-            width = Math.round(width * MAX_SIZE / height);
-            height = MAX_SIZE;
-          } else if (width > MAX_SIZE) {
-            height = Math.round(height * MAX_SIZE / width);
-            width = MAX_SIZE;
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          canvas.toBlob((blob) => {
-            if (blob) {
-              resolve(new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", { type: 'image/webp' }));
-            } else {
-              reject(new Error('Compression failed'));
-            }
-          }, 'image/webp', 0.70);
-        };
-      };
-      reader.onerror = (error) => reject(error);
+  const handleAddFiles = (files: FileList) => {
+    const newSlots: ImageSlot[] = Array.from(files)
+      .slice(0, MAX_IMAGES - slots.length)
+      .map(file => ({ type: 'file' as const, file, preview: URL.createObjectURL(file) }));
+    setSlots(prev => [...prev, ...newSlots]);
+  };
+
+  const handleRemove = (i: number) => {
+    setSlots(prev => {
+      if (prev[i].type === 'file') URL.revokeObjectURL(prev[i].preview);
+      return prev.filter((_, idx) => idx !== i);
+    });
+  };
+
+  const handleReorder = (from: number, to: number) => {
+    setSlots(prev => {
+      const arr = [...prev];
+      const [moved] = arr.splice(from, 1);
+      arr.splice(to, 0, moved);
+      return arr;
     });
   };
 
@@ -59,44 +85,41 @@ export default function EditProductForm({ product }: { product: Product }) {
     setIsSubmitting(true);
     setError('');
 
-    const formData = new FormData(e.currentTarget);
-    const file = formData.get('imageFile') as File;
-    let finalImageUrl = product.images[0] || '';
-
-    if (file && file.size > 0) {
-      try {
-        setSubmitStatus('Optimizing image...');
-        const optimizedFile = await compressImage(file);
-
-        setSubmitStatus('Uploading new image...');
-        const fd = new FormData();
-        fd.append('file', optimizedFile);
-
-        const res = await fetch('/api/upload', { method: 'POST', body: fd });
-        const json = await res.json();
-
-        if (!res.ok) throw new Error(json.error || `Upload failed with status ${res.status}`);
-
-        finalImageUrl = json.url;
-        setSubmitStatus('Image uploaded! Saving...');
-      } catch (err: any) {
-        console.error(err);
-        setSubmitStatus('');
-        setError(err.message || 'Image upload failed.');
-        setIsSubmitting(false);
-        return;
-      }
-    } else {
-      setSubmitStatus('Saving changes...');
+    if (slots.length === 0) {
+      setError('Please add at least one product image.');
+      setIsSubmitting(false);
+      return;
     }
 
+    // Upload any new files; keep existing URLs as-is
+    const finalUrls: string[] = [];
+    for (let i = 0; i < slots.length; i++) {
+      const slot = slots[i];
+      if (slot.type === 'url') {
+        finalUrls.push(slot.url);
+      } else {
+        try {
+          setSubmitStatus(`Uploading new image ${i + 1}…`);
+          const url = await uploadFile(slot.file);
+          finalUrls.push(url);
+        } catch (err: any) {
+          setError(`Failed to upload image ${i + 1}: ${err.message}`);
+          setIsSubmitting(false);
+          setSubmitStatus('');
+          return;
+        }
+      }
+    }
+
+    setSubmitStatus('Saving changes…');
+    const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get('name'),
       category: formData.get('category'),
       price: Number(formData.get('price')),
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
-      images: [finalImageUrl],
+      images: finalUrls,
       dimensions: formData.get('dimensions') || undefined,
       material: formData.get('material') || undefined,
       origin: formData.get('origin') || undefined,
@@ -104,116 +127,144 @@ export default function EditProductForm({ product }: { product: Product }) {
 
     const result = await updateProduct(product.id, data);
     if (!result.success) {
-      setSubmitStatus('');
       setError(result.error || 'Failed to update product');
       setIsSubmitting(false);
+      setSubmitStatus('');
     } else {
-      setSubmitStatus('Saved! Redirecting...');
+      setSubmitStatus('Saved! Redirecting…');
       router.push('/admin/inventory');
       router.refresh();
     }
   }
 
   return (
-    <div style={{ maxWidth: '760px', margin: '0 auto', padding: 'var(--space-xl)' }}>
-      <div style={{ marginBottom: 'var(--space-xl)' }}>
-        <Link href="/admin/inventory" style={{ color: 'var(--on-surface-variant)', textDecoration: 'none', fontSize: '0.875rem' }}>
-          ← Back to Inventory
-        </Link>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.75rem', marginTop: 'var(--space-sm)' }}>
-          Edit Product
-        </h1>
-        <p style={{ color: 'var(--on-surface-variant)', marginTop: '4px' }}>Editing: <strong>{product.name}</strong></p>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--space-xl)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
+        <Link href="/admin/inventory" className="btn btn-ghost" style={{ padding: '8px' }}>← Back</Link>
+        <div>
+          <h1 className="admin-page-title" style={{ margin: 0 }}>Edit Product</h1>
+          <p style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', marginTop: '2px' }}>{product.name}</p>
+        </div>
       </div>
 
       {error && (
-        <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '12px 16px', marginBottom: 'var(--space-lg)', color: '#991b1b', fontSize: '0.875rem' }}>
+        <div style={{ background: '#ffebee', color: '#c62828', padding: 'var(--space-md)', borderRadius: 'var(--radius-sm)', marginBottom: 'var(--space-lg)', fontSize: '0.9rem' }}>
           ❌ {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
-        <div className="card" style={{ padding: 'var(--space-xl)' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: 'var(--space-lg)' }}>Core Details</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
-            <div>
-              <label className="form-label">PRODUCT NAME *</label>
-              <input name="name" className="form-input" defaultValue={product.name} required />
+      <div style={{ background: 'var(--surface-container-low)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-md)' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 'var(--space-lg)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
+            <div className="form-group">
+              <label className="form-label">Product Name *</label>
+              <input type="text" name="name" className="form-input" required defaultValue={product.name} />
             </div>
-            <div>
-              <label className="form-label">CATEGORY *</label>
-              <select name="category" className="form-input" defaultValue={product.category} required>
-                <option value="">Select category...</option>
+            <div className="form-group">
+              <label className="form-label">Category *</label>
+              <select name="category" className="form-input" required defaultValue={product.category}>
                 <option value="Rugs">Rugs</option>
-                <option value="Shawls">Shawls</option>
-                <option value="Wall Hangings">Wall Hangings</option>
-                <option value="Accessories">Accessories</option>
+                <option value="Pashmina">Pashmina</option>
+                <option value="Furnishings">Furnishings</option>
+                <option value="Woodcraft">Woodcraft</option>
               </select>
             </div>
-            <div>
-              <label className="form-label">PRICE (₹) *</label>
-              <input name="price" type="number" className="form-input" defaultValue={product.price} min="1" required />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
+            <div className="form-group">
+              <label className="form-label">Price (₹) *</label>
+              <input type="number" name="price" className="form-input" required min="1" defaultValue={product.price} />
             </div>
-            <div>
-              <label className="form-label">STOCK *</label>
-              <input name="stock" type="number" className="form-input" defaultValue={product.stock} min="0" required />
+            <div className="form-group">
+              <label className="form-label">Stock *</label>
+              <input type="number" name="stock" className="form-input" required min="0" defaultValue={product.stock} />
             </div>
           </div>
 
-          <div style={{ marginTop: 'var(--space-md)' }}>
-            <label className="form-label">DESCRIPTION *</label>
-            <textarea name="description" className="form-input" rows={4} defaultValue={product.description} required style={{ resize: 'vertical' }} />
+          {/* Multi-image picker */}
+          <div>
+            <label className="form-label">
+              PRODUCT IMAGES &nbsp;
+              <span style={{ fontWeight: 400, color: 'var(--on-surface-variant)', textTransform: 'none' }}>
+                (first = hero • drag to reorder • up to {MAX_IMAGES})
+              </span>
+            </label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-sm)', marginTop: 'var(--space-sm)' }}>
+              {slots.map((slot, i) => (
+                <div
+                  key={i}
+                  draggable
+                  onDragStart={() => setDragging(i)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => { if (dragging !== null && dragging !== i) handleReorder(dragging, i); setDragging(null); }}
+                  style={{
+                    position: 'relative', width: '110px', height: '130px',
+                    borderRadius: 'var(--radius-sm)', overflow: 'hidden',
+                    border: i === 0 ? '2px solid var(--primary)' : '2px solid var(--outline-variant)',
+                    cursor: 'grab', flexShrink: 0,
+                    opacity: dragging === i ? 0.6 : 1
+                  }}
+                >
+                  <img src={slot.preview} alt={`image ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  {i === 0 && (
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'var(--primary)', color: 'var(--on-primary)', fontSize: '0.6rem', fontWeight: 700, textAlign: 'center', padding: '2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Hero
+                    </div>
+                  )}
+                  {slot.type === 'file' && (
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.6)', color: '#fff', fontSize: '0.6rem', textAlign: 'center', padding: '2px' }}>
+                      New
+                    </div>
+                  )}
+                  {!isSubmitting && (
+                    <button type="button" onClick={() => handleRemove(i)} style={{ position: 'absolute', top: '4px', right: '4px', width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                  )}
+                </div>
+              ))}
+
+              {slots.length < MAX_IMAGES && !isSubmitting && (
+                <label style={{ width: '110px', height: '130px', borderRadius: 'var(--radius-sm)', border: '2px dashed var(--outline-variant)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, gap: '8px', color: 'var(--on-surface-variant)' }}>
+                  <span style={{ fontSize: '1.75rem', lineHeight: 1 }}>+</span>
+                  <span style={{ fontSize: '0.7rem', textAlign: 'center' }}>Add photo</span>
+                  <input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={e => { if (e.target.files) handleAddFiles(e.target.files); e.target.value = ''; }} />
+                </label>
+              )}
+            </div>
+            <p style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginTop: '8px' }}>Drag to reorder. First image is the hero image shown on listings.</p>
           </div>
-        </div>
 
-        <div className="card" style={{ padding: 'var(--space-xl)' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: 'var(--space-lg)' }}>Product Image</h2>
+          <div className="form-group">
+            <label className="form-label">Description *</label>
+            <textarea name="description" className="form-input" required rows={4} style={{ resize: 'vertical' }} defaultValue={product.description} />
+          </div>
 
-          {imagePreview && (
-            <div style={{ marginBottom: 'var(--space-md)' }}>
-              <label className="form-label">CURRENT IMAGE</label>
-              <img src={imagePreview} alt="Product" style={{ width: '120px', height: '120px', objectFit: 'cover', borderRadius: '8px', display: 'block', border: '2px solid var(--outline-variant)' }} />
-            </div>
-          )}
-
-          <label className="form-label">UPLOAD NEW IMAGE (optional — leave blank to keep current)</label>
-          <input
-            name="imageFile"
-            type="file"
-            accept="image/*"
-            className="form-input"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) setImagePreview(URL.createObjectURL(f));
-            }}
-          />
-        </div>
-
-        <div className="card" style={{ padding: 'var(--space-xl)' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: 'var(--space-lg)' }}>Optional Details</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-md)' }}>
-            <div>
-              <label className="form-label">DIMENSIONS</label>
-              <input name="dimensions" className="form-input" defaultValue={product.dimensions || ''} placeholder="e.g. 5x7 ft" />
-            </div>
-            <div>
-              <label className="form-label">MATERIAL</label>
-              <input name="material" className="form-input" defaultValue={product.material || ''} placeholder="e.g. Pure Wool" />
-            </div>
-            <div>
-              <label className="form-label">ORIGIN</label>
-              <input name="origin" className="form-input" defaultValue={product.origin || ''} placeholder="e.g. Srinagar" />
+          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
+            <h3 style={{ marginBottom: 'var(--space-md)', fontSize: '1.1rem' }}>Optional Details</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-md)' }}>
+              <div className="form-group">
+                <label className="form-label">Dimensions</label>
+                <input type="text" name="dimensions" className="form-input" placeholder="e.g. 5x7 ft" defaultValue={product.dimensions ?? ''} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Material</label>
+                <input type="text" name="material" className="form-input" placeholder="e.g. Pure Wool" defaultValue={product.material ?? ''} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Origin</label>
+                <input type="text" name="origin" className="form-input" placeholder="e.g. Srinagar" defaultValue={product.origin ?? ''} />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-md)', marginTop: 'var(--space-lg)' }}>
-          <Link href="/admin/inventory" className="btn btn-ghost" style={{ padding: '12px var(--space-xl)' }}>Cancel</Link>
-          <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ padding: '12px var(--space-xl)' }}>
-            {isSubmitting ? (submitStatus || 'Saving...') : 'Save Changes'}
-          </button>
-        </div>
-      </form>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-md)', marginTop: 'var(--space-lg)' }}>
+            <Link href="/admin/inventory" className="btn btn-ghost" style={{ padding: '12px var(--space-xl)' }}>Cancel</Link>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ padding: '12px var(--space-xl)', minWidth: '180px' }}>
+              {isSubmitting ? (submitStatus || 'Saving…') : 'Save Changes'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
