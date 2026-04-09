@@ -9,6 +9,7 @@ import Link from 'next/link';
 export default function NewProductPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('');
   const [error, setError] = useState('');
   const [imagePreview, setImagePreview] = useState<string>('');
 
@@ -25,6 +26,7 @@ export default function NewProductPage() {
 
     if (file && file.size > 0) {
       try {
+        setSubmitStatus('Uploading image to Vercel Blob...');
         const uploadResult = await upload(file.name, file, {
           access: 'public',
           handleUploadUrl: '/api/upload',
@@ -33,15 +35,19 @@ export default function NewProductPage() {
         finalImageUrl = uploadResult.url;
       } catch (err: any) {
         console.error(err);
+        setSubmitStatus('');
         setError(err.message || 'Client upload failed. Vercel Token issue?');
         setIsSubmitting(false);
         return;
       }
     } else {
+      setSubmitStatus('');
       setError('Please provide a product image.');
       setIsSubmitting(false);
       return;
     }
+
+    setSubmitStatus('Saving product to database...');
 
     // 2. Create the Product
     const data = {
@@ -58,9 +64,11 @@ export default function NewProductPage() {
 
     const result = await createProduct(data);
     if (!result.success) {
+      setSubmitStatus('');
       setError(result.error || 'Failed to create product');
       setIsSubmitting(false);
     } else {
+      setSubmitStatus('Success! Redirecting...');
       router.push('/admin/inventory');
       router.refresh(); // Ensure layout clears cache
     }
@@ -157,7 +165,7 @@ export default function NewProductPage() {
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-md)', marginTop: 'var(--space-lg)' }}>
             <Link href="/admin/inventory" className="btn btn-ghost" style={{ padding: '12px var(--space-xl)' }}>Cancel</Link>
             <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ padding: '12px var(--space-xl)' }}>
-              {isSubmitting ? 'Uploading & Saving...' : 'Create Product'}
+              {isSubmitting ? (submitStatus || 'Working...') : 'Create Product'}
             </button>
           </div>
         </form>
