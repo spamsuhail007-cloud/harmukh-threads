@@ -1,30 +1,30 @@
-import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
+import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+
+// Use nodejs runtime so we can handle larger bodies
+export const runtime = 'nodejs';
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const body = (await request.json()) as HandleUploadBody;
+    const formData = await request.formData();
+    const file = formData.get('file') as File | null;
 
-    const jsonResponse = await handleUpload({
-      body,
-      request,
-      onBeforeGenerateToken: async (_pathname) => {
-        return {
-          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-          maximumSizeInBytes: 5 * 1024 * 1024, // 5MB max
-        };
-      },
-      onUploadCompleted: async ({ blob }) => {
-        // Keep this minimal — just log. Don't do any async DB work here.
-        console.log('Upload complete:', blob.url);
-      },
+    if (!file || file.size === 0) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    // Server-side put() — no client SDK, no webhook, no hanging
+    const blob = await put(file.name, file, {
+      access: 'public',
+      addRandomSuffix: true,
     });
 
-    return NextResponse.json(jsonResponse);
+    return NextResponse.json({ url: blob.url });
   } catch (error) {
+    console.error('[Upload Error]', error);
     return NextResponse.json(
       { error: (error as Error).message },
-      { status: 400 }
+      { status: 500 }
     );
   }
 }

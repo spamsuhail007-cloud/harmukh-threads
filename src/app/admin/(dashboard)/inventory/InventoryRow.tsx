@@ -51,10 +51,10 @@ export function InventoryRow({ product }: { product: Product }) {
       </td>
       <td>
         <div style={{ display: 'flex', gap: '8px' }}>
-          {/* Note: product edit page to be fully implemented next. Using alert for now since edit form is complex, but the link is prepared. */}
-          <button onClick={() => alert('Editing full products via UI is a Phase 2 item. You can edit via Prisma Studio for now.')} className="btn-ghost" style={{ fontSize: '0.8rem', textDecoration: 'underline' }}>
+          {/* Edit product link — now fully implemented */}
+          <Link href={`/admin/products/${product.id}/edit`} className="btn-ghost" style={{ fontSize: '0.8rem', textDecoration: 'underline' }}>
             Edit
-          </button>
+          </Link>
         </div>
       </td>
     </tr>

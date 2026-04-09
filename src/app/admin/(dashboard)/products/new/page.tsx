@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createProduct } from '@/actions/admin';
-import { upload } from '@vercel/blob/client';
 import Link from 'next/link';
 
 export default function NewProductPage() {
@@ -75,16 +74,18 @@ export default function NewProductPage() {
         const optimizedFile = await compressImage(file);
         
         setSubmitStatus('Requesting secure Vercel Blob upload token...');
-        const uploadResult = await upload(optimizedFile.name, optimizedFile, {
-          access: 'public',
-          handleUploadUrl: '/api/upload',
-          onUploadProgress: (progressEvent) => {
-            const pct = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-            setSubmitStatus(`Uploading image to Vercel Blob... ${pct}%`);
-          }
-        });
+        const fd = new FormData();
+        fd.append('file', optimizedFile);
         
-        finalImageUrl = uploadResult.url;
+        const res = await fetch('/api/upload', { method: 'POST', body: fd });
+        const json = await res.json();
+
+        if (!res.ok) {
+          throw new Error(json.error || `Upload failed with status ${res.status}`);
+        }
+
+        setSubmitStatus('Image uploaded! Saving product...');
+        finalImageUrl = json.url;
       } catch (err: any) {
         console.error(err);
         setSubmitStatus('');
