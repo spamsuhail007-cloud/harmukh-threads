@@ -8,20 +8,15 @@ export async function POST(request: Request): Promise<NextResponse> {
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (pathname) => {
-        // Here we could enforce authentication (e.g., check session)
-        // For simplicity and since this is a prototype, we'll allow it.
-        // The token is scoped strictly to the requested upload.
+      onBeforeGenerateToken: async (_pathname) => {
         return {
           allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-          tokenPayload: JSON.stringify({
-            // Any custom data to pass to onUploadCompleted
-          }),
+          maximumSizeInBytes: 5 * 1024 * 1024, // 5MB max
         };
       },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
-        // Run after the upload is completed
-        console.log('blob upload completed', blob.url);
+      onUploadCompleted: async ({ blob }) => {
+        // Keep this minimal — just log. Don't do any async DB work here.
+        console.log('Upload complete:', blob.url);
       },
     });
 
@@ -29,7 +24,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },
-      { status: 400 } // The webhook will retry 5 times waiting for a 200
+      { status: 400 }
     );
   }
 }

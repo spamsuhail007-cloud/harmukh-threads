@@ -23,21 +23,19 @@ export default function NewProductPage() {
         img.src = event.target?.result as string;
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1200;
-          const MAX_HEIGHT = 1200;
+          const MAX_SIZE = 800;
           let width = img.width;
           let height = img.height;
 
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
+          if (width > height && width > MAX_SIZE) {
+            height = Math.round(height * MAX_SIZE / width);
+            width = MAX_SIZE;
+          } else if (height > width && height > MAX_SIZE) {
+            width = Math.round(width * MAX_SIZE / height);
+            height = MAX_SIZE;
+          } else if (width > MAX_SIZE) {
+            height = Math.round(height * MAX_SIZE / width);
+            width = MAX_SIZE;
           }
           canvas.width = width;
           canvas.height = height;
@@ -53,7 +51,7 @@ export default function NewProductPage() {
             } else {
               reject(new Error('Compression failed'));
             }
-          }, 'image/webp', 0.85); // Compress to webp at 85% quality
+          }, 'image/webp', 0.70); // Compress to webp at 70% quality for small file size
         };
       };
       reader.onerror = (error) => reject(error);
