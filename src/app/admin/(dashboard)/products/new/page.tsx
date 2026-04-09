@@ -29,9 +29,9 @@ export default function NewProductPage() {
         uploadData.append('file', file);
         const uploadResult = await uploadImage(uploadData);
         finalImageUrl = uploadResult.url;
-      } catch (err) {
+      } catch (err: any) {
         console.error(err);
-        setError('Failed to upload image. Please try again.');
+        setError(err.message || 'Failed to upload image. Please try again.');
         setIsSubmitting(false);
         return;
       }
