@@ -26,10 +26,14 @@ export default function NewProductPage() {
 
     if (file && file.size > 0) {
       try {
-        setSubmitStatus('Uploading image to Vercel Blob...');
+        setSubmitStatus('Requesting secure Vercel Blob upload token...');
         const uploadResult = await upload(file.name, file, {
           access: 'public',
           handleUploadUrl: '/api/upload',
+          onUploadProgress: (progressEvent) => {
+            const pct = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+            setSubmitStatus(`Uploading image to Vercel Blob... ${pct}%`);
+          }
         });
         
         finalImageUrl = uploadResult.url;
