@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createProduct } from '@/actions/admin';
+import { uploadImage } from '@/actions/blob';
 import Link from 'next/link';
 
 export default function NewProductPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [imagePreview, setImagePreview] = useState<string>('');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -16,15 +18,37 @@ export default function NewProductPage() {
     setError('');
 
     const formData = new FormData(e.currentTarget);
-    const imageUrl = formData.get('imageUrl') as string;
     
+    // 1. Handle File Upload
+    const file = formData.get('imageFile') as File;
+    let finalImageUrl = '';
+
+    if (file && file.size > 0) {
+      try {
+        const uploadData = new FormData();
+        uploadData.append('file', file);
+        const uploadResult = await uploadImage(uploadData);
+        finalImageUrl = uploadResult.url;
+      } catch (err) {
+        console.error(err);
+        setError('Failed to upload image. Please try again.');
+        setIsSubmitting(false);
+        return;
+      }
+    } else {
+      setError('Please provide a product image.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // 2. Create the Product
     const data = {
       name: formData.get('name'),
       category: formData.get('category'),
       price: Number(formData.get('price')),
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
-      images: [imageUrl], // Wrap single image URL in array
+      images: [finalImageUrl], 
       dimensions: formData.get('dimensions') || undefined,
       material: formData.get('material') || undefined,
       origin: formData.get('origin') || undefined,
@@ -83,11 +107,26 @@ export default function NewProductPage() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Main Image URL *</label>
-            <input type="url" name="imageUrl" className="form-input" required placeholder="https://images.unsplash.com/photo-..." />
-            <div style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginTop: '4px' }}>
-              Paste a direct link to an image. (We will setup direct file uploads via Vercel Blob later)
-            </div>
+            <label className="form-label">Product Image (Upload) *</label>
+            <input 
+              type="file" 
+              name="imageFile" 
+              accept="image/*"
+              className="form-input" 
+              required 
+              style={{ background: 'var(--surface-container-lowest)' }}
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  const url = URL.createObjectURL(e.target.files[0]);
+                  setImagePreview(url);
+                }
+              }}
+            />
+            {imagePreview && (
+              <div style={{ marginTop: 'var(--space-md)' }}>
+                <img src={imagePreview} alt="Preview" style={{ width: '150px', height: '180px', objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
+              </div>
+            )}
           </div>
 
           <div className="form-group">
@@ -114,8 +153,9 @@ export default function NewProductPage() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-md)', marginTop: 'var(--space-lg)' }}>
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating Product...' : 'Create Product'}
+            <Link href="/admin/inventory" className="btn btn-ghost" style={{ padding: '12px var(--space-xl)' }}>Cancel</Link>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ padding: '12px var(--space-xl)' }}>
+              {isSubmitting ? 'Uploading & Saving...' : 'Create Product'}
             </button>
           </div>
         </form>
