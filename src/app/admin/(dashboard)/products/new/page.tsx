@@ -28,10 +28,16 @@ export default function NewProductPage() {
         const uploadData = new FormData();
         uploadData.append('file', file);
         const uploadResult = await uploadImage(uploadData);
-        finalImageUrl = uploadResult.url;
+        
+        if (!uploadResult.success) {
+          setError(`Blob Auth Error: ${uploadResult.error}. Did you redeploy your Vercel project after creating the Blob store?`);
+          setIsSubmitting(false);
+          return;
+        }
+        finalImageUrl = uploadResult.url!;
       } catch (err: any) {
         console.error(err);
-        setError(err.message || 'Failed to upload image. Please try again.');
+        setError(err.message || 'Next.js Server limits exceeded. The image file might be larger than 4.5MB.');
         setIsSubmitting(false);
         return;
       }
