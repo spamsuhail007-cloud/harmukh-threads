@@ -70,10 +70,10 @@ export function ProductClient({ product }: ProductClientProps) {
       </div>
 
       <div className="container" style={{ padding: 'var(--space-2xl) var(--space-lg)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3xl)', alignItems: 'start' }}>
+        <div className="grid-product-layout">
 
           {/* ── LEFT: Image Gallery ── */}
-          <div style={{ position: 'sticky', top: '100px' }}>
+          <div style={{ position: 'sticky', top: '100px' }} className="product-sticky-gallery">
             {/* Main Image */}
             <div
               onClick={() => setLightboxOpen(true)}
@@ -192,27 +192,8 @@ export function ProductClient({ product }: ProductClientProps) {
               )}
             </div>
 
-            {/* Trust badges */}
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 'var(--space-sm)', marginBottom: 'var(--space-xl)',
-              background: 'var(--surface-container-low)',
-              borderRadius: 'var(--radius-md)', padding: 'var(--space-md)'
-            }}>
-              {[
-                { icon: '🚚', label: 'Free Shipping', sub: 'Pan India' },
-                { icon: '✅', label: 'Authentic', sub: 'Handcrafted' },
-                { icon: '🔄', label: 'Easy Returns', sub: '7-day policy' },
-              ].map(b => (
-                <div key={b.label} style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>{b.icon}</div>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700 }}>{b.label}</div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--on-surface-variant)' }}>{b.sub}</div>
-                </div>
-              ))}
-            </div>
+            {/* Trust badges removed */}
 
-            {/* Add to Cart */}
             <div style={{ marginBottom: 'var(--space-xl)' }}>
               {product.stock > 0 && product.stock <= 5 && (
                 <p style={{ color: '#dc2626', fontSize: '0.85rem', marginBottom: '8px', fontWeight: 600 }}>
