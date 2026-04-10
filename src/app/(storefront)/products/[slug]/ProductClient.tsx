@@ -27,7 +27,6 @@ export function ProductClient({ product }: ProductClientProps) {
   const [mainImage, setMainImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [added, setAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description');
   const { add } = useCart();
 
   const avgRating = product.reviews.length
@@ -216,128 +215,100 @@ export function ProductClient({ product }: ProductClientProps) {
               </button>
             </div>
 
-            {/* Tab Navigation */}
-            <div style={{ borderBottom: '2px solid var(--outline-variant)', marginBottom: 'var(--space-lg)' }}>
-              <div style={{ display: 'flex', gap: 0 }}>
-                {[
-                  { key: 'description', label: 'Description' },
-                  { key: 'specs', label: 'Specifications' },
-                  { key: 'reviews', label: `Reviews (${product.reviews.length})` },
-                ].map(tab => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveTab(tab.key as any)}
-                    style={{
-                      padding: '10px 20px', border: 'none', background: 'none',
-                      cursor: 'pointer', fontSize: '0.875rem', fontWeight: 600,
-                      color: activeTab === tab.key ? 'var(--primary)' : 'var(--on-surface-variant)',
-                      borderBottom: activeTab === tab.key ? '2px solid var(--primary)' : '2px solid transparent',
-                      marginBottom: '-2px', transition: 'color 0.2s'
-                    }}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
+            {/* ── Description ── */}
+            <div style={{ borderTop: '2px solid var(--outline-variant)', paddingTop: 'var(--space-xl)', marginTop: 'var(--space-xl)' }}>
+              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', marginBottom: 'var(--space-md)', fontWeight: 700 }}>Description</h2>
+              <div style={{ lineHeight: 1.9, color: 'var(--on-surface-variant)', fontSize: '1rem', marginBottom: 'var(--space-lg)' }}>
+                {product.description}
               </div>
+              {(product as any).productNote && (
+                <div style={{
+                  background: '#fef9c3', border: '1px solid #fde047',
+                  borderRadius: 'var(--radius-sm)', padding: '12px 16px',
+                  fontSize: '0.875rem', color: '#713f12'
+                }}>
+                  <strong>Note:</strong> {(product as any).productNote}
+                </div>
+              )}
             </div>
 
-            {/* Tab Content */}
-            {activeTab === 'description' && (
-              <div>
-                <div style={{ lineHeight: 1.9, color: 'var(--on-surface-variant)', fontSize: '1rem', marginBottom: 'var(--space-lg)' }}>
-                  {product.description}
-                </div>
-                {(product as any).productNote && (
-                  <div style={{
-                    background: '#fef9c3', border: '1px solid #fde047',
-                    borderRadius: 'var(--radius-sm)', padding: '12px 16px',
-                    fontSize: '0.875rem', color: '#713f12'
-                  }}>
-                    <strong>Note:</strong> {(product as any).productNote}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'specs' && (
-              <div>
-                {hasSpecs ? (
-                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <tbody>
-                      {[
-                        { label: 'Dimensions', value: product.dimensions },
-                        { label: 'Weight', value: (product as any).weight },
-                        { label: 'Shape', value: (product as any).shape },
-                        { label: 'Type of Rug', value: (product as any).rugType },
-                        { label: 'Material', value: product.material },
-                        { label: 'Fabric', value: (product as any).fabric },
-                        { label: 'Embroidery Thread', value: (product as any).embroidery },
-                        { label: 'Craft', value: (product as any).craft },
-                        { label: 'Origin', value: product.origin },
-                        { label: 'Weave Time', value: product.weaveTime },
-                        { label: 'Knot Density', value: product.knotDensity },
-                      ].filter(row => row.value).map((row, i) => (
-                        <tr key={row.label} style={{ background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
-                          <td style={{ padding: '12px 16px', fontWeight: 700, fontSize: '0.8rem', color: 'var(--on-surface)', textTransform: 'uppercase', letterSpacing: '0.08em', width: '42%', borderBottom: '1px solid var(--outline-variant)' }}>
-                            {row.label}
-                          </td>
-                          <td style={{ padding: '12px 16px', fontSize: '0.95rem', color: 'var(--on-surface-variant)', borderBottom: '1px solid var(--outline-variant)' }}>{row.value}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p style={{ color: 'var(--on-surface-variant)' }}>No specifications added yet.</p>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'reviews' && (
-              <div>
-                {product.reviews.length > 0 ? (
-                  <>
-                    {/* Rating breakdown */}
-                    <div style={{ display: 'flex', gap: 'var(--space-xl)', marginBottom: 'var(--space-xl)', padding: 'var(--space-lg)', background: 'var(--surface-container-low)', borderRadius: 'var(--radius-md)' }}>
-                      <div style={{ textAlign: 'center', flexShrink: 0 }}>
-                        <div style={{ fontFamily: 'var(--font-serif)', fontSize: '3rem', fontWeight: 700, lineHeight: 1 }}>{avgRating}.0</div>
-                        <StarRating rating={avgRating} size={20} />
-                        <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginTop: '4px' }}>{product.reviews.length} reviews</div>
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        {ratingCounts.map(({ star, count }) => (
-                          <div key={star} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                            <span style={{ fontSize: '0.75rem', width: '12px' }}>{star}</span>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
-                            <div style={{ flex: 1, height: '6px', background: 'var(--outline-variant)', borderRadius: '99px', overflow: 'hidden' }}>
-                              <div style={{ height: '100%', width: `${product.reviews.length ? (count / product.reviews.length) * 100 : 0}%`, background: '#f59e0b', borderRadius: '99px' }} />
-                            </div>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', width: '20px' }}>{count}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Review list */}
-                    {product.reviews.map(r => (
-                      <div key={r.id} style={{ marginBottom: 'var(--space-lg)', paddingBottom: 'var(--space-lg)', borderBottom: '1px solid var(--outline-variant)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                          <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{r.author}</div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)' }}>
-                            {new Date(r.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                          </div>
-                        </div>
-                        <StarRating rating={r.rating} />
-                        <p style={{ marginTop: '8px', lineHeight: 1.7, color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>&ldquo;{r.text}&rdquo;</p>
-                      </div>
+            {/* ── Specifications ── */}
+            {hasSpecs && (
+              <div style={{ borderTop: '2px solid var(--outline-variant)', paddingTop: 'var(--space-xl)', marginTop: 'var(--space-xl)' }}>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', marginBottom: 'var(--space-md)', fontWeight: 700 }}>Specifications</h2>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <tbody>
+                    {[
+                      { label: 'Dimensions', value: product.dimensions },
+                      { label: 'Weight', value: (product as any).weight },
+                      { label: 'Shape', value: (product as any).shape },
+                      { label: 'Type of Rug', value: (product as any).rugType },
+                      { label: 'Material', value: product.material },
+                      { label: 'Fabric', value: (product as any).fabric },
+                      { label: 'Embroidery Thread', value: (product as any).embroidery },
+                      { label: 'Craft', value: (product as any).craft },
+                      { label: 'Origin', value: product.origin },
+                      { label: 'Weave Time', value: product.weaveTime },
+                      { label: 'Knot Density', value: product.knotDensity },
+                    ].filter(row => row.value).map((row, i) => (
+                      <tr key={row.label} style={{ background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
+                        <td style={{ padding: '12px 16px', fontWeight: 700, fontSize: '0.8rem', color: 'var(--on-surface)', textTransform: 'uppercase', letterSpacing: '0.08em', width: '42%', borderBottom: '1px solid var(--outline-variant)' }}>
+                          {row.label}
+                        </td>
+                        <td style={{ padding: '12px 16px', fontSize: '0.95rem', color: 'var(--on-surface-variant)', borderBottom: '1px solid var(--outline-variant)' }}>{row.value}</td>
+                      </tr>
                     ))}
-                  </>
-                ) : (
-                  <p style={{ color: 'var(--on-surface-variant)', textAlign: 'center', padding: 'var(--space-2xl) 0' }}>
-                    No reviews yet. Be the first to review this product!
-                  </p>
-                )}
+                  </tbody>
+                </table>
               </div>
             )}
+
+            {/* ── Reviews ── */}
+            <div style={{ borderTop: '2px solid var(--outline-variant)', paddingTop: 'var(--space-xl)', marginTop: 'var(--space-xl)' }}>
+              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', marginBottom: 'var(--space-lg)', fontWeight: 700 }}>
+                Customer Reviews {product.reviews.length > 0 && `(${product.reviews.length})`}
+              </h2>
+              {product.reviews.length > 0 ? (
+                <>
+                  {/* Rating breakdown */}
+                  <div style={{ display: 'flex', gap: 'var(--space-xl)', marginBottom: 'var(--space-xl)', padding: 'var(--space-lg)', background: 'var(--surface-container-low)', borderRadius: 'var(--radius-md)' }}>
+                    <div style={{ textAlign: 'center', flexShrink: 0 }}>
+                      <div style={{ fontFamily: 'var(--font-serif)', fontSize: '3rem', fontWeight: 700, lineHeight: 1 }}>{avgRating}.0</div>
+                      <StarRating rating={avgRating} size={20} />
+                      <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginTop: '4px' }}>{product.reviews.length} reviews</div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      {ratingCounts.map(({ star, count }) => (
+                        <div key={star} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                          <span style={{ fontSize: '0.75rem', width: '12px' }}>{star}</span>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+                          <div style={{ flex: 1, height: '6px', background: 'var(--outline-variant)', borderRadius: '99px', overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${product.reviews.length ? (count / product.reviews.length) * 100 : 0}%`, background: '#f59e0b', borderRadius: '99px' }} />
+                          </div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', width: '20px' }}>{count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Review list */}
+                  {product.reviews.map(r => (
+                    <div key={r.id} style={{ marginBottom: 'var(--space-lg)', paddingBottom: 'var(--space-lg)', borderBottom: '1px solid var(--outline-variant)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{r.author}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)' }}>
+                          {new Date(r.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </div>
+                      </div>
+                      <StarRating rating={r.rating} />
+                      <p style={{ marginTop: '8px', lineHeight: 1.7, color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>&ldquo;{r.text}&rdquo;</p>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <p style={{ color: 'var(--on-surface-variant)' }}>No reviews yet. Be the first to review this product!</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
