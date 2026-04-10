@@ -205,6 +205,13 @@ export default function NewProductPage() {
       dimensions: formData.get('dimensions') || undefined,
       material: formData.get('material') || undefined,
       origin: formData.get('origin') || undefined,
+      weight: formData.get('weight') || undefined,
+      shape: formData.get('shape') || undefined,
+      rugType: formData.get('rugType') || undefined,
+      embroidery: formData.get('embroidery') || undefined,
+      fabric: formData.get('fabric') || undefined,
+      craft: formData.get('craft') || undefined,
+      productNote: formData.get('productNote') || undefined,
     };
 
     const result = await createProduct(data);
@@ -276,20 +283,56 @@ export default function NewProductPage() {
           </div>
 
           <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
-            <h3 style={{ marginBottom: 'var(--space-md)', fontSize: '1.1rem' }}>Optional Details</h3>
+            <h3 style={{ marginBottom: 'var(--space-md)', fontSize: '1.1rem' }}>Product Specifications</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-md)' }}>
               <div className="form-group">
                 <label className="form-label">Dimensions</label>
-                <input type="text" name="dimensions" className="form-input" placeholder="e.g. 5x7 ft" />
+                <input type="text" name="dimensions" className="form-input" placeholder="e.g. 72x44 inches" />
               </div>
               <div className="form-group">
-                <label className="form-label">Material</label>
+                <label className="form-label">Weight</label>
+                <input type="text" name="weight" className="form-input" placeholder="e.g. 4.4 kg" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Shape</label>
+                <input type="text" name="shape" className="form-input" placeholder="e.g. Rectangle" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Material / Fabric</label>
                 <input type="text" name="material" className="form-input" placeholder="e.g. Pure Wool" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Fabric Type</label>
+                <input type="text" name="fabric" className="form-input" placeholder="e.g. Hand Woven" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Embroidery</label>
+                <input type="text" name="embroidery" className="form-input" placeholder="e.g. Hand Embroidery" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Type of Rug</label>
+                <input type="text" name="rugType" className="form-input" placeholder="e.g. Namda Rug" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Craft</label>
+                <input type="text" name="craft" className="form-input" placeholder="e.g. Kashmiri Namdas" />
               </div>
               <div className="form-group">
                 <label className="form-label">Origin</label>
                 <input type="text" name="origin" className="form-input" placeholder="e.g. Srinagar" />
               </div>
+              <div className="form-group">
+                <label className="form-label">Weave Time</label>
+                <input type="text" name="weaveTime" className="form-input" placeholder="e.g. 3 months" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Knot Density</label>
+                <input type="text" name="knotDensity" className="form-input" placeholder="e.g. 100 knots/in²" />
+              </div>
+            </div>
+            <div className="form-group" style={{ marginTop: 'var(--space-md)' }}>
+              <label className="form-label">Product Note <span style={{ fontWeight: 400, textTransform: 'none' }}>(shown at bottom of description)</span></label>
+              <input type="text" name="productNote" className="form-input" placeholder="e.g. Actual color may differ slightly due to photography effects" />
             </div>
           </div>
 

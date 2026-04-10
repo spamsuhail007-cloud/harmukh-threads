@@ -50,7 +50,9 @@ export function ProductClient({ product }: ProductClientProps) {
     if (e.key === 'Escape') setLightboxOpen(false);
   }, [product.images.length]);
 
-  const hasSpecs = product.dimensions || product.material || product.origin || product.weaveTime || product.knotDensity;
+  const hasSpecs = product.dimensions || product.material || product.origin || product.weaveTime || product.knotDensity
+    || (product as any).weight || (product as any).shape || (product as any).rugType
+    || (product as any).embroidery || (product as any).fabric || (product as any).craft;
   const isOnSale = product.originalPrice && product.originalPrice > product.price;
   const discountPct = isOnSale ? Math.round((1 - product.price / product.originalPrice!) * 100) : 0;
 
@@ -260,8 +262,19 @@ export function ProductClient({ product }: ProductClientProps) {
 
             {/* Tab Content */}
             {activeTab === 'description' && (
-              <div style={{ lineHeight: 1.9, color: 'var(--on-surface-variant)', fontSize: '1rem' }}>
-                {product.description}
+              <div>
+                <div style={{ lineHeight: 1.9, color: 'var(--on-surface-variant)', fontSize: '1rem', marginBottom: 'var(--space-lg)' }}>
+                  {product.description}
+                </div>
+                {(product as any).productNote && (
+                  <div style={{
+                    background: '#fef9c3', border: '1px solid #fde047',
+                    borderRadius: 'var(--radius-sm)', padding: '12px 16px',
+                    fontSize: '0.875rem', color: '#713f12'
+                  }}>
+                    <strong>Note:</strong> {(product as any).productNote}
+                  </div>
+                )}
               </div>
             )}
 
@@ -272,16 +285,22 @@ export function ProductClient({ product }: ProductClientProps) {
                     <tbody>
                       {[
                         { label: 'Dimensions', value: product.dimensions },
+                        { label: 'Weight', value: (product as any).weight },
+                        { label: 'Shape', value: (product as any).shape },
+                        { label: 'Type of Rug', value: (product as any).rugType },
                         { label: 'Material', value: product.material },
+                        { label: 'Fabric', value: (product as any).fabric },
+                        { label: 'Embroidery Thread', value: (product as any).embroidery },
+                        { label: 'Craft', value: (product as any).craft },
                         { label: 'Origin', value: product.origin },
-                        { label: 'Craft Time', value: product.weaveTime },
+                        { label: 'Weave Time', value: product.weaveTime },
                         { label: 'Knot Density', value: product.knotDensity },
                       ].filter(row => row.value).map((row, i) => (
                         <tr key={row.label} style={{ background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
-                          <td style={{ padding: '12px 16px', fontWeight: 600, fontSize: '0.85rem', color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em', width: '40%' }}>
+                          <td style={{ padding: '12px 16px', fontWeight: 700, fontSize: '0.8rem', color: 'var(--on-surface)', textTransform: 'uppercase', letterSpacing: '0.08em', width: '42%', borderBottom: '1px solid var(--outline-variant)' }}>
                             {row.label}
                           </td>
-                          <td style={{ padding: '12px 16px', fontSize: '0.95rem' }}>{row.value}</td>
+                          <td style={{ padding: '12px 16px', fontSize: '0.95rem', color: 'var(--on-surface-variant)', borderBottom: '1px solid var(--outline-variant)' }}>{row.value}</td>
                         </tr>
                       ))}
                     </tbody>

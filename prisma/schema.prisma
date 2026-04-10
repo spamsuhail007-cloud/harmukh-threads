@@ -23,6 +23,13 @@ model Product {
   knotDensity   String?
   origin        String?
   weaveTime     String?
+  weight        String?
+  shape         String?
+  rugType       String?
+  embroidery    String?
+  fabric        String?
+  craft         String?
+  productNote   String?   @db.Text
   images        String[]
   stock         Int         @default(0)
   isActive      Boolean     @default(true)

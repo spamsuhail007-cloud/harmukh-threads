@@ -27,6 +27,13 @@ const ProductSchema = z.object({
   knotDensity: z.string().optional(),
   origin: z.string().optional(),
   weaveTime: z.string().optional(),
+  weight: z.string().optional(),
+  shape: z.string().optional(),
+  rugType: z.string().optional(),
+  embroidery: z.string().optional(),
+  fabric: z.string().optional(),
+  craft: z.string().optional(),
+  productNote: z.string().optional(),
   images: z.array(z.string().url()).min(1),
   stock: z.coerce.number().min(0),
 });
