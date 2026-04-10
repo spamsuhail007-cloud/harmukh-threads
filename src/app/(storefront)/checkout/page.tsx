@@ -35,6 +35,7 @@ export default function CheckoutPage() {
       address: fd.get('address'),
       city: fd.get('city'),
       pincode: fd.get('pincode'),
+      paymentMethod: 'UPI',
       items: items.map(i => ({
         productId: i.product.id,
         name: i.product.name,
@@ -49,7 +50,8 @@ export default function CheckoutPage() {
 
     if (res.success && res.orderNumber) {
       clear();
-      router.push(`/orders/success?order=${res.orderNumber}`);
+      // Redirect to UPI payment page instead of success
+      router.push(`/orders/pay?order=${res.orderNumber}&amount=${total}`);
     } else {
       setError(res.error || 'Failed to place order.');
     }
@@ -102,20 +104,41 @@ export default function CheckoutPage() {
                 <input required type="text" id="pincode" name="pincode" className="form-input" />
               </div>
             </div>
-            
-            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-lg)', marginTop: 'var(--space-xl)' }}>Payment Method</h2>
-            <div style={{ padding: 'var(--space-md)', border: '1px solid var(--primary)', borderRadius: 'var(--radius-md)', background: 'var(--primary-fixed)', marginBottom: 'var(--space-xl)' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', cursor: 'pointer', fontWeight: 600, color: 'var(--primary)' }}>
-                <input type="radio" name="paymentMethod" value="COD" defaultChecked style={{ accentColor: 'var(--primary)', width: '18px', height: '18px' }} />
-                Cash on Delivery (Pay at your doorstep)
-              </label>
+
+            {/* Payment info banner */}
+            <div style={{
+              marginTop: 'var(--space-xl)',
+              padding: 'var(--space-md) var(--space-lg)',
+              background: 'linear-gradient(135deg, #fef9c3, #fefce8)',
+              border: '1px solid #fde047',
+              borderRadius: 'var(--radius-md)',
+              display: 'flex', alignItems: 'flex-start', gap: '12px',
+              marginBottom: 'var(--space-xl)'
+            }}>
+              <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>📱</span>
+              <div>
+                <div style={{ fontWeight: 700, marginBottom: '4px', color: '#713f12' }}>Pay via UPI after placing order</div>
+                <div style={{ fontSize: '0.85rem', color: '#92400e', lineHeight: 1.6 }}>
+                  After submitting your details, you'll be taken to a secure UPI payment page.
+                  Pay with any UPI app — Google Pay, PhonePe, Paytm, or your bank app.
+                  Your order will be confirmed once payment is verified.
+                </div>
+              </div>
             </div>
 
             {error && <div className="form-error" style={{ marginBottom: 'var(--space-md)' }}>{error}</div>}
 
-            <button type="submit" className="btn btn-primary btn-full" style={{ padding: '16px', fontSize: '1.1rem' }} disabled={loading}>
-              {loading ? 'Processing...' : `Place Order — ${formatPrice(total)}`}
+            <button
+              type="submit"
+              className="btn btn-primary btn-full"
+              style={{ padding: '16px', fontSize: '1.1rem' }}
+              disabled={loading}
+            >
+              {loading ? 'Saving order…' : `Continue to Payment — ${formatPrice(total)}`}
             </button>
+            <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginTop: '10px' }}>
+              🔒 Your information is secure and encrypted
+            </p>
           </form>
 
           <aside style={{ background: 'var(--surface-container)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-md)', position: 'sticky', top: '100px' }}>
@@ -140,17 +163,22 @@ export default function CheckoutPage() {
 
             <div style={{ borderTop: '1px solid var(--surface-container-high)', paddingTop: 'var(--space-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-sm)', color: 'var(--on-surface-variant)' }}>
-                <span>Subtotal</span>
-                <span>{formatPrice(total)}</span>
+                <span>Subtotal</span><span>{formatPrice(total)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-sm)', color: 'var(--on-surface-variant)' }}>
-                <span>Shipping</span>
-                <span>Free</span>
+                <span>Shipping</span><span>Free</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--space-md)', paddingTop: 'var(--space-md)', borderTop: '1px solid var(--surface-container-high)', fontFamily: 'var(--font-serif)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--on-surface)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'var(--space-md)', paddingTop: 'var(--space-md)', borderTop: '1px solid var(--surface-container-high)', fontFamily: 'var(--font-serif)', fontSize: '1.25rem', fontWeight: 600 }}>
                 <span>Total</span>
                 <span style={{ color: 'var(--primary)' }}>{formatPrice(total)}</span>
               </div>
+            </div>
+
+            {/* UPI apps */}
+            <div style={{ marginTop: 'var(--space-lg)', padding: 'var(--space-md)', background: 'var(--surface-container-low)', borderRadius: 'var(--radius-sm)', textAlign: 'center' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginBottom: '8px' }}>ACCEPTED PAYMENT</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>📱 All UPI Apps Accepted</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginTop: '4px' }}>Google Pay · PhonePe · Paytm · BHIM · Bank UPI</div>
             </div>
           </aside>
 
