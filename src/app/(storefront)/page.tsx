@@ -44,7 +44,7 @@ export default async function HomePage() {
           <div className="trust-bar-grid">
             <div>
               <div className="trust-item-icon">✦</div>
-              <div className="trust-item-title">GI Certified</div>
+              <div className="trust-item-title">Master Crafted</div>
               <div className="trust-item-sub">Authentic Kashmir Origin</div>
             </div>
             <div>

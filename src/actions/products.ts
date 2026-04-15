@@ -2,11 +2,20 @@
 import { db } from '@/lib/db';
 import { type Product } from '@prisma/client';
 
-export async function getProducts(category?: string): Promise<Product[]> {
+export async function getProducts(category?: string, query?: string): Promise<Product[]> {
   return db.product.findMany({
     where: {
       isActive: true,
       ...(category ? { category } : {}),
+      ...(query
+        ? {
+            OR: [
+              { name: { contains: query, mode: 'insensitive' } },
+              { category: { contains: query, mode: 'insensitive' } },
+              { description: { contains: query, mode: 'insensitive' } },
+            ],
+          }
+        : {}),
     },
     orderBy: { createdAt: 'asc' },
   });

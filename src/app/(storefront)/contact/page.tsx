@@ -32,67 +32,126 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="container" style={{ padding: 'var(--space-3xl) 0' }}>
-      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <h1 className="section-title" style={{ marginBottom: 'var(--space-md)', textAlign: 'center' }}>Contact Us</h1>
-        <p className="section-lead" style={{ textAlign: 'center', margin: '0 auto var(--space-3xl)' }}>
-          Have a question about a piece, or want to discuss a custom commission? 
-          Reach out to our team in Srinagar. We typically respond within 24 hours.
-        </p>
+    <div className="contact-page">
+      {/* Hero Banner */}
+      <div className="contact-hero">
+        <div className="contact-hero-overlay" />
+        <div className="container contact-hero-content">
+          <div className="section-kicker" style={{ color: 'rgba(255,219,203,0.85)' }}>We&apos;d Love to Hear From You</div>
+          <h1 className="contact-hero-title">Get in Touch</h1>
+          <p className="contact-hero-sub">
+            Have a question about a piece, or want to discuss a custom commission?<br />
+            Our team in Srinagar typically responds within 24 hours.
+          </p>
+        </div>
+      </div>
 
-        <div className="grid-contact-layout">
-          <div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-md)' }}>Direct Contact</h3>
-            <div style={{ color: 'var(--on-surface-variant)', fontSize: '0.9rem', marginBottom: 'var(--space-lg)', lineHeight: 1.8 }}>
-              <strong>Email:</strong><br/>
-              hello@harmukh.in<br/><br/>
-              <strong>Phone / WhatsApp:</strong><br/>
-              +91 194 247 0000<br/><br/>
-              <strong>Studio (By Appointment):</strong><br/>
-              Residency Road<br/>
-              Srinagar, Kashmir 190001
+      <div className="container contact-body">
+        <div className="contact-layout">
+
+          {/* Left — Info Cards */}
+          <aside className="contact-info-col">
+            <div className="contact-info-card">
+              <div className="contact-info-icon">✉</div>
+              <div>
+                <div className="contact-info-label">Email Us</div>
+                <a href="mailto:hello@harmukh.in" className="contact-info-value contact-link">hello@harmukh.in</a>
+              </div>
             </div>
-          </div>
 
-          <div style={{ background: 'var(--surface-container-low)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-md)' }}>
+            <div className="contact-info-card">
+              <div className="contact-info-icon">☎</div>
+              <div>
+                <div className="contact-info-label">Phone / WhatsApp</div>
+                <a href="tel:+911942470000" className="contact-info-value contact-link">+91 194 247 0000</a>
+              </div>
+            </div>
+
+            <div className="contact-info-card">
+              <div className="contact-info-icon">⌖</div>
+              <div>
+                <div className="contact-info-label">Studio (By Appointment)</div>
+                <div className="contact-info-value">Residency Road<br />Srinagar, Kashmir 190001</div>
+              </div>
+            </div>
+
+            <div className="contact-info-card">
+              <div className="contact-info-icon">◷</div>
+              <div>
+                <div className="contact-info-label">Studio Hours</div>
+                <div className="contact-info-value">Mon – Sat, 10am – 6pm IST</div>
+              </div>
+            </div>
+
+            <div className="contact-promise">
+              <div className="contact-promise-icon">✦</div>
+              <p>Every message is personally read by our team — no bots, no templates.</p>
+            </div>
+          </aside>
+
+          {/* Right — Form */}
+          <div className="contact-form-col">
             {success ? (
-              <div style={{ textAlign: 'center', padding: 'var(--space-2xl) 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: 'var(--space-md)' }}>🕊️</div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-sm)' }}>Message Sent</h3>
-                <p style={{ color: 'var(--on-surface-variant)' }}>Thank you for reaching out. We will get back to you shortly.</p>
-                <button className="btn btn-secondary" style={{ marginTop: 'var(--space-lg)' }} onClick={() => setSuccess(false)}>Send Another Message</button>
+              <div className="contact-success">
+                <div className="contact-success-icon">🕊️</div>
+                <h2>Message Sent!</h2>
+                <p>Thank you for reaching out. We&apos;ll get back to you within 24 hours.</p>
+                <button className="btn btn-secondary" onClick={() => setSuccess(false)}>
+                  Send Another Message
+                </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="name" className="form-label">Name</label>
-                  <input type="text" id="name" name="name" className="form-input" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="email" className="form-label">Email</label>
-                  <input type="email" id="email" name="email" className="form-input" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="subject" className="form-label">Subject</label>
-                  <select id="subject" name="subject" className="form-select" required>
-                    <option value="">Select a topic...</option>
-                    <option value="Product Inquiry">Product Inquiry</option>
-                    <option value="Custom Commission">Custom Commission</option>
-                    <option value="Order Status">Order Status</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="message" className="form-label">Message</label>
-                  <textarea id="message" name="message" className="form-textarea" required rows={5}></textarea>
-                </div>
-                {error && <div className="form-error" style={{ marginBottom: 'var(--space-md)' }}>{error}</div>}
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                  {loading ? 'Sending...' : 'Send Message'}
-                </button>
-              </form>
+              <>
+                <h2 className="contact-form-title">Send Us a Message</h2>
+                <p className="contact-form-sub">Fill in the form and we&apos;ll reach out shortly.</p>
+                <form onSubmit={handleSubmit} className="contact-form">
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="name" className="form-label">Your Name</label>
+                      <input type="text" id="name" name="name" className="form-input" placeholder="e.g. Rahul Sharma" required />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="email" className="form-label">Email Address</label>
+                      <input type="email" id="email" name="email" className="form-input" placeholder="you@example.com" required />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="subject" className="form-label">Topic</label>
+                    <select id="subject" name="subject" className="form-select" required>
+                      <option value="">Select a topic...</option>
+                      <option value="Product Inquiry">Product Inquiry</option>
+                      <option value="Custom Commission">Custom Commission</option>
+                      <option value="Order Status">Order Status</option>
+                      <option value="Wholesale">Wholesale Enquiry</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="message" className="form-label">Your Message</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      className="form-textarea"
+                      placeholder="Tell us what you have in mind..."
+                      required
+                      rows={6}
+                    />
+                  </div>
+                  {error && <div className="form-error" style={{ marginBottom: 'var(--space-md)' }}>{error}</div>}
+                  <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
+                    {loading ? (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="contact-spinner" /> Sending...
+                      </span>
+                    ) : (
+                      <>Send Message ✦</>
+                    )}
+                  </button>
+                </form>
+              </>
             )}
           </div>
+
         </div>
       </div>
     </div>

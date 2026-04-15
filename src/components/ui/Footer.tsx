@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Footer() {
   return (
@@ -6,7 +7,9 @@ export function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <span className="logo-text">✦ Harmukh Threads</span>
+            <Link href="/" style={{ display: 'inline-block', marginBottom: 'var(--space-md)' }}>
+              <Image src="/harmukhlogo.png" alt="Harmukh Threads" width={150} height={40} style={{ objectFit: 'contain', width: 'auto', height: '40px' }} />
+            </Link>
             <p>Custodians of 600 years of Kashmiri craft — connecting master weavers with discerning homes across the world.</p>
           </div>
           <div className="footer-col">
@@ -24,16 +27,17 @@ export function Footer() {
               <li><Link href="/story">Our Story</Link></li>
               <li><Link href="/story#artisans">The Artisans</Link></li>
               <li><Link href="/story#process">The Process</Link></li>
-              <li><Link href="/story#gi">GI Certification</Link></li>
+              <li><Link href="/story#process">Our Craft</Link></li>
             </ul>
           </div>
           <div className="footer-col">
             <h4>Help</h4>
             <ul>
               <li><Link href="/contact">Contact Us</Link></li>
+              <li><Link href="/returns">Return Policy</Link></li>
               <li><Link href="/collections">Shop All</Link></li>
               <li><a href="mailto:hello@harmukh.in">hello@harmukh.in</a></li>
-              <li><a href="tel:+91-194-247-0000">+91 194 247 0000</a></li>
+              <li><a href="tel:+91-849-100-6127">+91 84910 06127</a></li>
             </ul>
           </div>
         </div>

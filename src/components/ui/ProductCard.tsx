@@ -11,13 +11,24 @@ export function ProductCard({ product }: { product: Product }) {
           src={product.images[0]}
           alt={product.name}
           width={400}
-          height={500}
+          height={400}
           priority={false}
         />
         {product.stock === 0 && (
           <div className="out-of-stock-overlay">
             <span className="out-of-stock-label">Out of Stock</span>
           </div>
+        )}
+        {product.stock > 0 && product.stock <= 5 && (
+          <span style={{
+            position: 'absolute', bottom: '10px', left: '10px',
+            background: '#f59e0b', color: '#fff',
+            fontSize: '0.7rem', fontWeight: 700,
+            padding: '3px 10px', borderRadius: '99px',
+            letterSpacing: '0.04em', zIndex: 1,
+          }}>
+            Only {product.stock} left!
+          </span>
         )}
         {product.badge && product.stock > 0 && (
           <span className={`badge ${product.badgeType || 'badge-primary'} product-card-badge`}>

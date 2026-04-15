@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -19,22 +20,33 @@ export function Navbar() {
   useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   const navLinks = [
-    { href: '/collections', label: 'Collections' },
+    { href: '/', label: 'Home' },
+    { href: '/collections', label: 'Shop' },
     { href: '/collections?cat=Rugs', label: 'Rugs' },
     { href: '/story', label: 'Our Story' },
+    { href: '/contact', label: 'Contact Us' },
   ];
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/';
+    if (href.includes('?')) return pathname + (typeof window !== 'undefined' ? window.location.search : '') === href;
+    return pathname === href || pathname.startsWith(href + '/');
+  };
 
   return (
     <header className={`navbar${scrolled ? ' scrolled' : ''}`}>
       <div className="navbar-inner">
-        <Link href="/" className="navbar-logo">
-          <span className="logo-mark">✦</span>
-          <span className="logo-text">Harmukh Threads</span>
+        <Link href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center' }}>
+          <Image src="/harmukhlogo.png" alt="Harmukh Threads" width={150} height={40} style={{ objectFit: 'contain', width: 'auto', height: '40px' }} priority />
         </Link>
 
         <nav className="navbar-nav" aria-label="Main navigation">
           {navLinks.map(l => (
-            <Link key={l.href} href={l.href} className={`nav-link${pathname === l.href ? ' active' : ''}`}>
+            <Link
+              key={l.href}
+              href={l.href}
+              className={`nav-link${isActive(l.href) ? ' active' : ''}${l.label === 'Contact Us' ? ' nav-link-cta' : ''}`}
+            >
               {l.label}
             </Link>
           ))}
@@ -66,11 +78,15 @@ export function Navbar() {
       {mobileOpen && (
         <nav className="mobile-nav open" aria-label="Mobile navigation">
           {navLinks.map(l => (
-            <Link key={l.href} href={l.href} className="nav-link" style={{ fontSize: '1rem', padding: '8px 0' }}>
+            <Link
+              key={l.href}
+              href={l.href}
+              className={`nav-link${isActive(l.href) ? ' active' : ''}`}
+              style={{ fontSize: '1rem', padding: '10px 0' }}
+            >
               {l.label}
             </Link>
           ))}
-          <Link href="/contact" className="nav-link" style={{ fontSize: '1rem', padding: '8px 0' }}>Contact</Link>
         </nav>
       )}
     </header>

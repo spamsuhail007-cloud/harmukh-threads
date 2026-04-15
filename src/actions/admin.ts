@@ -67,6 +67,17 @@ export async function updateProduct(id: string, data: unknown) {
   }
 }
 
+export async function deleteProduct(id: string) {
+  try {
+    await db.product.delete({ where: { id } });
+    revalidatePath('/collections');
+    revalidatePath('/admin/inventory');
+    return { success: true };
+  } catch {
+    return { success: false, error: 'Failed to delete product.' };
+  }
+}
+
 export async function getAdminStats() {
   const [totalOrders, totalProducts, pendingOrders, lowStockProducts] = await Promise.all([
     db.order.count(),

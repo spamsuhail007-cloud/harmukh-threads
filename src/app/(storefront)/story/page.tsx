@@ -61,7 +61,7 @@ export default function StoryPage() {
         </div>
       </section>
 
-      <section className="container artisan-section" id="gi">
+      <section className="container artisan-section" id="artisans">
         <div className="artisan-grid">
           <img
             src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=80"
@@ -69,13 +69,12 @@ export default function StoryPage() {
             className="artisan-img"
           />
           <div>
-            <div className="section-kicker">Authentication</div>
-            <h2 className="section-title" style={{ marginBottom: 'var(--space-md)' }}>The GI Promise</h2>
+            <div className="section-kicker">Our Commitment</div>
+            <h2 className="section-title" style={{ marginBottom: 'var(--space-md)' }}>Authenticity You Can Trust</h2>
             <p className="section-lead" style={{ marginBottom: 'var(--space-xl)' }}>
-              Kashmiri crafts are heavily counterfeited globally. To protect our artisans and our patrons,
-              applicable products (like our Pashmina shawls and hand-knotted Carpets) come with a 
-              Geographical Indication (GI) tag. This government-backed certification guarantees origin, 
-              authenticity, and the traditional method of creation.
+              Kashmiri crafts represent centuries of tradition. Every Harmukh piece is sourced directly
+              from master artisans in Kashmir, ensuring authenticity of origin, traditional methods of
+              creation, and fair compensation for the craftspeople who make them.
             </p>
             <Link href="/collections" className="btn btn-secondary">
               Shop Authentic Pieces

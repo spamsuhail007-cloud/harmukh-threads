@@ -9,6 +9,9 @@ export default async function OrdersPage() {
   return (
     <>
       <h1 className="admin-page-title">Orders</h1>
+      <p style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--space-md)' }}>
+        Click any row to expand customer contact details, order items, and UPI payment info.
+      </p>
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
@@ -24,7 +27,7 @@ export default async function OrdersPage() {
           </thead>
           <tbody>
             {orders.length === 0 ? (
-              <tr><td colSpan={7} style={{ textAlign: 'center' }}>No orders found.</td></tr>
+              <tr><td colSpan={7} style={{ textAlign: 'center' }}>No orders yet.</td></tr>
             ) : (
               orders.map(order => <OrderRow key={order.id} order={order} />)
             )}

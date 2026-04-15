@@ -9,19 +9,20 @@ const UPI_ID = process.env.NEXT_PUBLIC_UPI_ID || 'yourname@upi';
 const UPI_NAME = process.env.NEXT_PUBLIC_UPI_NAME || 'Harmukh Threads';
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP || '919000000000';
 
-function buildUpiUrl(amountPaise: number, orderNumber: string) {
-  const amountRupees = (amountPaise / 100).toFixed(2);
+function buildUpiUrl(amountRupees: number, orderNumber: string) {
+  // Prices are stored as plain rupees (integer). UPI spec requires amount in rupees with 2 decimal places.
+  const amountStr = amountRupees.toFixed(2);
   const note = `HT-${orderNumber}`;
-  return `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_NAME)}&am=${amountRupees}&cu=INR&tn=${encodeURIComponent(note)}`;
+  return `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_NAME)}&am=${amountStr}&cu=INR&tn=${encodeURIComponent(note)}`;
 }
 
 function buildQrUrl(upiUrl: string) {
   return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}&ecc=M&color=3d1f00&bgcolor=fef9f5`;
 }
 
-function buildWhatsAppUrl(orderNumber: string, amountPaise: number) {
-  const amountRupees = (amountPaise / 100).toLocaleString('en-IN');
-  const msg = `Hi! I've paid ₹${amountRupees} for my Harmukh Threads order #${orderNumber} via UPI (${UPI_ID}). Please confirm my order. 🙏`;
+function buildWhatsAppUrl(orderNumber: string, amountRupees: number) {
+  const amountFormatted = amountRupees.toLocaleString('en-IN');
+  const msg = `Hi! I've paid ₹${amountFormatted} for my Harmukh Threads order #${orderNumber} via UPI (${UPI_ID}). Please confirm my order. 🙏`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
