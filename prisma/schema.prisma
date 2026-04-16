@@ -97,6 +97,7 @@ model ContactMessage {
   id        String        @id @default(cuid())
   name      String
   email     String
+  phone     String        @default("")
   subject   String
   message   String        @db.Text
   status    MessageStatus @default(NEW)

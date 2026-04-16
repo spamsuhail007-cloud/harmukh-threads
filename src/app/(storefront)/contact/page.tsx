@@ -27,6 +27,7 @@ export default function ContactPage() {
       const data = {
         name: fd.get('name'),
         email: fd.get('email'),
+        phone: fd.get('phone'),
         subject: fd.get('subject'),
         message: fd.get('message'),
         token,
@@ -78,15 +79,15 @@ export default function ContactPage() {
               <div className="contact-info-icon">☎</div>
               <div>
                 <div className="contact-info-label">Phone / WhatsApp</div>
-                <a href="tel:+911942470000" className="contact-info-value contact-link">+91 194 247 0000</a>
+                <a href="tel:+918491006127" className="contact-info-value contact-link">+91 84910 06127</a>
               </div>
             </div>
 
             <div className="contact-info-card">
               <div className="contact-info-icon">⌖</div>
               <div>
-                <div className="contact-info-label">Studio (By Appointment)</div>
-                <div className="contact-info-value">Residency Road<br />Srinagar, Kashmir 190001</div>
+                <div className="contact-info-label">STORE</div>
+                <div className="contact-info-value">Malabagh Naseem Bagh<br />Srinagar 190006</div>
               </div>
             </div>
 
@@ -129,6 +130,10 @@ export default function ContactPage() {
                       <label htmlFor="email" className="form-label">Email Address</label>
                       <input type="email" id="email" name="email" className="form-input" placeholder="you@example.com" required />
                     </div>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="phone" className="form-label">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" className="form-input" placeholder="+91 84910..." required />
                   </div>
                   <div className="form-group">
                     <label htmlFor="subject" className="form-label">Topic</label>

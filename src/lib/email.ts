@@ -326,7 +326,7 @@ export async function sendOrderStatusEmail(order: OrderEmailData, status: string
   }
 }
 
-export async function sendEnquiryCopyEmail(enquiry: { name: string; email: string; subject: string; message: string }) {
+export async function sendEnquiryCopyEmail(enquiry: { name: string; email: string; phone: string; subject: string; message: string }) {
   const html = `<!DOCTYPE html>
 <html lang="en">
 <body style="margin:0;padding:0;background:#f5ede4;font-family:'Georgia',serif;">
@@ -400,10 +400,11 @@ export async function sendAdminOrderNotification(order: OrderEmailData) {
   }
 }
 
-export async function sendAdminEnquiryNotification(enquiry: { name: string; email: string; subject: string; message: string }) {
+export async function sendAdminEnquiryNotification(enquiry: { name: string; email: string; phone: string; subject: string; message: string }) {
   const html = `
     <h2>New Contact Form Submission</h2>
     <p><strong>From:</strong> ${enquiry.name} (${enquiry.email})</p>
+    <p><strong>Phone:</strong> ${enquiry.phone}</p>
     <p><strong>Subject:</strong> ${enquiry.subject}</p>
     <hr/>
     <p>${enquiry.message.replace(/\n/g, '<br/>')}</p>

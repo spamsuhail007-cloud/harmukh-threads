@@ -8,6 +8,7 @@ import { verifyRecaptcha } from '@/lib/recaptcha';
 const ContactSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
+  phone: z.string().min(10, "Phone number is required"),
   subject: z.string().min(3),
   message: z.string().min(10),
   token: z.string().min(1),
