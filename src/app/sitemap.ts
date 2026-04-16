@@ -6,7 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Get active products
   const products = await db.product.findMany({
-    where: { isVisible: true },
+    where: { isActive: true },
     select: { slug: true, updatedAt: true },
   });
 
