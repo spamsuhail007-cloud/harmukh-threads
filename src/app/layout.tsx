@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     type: 'website',
   },
   metadataBase: new URL('https://harmukhthreads.com'),
+  verification: {
+    google: 'zpnQeh1_ikeL9SbySBI-QPOKimlz9F9CkGFa00qdXf8',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
