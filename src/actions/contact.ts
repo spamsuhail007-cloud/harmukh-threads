@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { sendEnquiryCopyEmail, sendAdminEnquiryNotification } from '@/lib/email';
 import { verifyRecaptcha } from '@/lib/recaptcha';
+import { sendTelegramAlert } from '@/lib/telegram';
 
 const ContactSchema = z.object({
   name: z.string().min(2),
@@ -30,6 +31,14 @@ export async function submitContactForm(data: unknown) {
     await db.contactMessage.create({ data: dbData });
     await sendEnquiryCopyEmail(dbData);
     await sendAdminEnquiryNotification(dbData);
+    await sendTelegramAlert(
+      `📩 <b>NEW ENQUIRY</b>\n` +
+      `👤 ${dbData.name}\n` +
+      `📞 ${dbData.phone}\n` +
+      `📬 ${dbData.email}\n` +
+      `💬 <b>${dbData.subject}</b>\n\n` +
+      `${dbData.message.slice(0, 200)}${dbData.message.length > 200 ? '...' : ''}`
+    );
     return { success: true };
   } catch {
     return { success: false, error: 'Something went wrong. Please try again.' };

@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { sendOrderConfirmationEmail, sendOrderStatusEmail, sendAdminOrderNotification } from '@/lib/email';
 import { verifyRecaptcha } from '@/lib/recaptcha';
+import { sendTelegramAlert } from '@/lib/telegram';
 
 const OrderSchema = z.object({
   firstName: z.string().min(1),
@@ -73,6 +74,16 @@ export async function createOrder(data: unknown) {
     await sendOrderConfirmationEmail(emailPayload);
     await sendAdminOrderNotification(emailPayload);
 
+    const itemSummary = items.map(i => `  • ${i.name} ×${i.qty}`).join('\n');
+    await sendTelegramAlert(
+      `🛒 <b>NEW ORDER</b> #${orderNumber}\n` +
+      `👤 ${customerData.firstName} ${customerData.lastName}\n` +
+      `📞 ${customerData.phone}\n` +
+      `💰 ₹${subtotal.toLocaleString('en-IN')}\n\n` +
+      `${itemSummary}\n\n` +
+      `🔗 <a href="https://harmukhthreads.com/admin/orders">View in Admin</a>`
+    );
+
     revalidatePath('/admin/orders');
     return { success: true, orderNumber: order.orderNumber, orderId: order.id };
   } catch (err) {
@@ -128,6 +139,15 @@ export async function updateOrderStatus(orderId: string, status: string) {
     } else if (['PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].includes(status)) {
       await sendOrderStatusEmail(orderData, status);
     }
+
+    const statusEmoji: Record<string, string> = {
+      CONFIRMED: '✅', PROCESSING: '⏳', SHIPPED: '✈️', DELIVERED: '🎁', CANCELLED: '❌'
+    };
+    await sendTelegramAlert(
+      `${statusEmoji[status] || '📦'} Order <b>#${order.orderNumber}</b> → <b>${status}</b>\n` +
+      `👤 ${order.firstName} ${order.lastName}\n` +
+      `💰 ₹${order.total.toLocaleString('en-IN')}`
+    );
   }
 
   revalidatePath('/admin/orders');
