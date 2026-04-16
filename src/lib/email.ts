@@ -160,9 +160,8 @@ function buildEmailHtml(order: OrderEmailData): string {
                 </div>
               </div>
 
-              <!-- CTA Button -->
               <div style="margin-top:28px;text-align:center;">
-                <a href="https://harmukh-threads.vercel.app/collections"
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://harmukhthreads.com'}/collections"
                    style="display:inline-block;background:#5c3d1e;color:#fef9f5;padding:14px 32px;border-radius:99px;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:0.04em;">
                   Continue Shopping →
                 </a>
