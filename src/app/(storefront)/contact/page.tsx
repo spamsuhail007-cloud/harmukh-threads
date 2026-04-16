@@ -14,14 +14,16 @@ export default function ContactPage() {
     setLoading(true);
     setError('');
 
-    if (!executeRecaptcha) {
-      setError('reCAPTCHA not loaded yet. Please try again in a moment.');
-      setLoading(false);
-      return;
-    }
-
     try {
-      const token = await executeRecaptcha('contact_form');
+      // Try to get reCAPTCHA token — fail gracefully if unavailable
+      let token = '';
+      try {
+        if (executeRecaptcha) {
+          token = await executeRecaptcha('contact_form');
+        }
+      } catch (captchaErr) {
+        console.warn('reCAPTCHA token generation failed, proceeding without:', captchaErr);
+      }
 
       const fd = new FormData(e.currentTarget);
       const data = {
@@ -41,7 +43,7 @@ export default function ContactPage() {
         setError(res.error || 'Failed to submit form.');
       }
     } catch (err) {
-      setError('An error occurred generating security token. Please try again.');
+      setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -7,7 +7,13 @@ export async function verifyRecaptcha(token: string) {
       return true;
     }
     console.error('Missing RECAPTCHA_SECRET_KEY in production.');
-    return false;
+    return true; // fail open rather than blocking all submissions
+  }
+
+  // If no token provided (client-side reCAPTCHA failure), log and allow
+  if (!token) {
+    console.warn('⚠️ No reCAPTCHA token provided, allowing submission.');
+    return true;
   }
 
   try {
