@@ -53,6 +53,19 @@ export default function EditProductForm({ product }: { product: Product }) {
   const [error, setError] = useState('');
   const [dragging, setDragging] = useState<number | null>(null);
 
+  const initialSpecs = Array.isArray((product as any).specifications) 
+    ? (product as any).specifications as { label: string; value: string }[]
+    : [];
+  const [specs, setSpecs] = useState<{ label: string; value: string }[]>(initialSpecs);
+
+  const handleAddSpec = () => setSpecs([...specs, { label: '', value: '' }]);
+  const handleRemoveSpec = (i: number) => setSpecs(specs.filter((_, idx) => idx !== i));
+  const handleSpecChange = (i: number, key: 'label' | 'value', val: string) => {
+    const newSpecs = [...specs];
+    newSpecs[i][key] = val;
+    setSpecs(newSpecs);
+  };
+
   const [slots, setSlots] = useState<ImageSlot[]>(
     product.images.map(url => ({ type: 'url' as const, url, preview: url }))
   );
@@ -123,15 +136,7 @@ export default function EditProductForm({ product }: { product: Product }) {
       images: finalUrls,
       badge: rawBadge || undefined,
       badgeType: rawBadge ? (formData.get('badgeType') as string) || 'badge-primary' : undefined,
-      dimensions: formData.get('dimensions') || undefined,
-      material: formData.get('material') || undefined,
-      origin: formData.get('origin') || undefined,
-      weight: formData.get('weight') || undefined,
-      shape: formData.get('shape') || undefined,
-      rugType: formData.get('rugType') || undefined,
-      embroidery: formData.get('embroidery') || undefined,
-      fabric: formData.get('fabric') || undefined,
-      craft: formData.get('craft') || undefined,
+      specifications: specs.filter(s => s.label.trim() && s.value.trim()),
       productNote: formData.get('productNote') || undefined,
     };
 
@@ -279,52 +284,32 @@ export default function EditProductForm({ product }: { product: Product }) {
           </div>
 
           <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
-            <h3 style={{ marginBottom: 'var(--space-md)', fontSize: '1.1rem' }}>Product Specifications</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-md)' }}>
-              <div className="form-group">
-                <label className="form-label">Dimensions</label>
-                <input type="text" name="dimensions" className="form-input" placeholder="e.g. 72x44 inches" defaultValue={product.dimensions ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Weight</label>
-                <input type="text" name="weight" className="form-input" placeholder="e.g. 4.4 kg" defaultValue={(product as any).weight ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Shape</label>
-                <input type="text" name="shape" className="form-input" placeholder="e.g. Rectangle" defaultValue={(product as any).shape ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Material / Fabric</label>
-                <input type="text" name="material" className="form-input" placeholder="e.g. Pure Wool" defaultValue={product.material ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Fabric Type</label>
-                <input type="text" name="fabric" className="form-input" placeholder="e.g. Hand Woven" defaultValue={(product as any).fabric ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Embroidery</label>
-                <input type="text" name="embroidery" className="form-input" placeholder="e.g. Hand Embroidery" defaultValue={(product as any).embroidery ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Type of Rug</label>
-                <input type="text" name="rugType" className="form-input" placeholder="e.g. Namda Rug" defaultValue={(product as any).rugType ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Craft</label>
-                <input type="text" name="craft" className="form-input" placeholder="e.g. Kashmiri Namdas" defaultValue={(product as any).craft ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Origin</label>
-                <input type="text" name="origin" className="form-input" placeholder="e.g. Srinagar" defaultValue={product.origin ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Weave Time</label>
-                <input type="text" name="weaveTime" className="form-input" placeholder="e.g. 3 months" defaultValue={product.weaveTime ?? ''} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Knot Density</label>
-                <input type="text" name="knotDensity" className="form-input" placeholder="e.g. 100 knots/in²" defaultValue={product.knotDensity ?? ''} />
-              </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-md)' }}>
+              <h3 style={{ fontSize: '1.1rem', margin: 0 }}>Product Specifications</h3>
+              <button type="button" className="btn btn-ghost" onClick={handleAddSpec} style={{ padding: '6px 12px', fontSize: '0.85rem' }}>
+                + Add Specification
+              </button>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+              {specs.length === 0 && (
+                <div style={{ padding: 'var(--space-xl)', textAlign: 'center', background: 'var(--surface-container)', borderRadius: 'var(--radius-md)', color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>
+                  No specifications added yet. Click "+ Add Specification" to start adding custom details.
+                </div>
+              )}
+              {specs.map((spec, i) => (
+                <div key={i} style={{ display: 'flex', gap: 'var(--space-sm)', alignItems: 'flex-start' }}>
+                  <div className="form-group" style={{ margin: 0, flex: 1 }}>
+                    <input type="text" className="form-input" placeholder="Label (e.g. Material)" value={spec.label} onChange={e => handleSpecChange(i, 'label', e.target.value)} />
+                  </div>
+                  <div className="form-group" style={{ margin: 0, flex: 2 }}>
+                    <input type="text" className="form-input" placeholder="Value (e.g. Silk & Wool)" value={spec.value} onChange={e => handleSpecChange(i, 'value', e.target.value)} />
+                  </div>
+                  <button type="button" onClick={() => handleRemoveSpec(i)} style={{ padding: '10px', background: 'none', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#dc2626' }}>
+                    ✕
+                  </button>
+                </div>
+              ))}
             </div>
             <div className="form-group" style={{ marginTop: 'var(--space-md)' }}>
               <label className="form-label">Product Note <span style={{ fontWeight: 400, textTransform: 'none' }}>(shown at bottom of description)</span></label>

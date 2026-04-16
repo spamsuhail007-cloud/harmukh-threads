@@ -179,10 +179,10 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
   const handlePrev = () => { goPrev(); resetAutoplay(); };
   const handleNext = () => { goNext(); resetAutoplay(); };
 
-  const hasSpecs = product.dimensions || product.material || product.origin || product.weaveTime
-    || product.knotDensity || (product as any).weight || (product as any).shape
-    || (product as any).rugType || (product as any).embroidery
-    || (product as any).fabric || (product as any).craft;
+  const specs = Array.isArray((product as any).specifications) 
+    ? (product as any).specifications as { label: string; value: string }[] 
+    : [];
+  const hasSpecs = specs.length > 0;
 
   const isOnSale = product.originalPrice && product.originalPrice > product.price;
   const discountPct = isOnSale ? Math.round((1 - product.price / product.originalPrice!) * 100) : 0;
@@ -333,20 +333,8 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
             <div className="pdp-section">
               <h2 className="pdp-section-title">Specifications</h2>
               <div className="pdp-specs">
-                {[
-                  { label: 'Dimensions', value: product.dimensions },
-                  { label: 'Weight', value: (product as any).weight },
-                  { label: 'Shape', value: (product as any).shape },
-                  { label: 'Type of Rug', value: (product as any).rugType },
-                  { label: 'Material', value: product.material },
-                  { label: 'Fabric', value: (product as any).fabric },
-                  { label: 'Embroidery', value: (product as any).embroidery },
-                  { label: 'Craft', value: (product as any).craft },
-                  { label: 'Origin', value: product.origin },
-                  { label: 'Weave Time', value: product.weaveTime },
-                  { label: 'Knot Density', value: product.knotDensity },
-                ].filter(r => r.value).map((row, i) => (
-                  <div className="pdp-spec-row" key={row.label}
+                {specs.filter(r => r.label && r.value).map((row, i) => (
+                  <div className="pdp-spec-row" key={row.label + i}
                     style={{ background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
                     <span className="pdp-spec-label">{row.label}</span>
                     <span className="pdp-spec-value">{row.value}</span>
