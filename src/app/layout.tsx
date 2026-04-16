@@ -4,11 +4,11 @@ import { Providers } from '@/components/providers/Providers';
 
 export const metadata: Metadata = {
   title: { default: 'Harmukh Threads — Premium Kashmir Handicrafts', template: '%s | Harmukh Threads' },
-  description: 'Hand-knotted rugs, pure pashmina shawls, and authentic Kashmir handicrafts. Each piece carries 600 years of tradition.',
-  keywords: ['Kashmir rugs', 'pashmina shawls', 'Kashmir handicrafts', 'hand-knotted rug', 'authentic Kashmir'],
+  description: 'Hand-knotted rugs and exquisite pillow covers. Each piece carries 600 years of tradition.',
+  keywords: ['Kashmir rugs', 'pillow covers', 'Kashmir handicrafts', 'hand-knotted rug', 'authentic Kashmir'],
   openGraph: {
     title: 'Harmukh Threads — Premium Kashmir Handicrafts',
-    description: 'Hand-knotted rugs, pure pashmina shawls, and authentic Kashmir handicrafts.',
+    description: 'Hand-knotted rugs and exquisite pillow covers.',
     type: 'website',
   },
 };

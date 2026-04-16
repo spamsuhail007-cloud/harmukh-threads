@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: 'Return & Exchange Policy | Harmukh Threads',
   description:
-    'Learn about our hassle-free return and exchange policy for hand-knotted rugs, pashmina, and Kashmir artisan products.',
+    'Learn about our hassle-free return and exchange policy for hand-knotted rugs and pillow covers.',
 };
 
 const sections = [
@@ -18,8 +18,7 @@ const sections = [
     title: 'Eligible Items',
     content: `The following items are eligible for return or exchange:
 - Hand-knotted rugs (undamaged, uninstalled)
-- Pashmina shawls (unworn, unwashed)
-- Home furnishings (unused, in original packaging)
+- Pillow covers (unused, in original packaging)
 
 **Custom-made or personalised orders are non-returnable.**`,
   },

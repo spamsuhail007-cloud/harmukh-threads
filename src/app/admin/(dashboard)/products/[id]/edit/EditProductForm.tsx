@@ -174,9 +174,7 @@ export default function EditProductForm({ product }: { product: Product }) {
               <label className="form-label">Category *</label>
               <select name="category" className="form-input" required defaultValue={product.category}>
                 <option value="Rugs">Rugs</option>
-                <option value="Pashmina">Pashmina</option>
-                <option value="Furnishings">Furnishings</option>
-                <option value="Woodcraft">Woodcraft</option>
+                <option value="Pillow Covers">Pillow Covers</option>
               </select>
             </div>
           </div>

@@ -88,7 +88,7 @@ export function SearchBar({
         ref={inputRef}
         type="search"
         id="product-search"
-        placeholder={searchMode ? 'Search our collection…' : 'Search rugs, pashmina, woodcraft…'}
+        placeholder={searchMode ? 'Search our collection…' : 'Search rugs, pillow covers…'}
         value={value}
         onChange={e => setValue(e.target.value)}
         style={{

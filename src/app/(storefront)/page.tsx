@@ -25,7 +25,7 @@ export default async function HomePage() {
           </h1>
           <p className="hero-body">
             Direct from the karkhanas of Kashmir. Discover museum-quality
-            hand-knotted rugs, pure pashmina, and silken furnishings woven by master
+            hand-knotted rugs and hand-crafted pillow covers woven by master
             artisans.
           </p>
           <div className="hero-actions">
@@ -98,10 +98,10 @@ export default async function HomePage() {
               category="Rugs"
             />
             <CollectionCard
-              title="Pure Pashmina"
+              title="Pillow Covers"
               count="8"
-              image="https://images.unsplash.com/photo-1577198239986-fc433ee95de3?w=600&q=80"
-              category="Pashmina"
+              image="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=600&q=80"
+              category="Pillow Covers"
             />
           </div>
         </div>

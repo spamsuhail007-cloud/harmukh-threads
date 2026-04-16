@@ -14,7 +14,7 @@ export default function StoryPage() {
           <h1>Hands that weave<br />history.</h1>
           <p>
             In the secluded valleys of Kashmir, time moves differently. Here, a single rug
-            takes months to knot. A pashmina takes a season to weave. Discover the
+            takes months to knot. A finely crafted pillow cover takes weeks to weave. Discover the
             artisans behind Harmukh Threads.
           </p>
         </div>
@@ -28,7 +28,7 @@ export default function StoryPage() {
             <p className="section-lead" style={{ marginBottom: 'var(--space-lg)' }}>
               Unlike industrial manufacturing, our process relies entirely on human hands, 
               passed down through generations of families in Srinagar, Anantnag, and Pampore.
-              Each knot in our rugs is tied individually. Each thread in our pashminas is 
+              Each knot in our rugs is tied individually. Each thread in our pillow covers is 
               spun on a traditional <em>charkha</em>.
             </p>
             <p className="section-lead">
@@ -65,7 +65,7 @@ export default function StoryPage() {
         <div className="artisan-grid">
           <img
             src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=80"
-            alt="Pashmina weaving"
+            alt="Artisan loom weaving"
             className="artisan-img"
           />
           <div>

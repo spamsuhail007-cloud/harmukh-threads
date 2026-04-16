@@ -39,7 +39,7 @@ export default async function SearchPage({
             <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-            <p>Type something above to search our collection — rugs, pashmina, woodcraft and more.</p>
+            <p>Type something above to search our collection — rugs and pillow covers.</p>
           </div>
         )}
 
