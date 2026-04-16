@@ -1842,26 +1842,20 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 /* ============================================================
-   ENQUIRY MODAL  —  compact, always centred, no page scroll
+   ENQUIRY MODAL — bottom sheet on mobile, centred on desktop
    ============================================================ */
 
-/* Backdrop — covers 100dvh so it works on mobile too */
+/* ── Shared backdrop ── */
 .enq-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100dvh;          /* dynamic viewport height for mobile */
+  top: 0; left: 0; right: 0; bottom: 0;
   width: 100vw;
-  background: rgba(20, 18, 14, 0.60);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  z-index: 99999;           /* above everything including navbar */
+  height: 100dvh;
+  background: rgba(20, 18, 14, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 99999;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
   box-sizing: border-box;
   animation: enqFade 0.18s ease;
 }
@@ -1870,22 +1864,67 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   to   { opacity: 1; }
 }
 
-/* Panel — scrolls internally, never overflows viewport */
+/* ── Desktop (>= 541px): centred panel ── */
+@media (min-width: 541px) {
+  .enq-backdrop {
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .enq-panel {
+    animation: enqSlideUp 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius: 16px;
+    max-height: calc(100dvh - 48px);
+  }
+  @keyframes enqSlideUp {
+    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+}
+
+/* ── Mobile (<= 540px): bottom sheet ── */
+@media (max-width: 540px) {
+  .enq-backdrop {
+    align-items: flex-end;   /* stick to bottom */
+    justify-content: center;
+    padding: 0;
+  }
+  .enq-panel {
+    border-radius: 20px 20px 0 0;   /* rounded top only */
+    max-height: 88dvh;               /* leave a sliver of backdrop at top */
+    animation: enqSheetUp 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes enqSheetUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  /* Drag-handle pill at top of sheet */
+  .enq-panel::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: #d4cfc8;
+    margin: 10px auto 0;
+    flex-shrink: 0;
+  }
+  .enq-header { padding: 12px 16px 14px; }
+  .enq-body   { padding: 12px 16px 24px; }
+  .enq-grid-2 { grid-template-columns: 1fr; gap: 10px; }
+}
+
+/* ── Shared panel styles ── */
 .enq-panel {
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 -4px 32px rgba(0,0,0,0.18), 0 20px 60px rgba(0,0,0,0.22);
   width: 100%;
   max-width: 520px;
-  max-height: calc(100dvh - 32px);   /* always fits in viewport */
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  animation: enqSlide 0.24s cubic-bezier(0.22, 1, 0.36, 1);
-}
-@keyframes enqSlide {
-  from { opacity: 0; transform: translateY(16px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  /* overscroll so inner scroll doesn't bleed to backdrop */
+  overscroll-behavior: contain;
 }
 
 /* Header */
@@ -1896,7 +1935,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   gap: 12px;
   padding: 20px 20px 16px;
   border-bottom: 1px solid #eee;
-  flex-shrink: 0;         /* never squish the header */
+  flex-shrink: 0;
 }
 .enq-kicker {
   font-size: 0.65rem;
@@ -1931,19 +1970,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .enq-close:hover { background: #e8e4dd; color: #222; }
 
-/* Body — this part is scrollable if needed */
+/* Scrollable body */
 .enq-body {
   padding: 16px 20px 20px;
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-/* Compact form */
-.enq-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+/* Form */
+.enq-form { display: flex; flex-direction: column; gap: 12px; }
 .enq-intro {
   font-size: 0.83rem;
   color: var(--on-surface-variant);
@@ -1955,11 +1991,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
-.enq-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+.enq-field { display: flex; flex-direction: column; gap: 4px; }
 .enq-label {
   font-size: 0.75rem;
   font-weight: 600;
@@ -1967,14 +1999,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   letter-spacing: 0.02em;
 }
 .enq-req { color: var(--primary); }
-/* Compact inputs inside modal */
 .enq-input {
   padding: 8px 12px !important;
   font-size: 0.88rem !important;
   border-radius: 8px !important;
 }
 
-/* Success */
+/* Success state */
 .enq-success {
   display: flex;
   flex-direction: column;
@@ -2006,11 +2037,4 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   line-height: 1.6;
   margin: 0;
   max-width: 320px;
-}
-
-@media (max-width: 480px) {
-  .enq-grid-2 { grid-template-columns: 1fr; gap: 10px; }
-  .enq-panel { border-radius: 14px; }
-  .enq-header { padding: 16px 16px 14px; }
-  .enq-body { padding: 14px 16px 16px; }
 }
