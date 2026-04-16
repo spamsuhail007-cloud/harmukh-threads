@@ -43,3 +43,16 @@ export async function getCategories(): Promise<string[]> {
   });
   return cats.map(c => c.category);
 }
+
+export async function getRelatedProducts(
+  category: string,
+  excludeSlug: string,
+  limit = 4
+): Promise<Product[]> {
+  return db.product.findMany({
+    where: { isActive: true, category, NOT: { slug: excludeSlug } },
+    take: limit,
+    orderBy: { createdAt: 'desc' },
+  });
+}
+

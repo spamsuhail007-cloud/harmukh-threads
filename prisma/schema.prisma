@@ -35,11 +35,23 @@ model Product {
   isActive      Boolean     @default(true)
   reviews       Review[]
   orderItems    OrderItem[]
+  stockNotifications StockNotification[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
   @@index([category])
   @@index([slug])
+}
+
+model StockNotification {
+  id        String   @id @default(cuid())
+  email     String
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([email, productId])
+  @@index([productId])
 }
 
 model Review {
