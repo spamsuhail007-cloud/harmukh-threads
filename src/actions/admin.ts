@@ -6,11 +6,13 @@ import { slugify } from '@/lib/utils';
 
 export async function updateStock(productId: string, stock: number) {
   await db.product.update({ where: { id: productId }, data: { stock } });
+  revalidatePath('/');
   revalidatePath('/admin/inventory');
 }
 
 export async function toggleProductStatus(productId: string, isActive: boolean) {
   await db.product.update({ where: { id: productId }, data: { isActive } });
+  revalidatePath('/');
   revalidatePath('/admin/inventory');
   revalidatePath('/collections');
 }
@@ -36,6 +38,7 @@ export async function createProduct(data: unknown) {
   const slug = slugify(parsed.data.name);
   try {
     await db.product.create({ data: { ...parsed.data, slug } });
+    revalidatePath('/');
     revalidatePath('/collections');
     revalidatePath('/admin/inventory');
     return { success: true };
@@ -50,6 +53,7 @@ export async function updateProduct(id: string, data: unknown) {
 
   try {
     await db.product.update({ where: { id }, data: parsed.data });
+    revalidatePath('/');
     revalidatePath('/collections');
     revalidatePath('/admin/inventory');
     return { success: true };
@@ -61,6 +65,7 @@ export async function updateProduct(id: string, data: unknown) {
 export async function deleteProduct(id: string) {
   try {
     await db.product.delete({ where: { id } });
+    revalidatePath('/');
     revalidatePath('/collections');
     revalidatePath('/admin/inventory');
     return { success: true };
