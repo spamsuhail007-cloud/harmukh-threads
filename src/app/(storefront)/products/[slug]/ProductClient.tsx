@@ -7,6 +7,7 @@ import { formatPrice } from '@/lib/utils';
 import { useCart } from '@/components/providers/CartProvider';
 import { type Product, type Review } from '@prisma/client';
 import { ProductCard } from '@/components/ui/ProductCard';
+import { EnquiryModal } from '@/components/ui/EnquiryModal';
 
 type ProductClientProps = {
   product: Product & { reviews: Review[] };
@@ -141,6 +142,7 @@ function ShareButtons({ product }: { product: Product }) {
 export function ProductClient({ product, relatedProducts }: ProductClientProps) {
   const [mainIdx, setMainIdx] = useState(0);
   const [added, setAdded] = useState(false);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
   const { add } = useCart();
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -300,7 +302,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
                   </>
                 )}
               </button>
-              <Link href="/contact" className="btn btn-secondary pdp-btn-enquire">Enquire</Link>
+              <button className="btn btn-secondary pdp-btn-enquire" onClick={() => setEnquiryOpen(true)}>Enquire</button>
             </div>
           ) : (
             <div style={{ marginBottom: 'var(--space-lg)' }}>
@@ -439,6 +441,14 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
             </div>
           </div>
         </div>
+      )}
+
+      {/* ── Enquiry Modal ── */}
+      {enquiryOpen && (
+        <EnquiryModal
+          productName={product.name}
+          onClose={() => setEnquiryOpen(false)}
+        />
       )}
     </div>
   );
