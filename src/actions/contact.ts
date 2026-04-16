@@ -28,20 +28,28 @@ export async function submitContactForm(data: unknown) {
 
   try {
     const { token, ...dbData } = parsed.data;
+
+    // Critical: save to DB — if this fails, return error
     await db.contactMessage.create({ data: dbData });
-    await sendEnquiryCopyEmail(dbData);
-    await sendAdminEnquiryNotification(dbData);
-    await sendTelegramAlert(
-      `📩 <b>NEW ENQUIRY</b>\n` +
-      `👤 ${dbData.name}\n` +
-      `📞 ${dbData.phone}\n` +
-      `📬 ${dbData.email}\n` +
-      `💬 <b>${dbData.subject}</b>\n\n` +
-      `${dbData.message.slice(0, 200)}${dbData.message.length > 200 ? '...' : ''}`
-    );
+
+    // Non-critical: send notifications — failures are logged but don't block
+    Promise.allSettled([
+      sendEnquiryCopyEmail(dbData),
+      sendAdminEnquiryNotification(dbData),
+      sendTelegramAlert(
+        `📩 <b>NEW ENQUIRY</b>\n` +
+        `👤 ${dbData.name}\n` +
+        `📞 ${dbData.phone}\n` +
+        `📬 ${dbData.email}\n` +
+        `💬 <b>${dbData.subject}</b>\n\n` +
+        `${dbData.message.slice(0, 200)}${dbData.message.length > 200 ? '...' : ''}`
+      ),
+    ]).catch(err => console.error('[Notifications] Error:', err));
+
     return { success: true };
-  } catch {
-    return { success: false, error: 'Something went wrong. Please try again.' };
+  } catch (err) {
+    console.error('[ContactForm] Error saving message:', err);
+    return { success: false, error: 'Something went wrong saving your message. Please try again.' };
   }
 }
 
