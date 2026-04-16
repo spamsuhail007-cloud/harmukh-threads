@@ -21,6 +21,7 @@ const ProductSchema = z.object({
   price: z.coerce.number().min(1),
   originalPrice: z.coerce.number().optional(),
   badge: z.string().optional(),
+  badgeType: z.string().optional(),
   description: z.string().min(10),
   dimensions: z.string().optional(),
   material: z.string().optional(),

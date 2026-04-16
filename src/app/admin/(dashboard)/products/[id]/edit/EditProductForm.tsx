@@ -113,6 +113,7 @@ export default function EditProductForm({ product }: { product: Product }) {
 
     setSubmitStatus('Saving changes…');
     const formData = new FormData(e.currentTarget);
+    const rawBadge = (formData.get('badge') as string)?.trim();
     const data = {
       name: formData.get('name'),
       category: formData.get('category'),
@@ -120,6 +121,8 @@ export default function EditProductForm({ product }: { product: Product }) {
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
       images: finalUrls,
+      badge: rawBadge || undefined,
+      badgeType: rawBadge ? (formData.get('badgeType') as string) || 'badge-primary' : undefined,
       dimensions: formData.get('dimensions') || undefined,
       material: formData.get('material') || undefined,
       origin: formData.get('origin') || undefined,
@@ -239,6 +242,37 @@ export default function EditProductForm({ product }: { product: Product }) {
               )}
             </div>
             <p style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginTop: '8px' }}>Drag to reorder. First image is the hero image shown on listings.</p>
+          </div>
+
+          {/* Badge section */}
+          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
+            <h3 style={{ marginBottom: 'var(--space-sm)', fontSize: '1.1rem' }}>Product Badge</h3>
+            <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--space-md)' }}>
+              Optional pill shown on the product card. Leave blank to remove badge.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label">Badge Text</label>
+                <input
+                  type="text"
+                  name="badge"
+                  className="form-input"
+                  placeholder="e.g. Best Seller, GI Tagged, New Arrival…"
+                  maxLength={30}
+                  defaultValue={product.badge ?? ''}
+                />
+              </div>
+              <div className="form-group" style={{ margin: 0 }}>
+                <label className="form-label">Badge Colour Style</label>
+                <select name="badgeType" className="form-input" defaultValue={product.badgeType ?? 'badge-primary'}>
+                  <option value="badge-primary">🟠 Amber — Best Seller / Featured</option>
+                  <option value="badge-gi">🟢 Green — GI Tagged / Certified</option>
+                  <option value="badge-new">🔵 Blue — New Arrival</option>
+                  <option value="badge-sale">🔴 Red — Sale / Offer</option>
+                  <option value="badge-secondary">🟡 Gold — Heritage / Premium</option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div className="form-group">
