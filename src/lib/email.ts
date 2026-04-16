@@ -218,7 +218,12 @@ function buildStatusHtml(order: OrderEmailData, status: string): string {
   let bgBanner = "#dcfce7";
   let icon = "📦";
 
-  if (status === 'SHIPPED') {
+  if (status === 'PROCESSING') {
+    title = "Order Processing";
+    subtitle = `Your order <strong>#${order.orderNumber}</strong> is currently being processed by our artisans.`;
+    bgBanner = "#fef3c7";
+    icon = "⏳";
+  } else if (status === 'SHIPPED') {
     title = "Order Shipped!";
     subtitle = `Your order <strong>#${order.orderNumber}</strong> has been shipped and is on its way!`;
     bgBanner = "#dbeafe";
@@ -298,6 +303,7 @@ function buildStatusHtml(order: OrderEmailData, status: string): string {
 export async function sendOrderStatusEmail(order: OrderEmailData, status: string) {
   try {
     let subjectIcon = '📦';
+    if (status === 'PROCESSING') subjectIcon = '⏳';
     if (status === 'SHIPPED') subjectIcon = '✈️';
     if (status === 'DELIVERED') subjectIcon = '🎁';
     if (status === 'CANCELLED') subjectIcon = '❌';

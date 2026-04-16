@@ -105,7 +105,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
 
     if (status === 'CONFIRMED') {
       await sendOrderConfirmationEmail(orderData);
-    } else if (['SHIPPED', 'DELIVERED', 'CANCELLED'].includes(status)) {
+    } else if (['PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].includes(status)) {
       await sendOrderStatusEmail(orderData, status);
     }
   }
