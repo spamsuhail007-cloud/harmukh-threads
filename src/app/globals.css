@@ -1842,150 +1842,175 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 /* ============================================================
-   ENQUIRY MODAL
+   ENQUIRY MODAL  —  compact, always centred, no page scroll
    ============================================================ */
-.modal-backdrop {
+
+/* Backdrop — covers 100dvh so it works on mobile too */
+.enq-backdrop {
   position: fixed;
-  inset: 0;
-  background: rgba(28, 28, 24, 0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 9000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100dvh;          /* dynamic viewport height for mobile */
+  width: 100vw;
+  background: rgba(20, 18, 14, 0.60);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 99999;           /* above everything including navbar */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-lg);
-  animation: modalFadeIn 0.2s ease;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: enqFade 0.18s ease;
 }
-@keyframes modalFadeIn {
+@keyframes enqFade {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-.modal-panel {
-  background: var(--surface-container-lowest);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+/* Panel — scrolls internally, never overflows viewport */
+.enq-panel {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.1);
   width: 100%;
-  max-width: 560px;
-  max-height: 90vh;
+  max-width: 520px;
+  max-height: calc(100dvh - 32px);   /* always fits in viewport */
   overflow-y: auto;
-  animation: modalSlideUp 0.28s cubic-bezier(0.34,1.28,0.64,1);
+  display: flex;
+  flex-direction: column;
+  animation: enqSlide 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
-@keyframes modalSlideUp {
-  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+@keyframes enqSlide {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.modal-header {
+/* Header */
+.enq-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-md);
-  padding: var(--space-xl) var(--space-xl) 0;
-  border-bottom: 1px solid var(--outline-variant);
-  padding-bottom: var(--space-lg);
+  gap: 12px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;         /* never squish the header */
 }
-.modal-kicker {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+.enq-kicker {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--primary);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
-.modal-title {
+.enq-title {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--on-surface);
-  line-height: 1.3;
+  line-height: 1.25;
   margin: 0;
 }
-.modal-close-btn {
-  background: var(--surface-container);
+.enq-close {
+  background: #f5f3ef;
   border: none;
-  border-radius: var(--radius-full);
-  width: 36px;
-  height: 36px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--on-surface-variant);
-  flex-shrink: 0;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  color: #666;
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
 }
-.modal-close-btn:hover {
-  background: var(--surface-container-high);
-  color: var(--on-surface);
+.enq-close:hover { background: #e8e4dd; color: #222; }
+
+/* Body — this part is scrollable if needed */
+.enq-body {
+  padding: 16px 20px 20px;
+  flex: 1;
+  overflow-y: auto;
 }
 
-.modal-body {
-  padding: var(--space-xl);
+/* Compact form */
+.enq-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: 12px;
 }
-
-/* Form layout inside modal */
-.enquiry-intro {
-  font-size: 0.88rem;
+.enq-intro {
+  font-size: 0.83rem;
   color: var(--on-surface-variant);
-  line-height: 1.6;
-  margin: 0;
+  line-height: 1.5;
+  margin: 0 0 4px;
 }
-.enquiry-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-.enquiry-row {
+.enq-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-md);
+  gap: 10px;
 }
-.form-required {
-  color: var(--primary);
-  margin-left: 2px;
+.enq-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.enq-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  letter-spacing: 0.02em;
+}
+.enq-req { color: var(--primary); }
+/* Compact inputs inside modal */
+.enq-input {
+  padding: 8px 12px !important;
+  font-size: 0.88rem !important;
+  border-radius: 8px !important;
 }
 
-/* Success state */
-.enquiry-success {
+/* Success */
+.enq-success {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: var(--space-xl) 0;
-  gap: var(--space-md);
+  gap: 12px;
+  padding: 12px 0 8px;
 }
-.enquiry-success-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-full);
+.enq-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
   background: #dcfce7;
   color: #16a34a;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.enquiry-success h3 {
+.enq-success h3 {
   font-family: var(--font-serif);
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--on-surface);
   margin: 0;
 }
-.enquiry-success p {
-  font-size: 0.9rem;
+.enq-success p {
+  font-size: 0.87rem;
   color: var(--on-surface-variant);
-  line-height: 1.7;
-  max-width: 340px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 320px;
 }
 
-@media (max-width: 540px) {
-  .modal-panel { border-radius: var(--radius-lg); }
-  .enquiry-row { grid-template-columns: 1fr; }
-  .modal-body { padding: var(--space-lg); }
-  .modal-header { padding: var(--space-lg) var(--space-lg) var(--space-md); }
+@media (max-width: 480px) {
+  .enq-grid-2 { grid-template-columns: 1fr; gap: 10px; }
+  .enq-panel { border-radius: 14px; }
+  .enq-header { padding: 16px 16px 14px; }
+  .enq-body { padding: 14px 16px 16px; }
 }
