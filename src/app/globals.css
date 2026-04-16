@@ -1840,3 +1840,196 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: 0.95rem;
   line-height: 1.7;
 }
+
+/* ============================================================
+   PRODUCT BADGES
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 99px;
+  line-height: 1;
+}
+
+.product-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.product-page-badge {
+  margin-bottom: var(--space-sm);
+  display: inline-flex;
+}
+
+.badge-primary { background: #f59e0b; color: #fff; }     /* Amber for Bestseller */
+.badge-gi { background: #e0e9cc; color: #3b5f16; }       /* Subtle Green for GI Tagged */
+.badge-new { background: #dbeafe; color: #1e40af; }      /* Blue for New Arrival */
+.badge-sale { background: #fee2e2; color: #991b1b; }     /* Red for Sale */
+.badge-secondary { background: #fef08a; color: #854d0e; } /* Gold for Premium */
+
+
+/* ============================================================
+   ADMIN DASHBOARD NOTIFICATIONS (TOAST & PILL)
+   ============================================================ */
+
+/* Red notification pill in the sidebar */
+.admin-notif-pill {
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-left: 8px;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.4);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Toast Container (bottom right screen) */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none; /* Let clicks pass through container */
+}
+
+/* Toast Card */
+.toast {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.06);
+  padding: 16px 20px;
+  display: flex;
+  gap: 16px;
+  width: 320px;
+  border-left: 4px solid var(--primary);
+  pointer-events: auto; /* Catch clicks on the toast itself */
+  overflow: hidden;
+  animation: toastSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: bottom center;
+}
+
+.toast-exit {
+  animation: toastFadeOut 0.3s ease forwards;
+}
+
+@keyframes toastSlideIn {
+  from { transform: translateX(120%) scale(0.9); opacity: 0; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+@keyframes toastFadeOut {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(0.95); opacity: 0; }
+}
+
+/* Toast variants */
+.toast-order { border-left-color: #f59e0b; }
+.toast-message { border-left-color: #3b82f6; }
+
+.toast-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.toast-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toast-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #111;
+  line-height: 1.2;
+}
+
+.toast-sub {
+  font-size: 0.8rem;
+  color: #666;
+  line-height: 1.4;
+  /* Truncate long lines */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.toast-action {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+  transition: opacity 0.2s;
+}
+.toast-action:hover { opacity: 0.7; }
+
+/* Dismiss button */
+.toast-close {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  height: max-content;
+  transition: color 0.2s;
+}
+.toast-close:hover { color: #333; }
+
+/* Countdown progress bar at bottom of toast */
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(0,0,0,0.1);
+  width: 100%;
+  transform-origin: left;
+  animation: toastTimer var(--toast-duration, 5s) linear forwards;
+}
+@keyframes toastTimer {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* Mobile toast adjustments */
+@media (max-width: 600px) {
+  .toast-container {
+    bottom: unset;
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    align-items: stretch;
+  }
+  .toast {
+    width: auto; /* stretch to fill container width */
+  }
+  @keyframes toastSlideIn {
+    from { transform: translateY(-120%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+}
