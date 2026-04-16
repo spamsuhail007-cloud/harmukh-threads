@@ -12,7 +12,7 @@ const ContactSchema = z.object({
   phone: z.string().min(10, "Phone number is required"),
   subject: z.string().min(3),
   message: z.string().min(10),
-  token: z.string().min(1),
+  token: z.string(),
 });
 
 export async function submitContactForm(data: unknown) {
