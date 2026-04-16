@@ -959,13 +959,38 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   justify-content: center;
   transition: background var(--transition-fast), transform var(--transition-fast);
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
+  /* always visible — no zoom/lightbox trigger */
+  opacity: 0.75;
 }
-.pdp-main-image-btn:hover .pdp-arrow { opacity: 1; }
-.pdp-arrow:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+.pdp-arrow:hover { background: #fff; opacity: 1; transform: translateY(-50%) scale(1.08); }
 .pdp-arrow-left { left: 12px; }
 .pdp-arrow-right { right: 12px; }
+
+/* Inline dot indicators (bottom of image, replaces lightbox dots) */
+.pdp-dots-inline {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 4;
+  pointer-events: all;
+}
+.pdp-dot-inline {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: rgba(100,80,60,0.3);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  padding: 0;
+}
+.pdp-dot-inline.active {
+  background: var(--primary);
+  transform: scale(1.3);
+}
 
 /* ── Info panel ── */
 .pdp-info {

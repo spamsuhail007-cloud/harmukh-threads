@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatPrice } from '@/lib/utils';
@@ -27,9 +27,9 @@ function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
 
 export function ProductClient({ product }: ProductClientProps) {
   const [mainIdx, setMainIdx] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [added, setAdded] = useState(false);
   const { add } = useCart();
+  const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const totalImages = product.images.length;
 
@@ -50,11 +50,26 @@ export function ProductClient({ product }: ProductClientProps) {
   const goNext = useCallback(() => setMainIdx(i => (i + 1) % totalImages), [totalImages]);
   const goPrev = useCallback(() => setMainIdx(i => (i - 1 + totalImages) % totalImages), [totalImages]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowRight') goNext();
-    if (e.key === 'ArrowLeft') goPrev();
-    if (e.key === 'Escape') setLightboxOpen(false);
-  }, [goNext, goPrev]);
+  // ── Auto-loop every 6 seconds ──
+  const resetAutoplay = useCallback(() => {
+    if (autoplayRef.current) clearInterval(autoplayRef.current);
+    if (totalImages > 1) {
+      autoplayRef.current = setInterval(goNext, 6000);
+    }
+  }, [goNext, totalImages]);
+
+  useEffect(() => {
+    resetAutoplay();
+    return () => { if (autoplayRef.current) clearInterval(autoplayRef.current); };
+  }, [resetAutoplay]);
+
+  // On manual nav, restart the 6s timer
+  const handleThumbClick = (i: number) => {
+    setMainIdx(i);
+    resetAutoplay();
+  };
+  const handlePrev = () => { goPrev(); resetAutoplay(); };
+  const handleNext = () => { goNext(); resetAutoplay(); };
 
   const hasSpecs = product.dimensions || product.material || product.origin || product.weaveTime
     || product.knotDensity || (product as any).weight || (product as any).shape
@@ -88,7 +103,7 @@ export function ProductClient({ product }: ProductClientProps) {
               {product.images.map((img, i) => (
                 <button
                   key={i}
-                  onClick={() => setMainIdx(i)}
+                  onClick={() => handleThumbClick(i)}
                   aria-label={`View image ${i + 1}`}
                   className={`pdp-thumb${mainIdx === i ? ' active' : ''}`}
                 >
@@ -98,32 +113,20 @@ export function ProductClient({ product }: ProductClientProps) {
             </div>
           )}
 
-          {/* Main image card */}
+          {/* Main image card — no zoom/lightbox */}
           <div className="pdp-main-image-wrap">
-            <button
-              className="pdp-main-image-btn"
-              onClick={() => setLightboxOpen(true)}
-              aria-label="Open full-screen image"
-            >
+            <div className="pdp-main-image-btn" style={{ cursor: 'default' }}>
               {/* Counter badge */}
               {totalImages > 1 && (
                 <span className="pdp-counter">{mainIdx + 1} / {totalImages}</span>
               )}
 
-              {/* Badge */}
+              {/* Product badge */}
               {product.badge && (
                 <span className={`badge ${product.badgeType || 'badge-primary'} pdp-badge`}>
                   {product.badge}
                 </span>
               )}
-
-              {/* Zoom hint */}
-              <span className="pdp-zoom-hint" aria-hidden>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                  <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
-                </svg>
-              </span>
 
               <div className="pdp-main-image-inner">
                 <Image
@@ -136,22 +139,36 @@ export function ProductClient({ product }: ProductClientProps) {
                 />
               </div>
 
-              {/* Left / Right nav arrows */}
+              {/* Prev / Next arrows */}
               {totalImages > 1 && (
                 <>
                   <button
                     className="pdp-arrow pdp-arrow-left"
-                    onClick={(e) => { e.stopPropagation(); goPrev(); }}
+                    onClick={handlePrev}
                     aria-label="Previous image"
                   >‹</button>
                   <button
                     className="pdp-arrow pdp-arrow-right"
-                    onClick={(e) => { e.stopPropagation(); goNext(); }}
+                    onClick={handleNext}
                     aria-label="Next image"
                   >›</button>
                 </>
               )}
-            </button>
+
+              {/* Dot indicators at bottom */}
+              {totalImages > 1 && (
+                <div className="pdp-dots-inline">
+                  {product.images.map((_, i) => (
+                    <button
+                      key={i}
+                      className={`pdp-dot-inline${mainIdx === i ? ' active' : ''}`}
+                      onClick={() => handleThumbClick(i)}
+                      aria-label={`Go to image ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -224,22 +241,6 @@ export function ProductClient({ product }: ProductClientProps) {
             </Link>
           </div>
 
-          {/* Payment trust strip */}
-          <div className="pdp-trust-strip">
-            <div className="pdp-trust-item">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-              Cash on Delivery
-            </div>
-            <div className="pdp-trust-item">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Secure Checkout
-            </div>
-            <div className="pdp-trust-item">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              Free Shipping
-            </div>
-          </div>
-
           {/* ── Description ── */}
           <div className="pdp-section">
             <h2 className="pdp-section-title">Description</h2>
@@ -278,6 +279,22 @@ export function ProductClient({ product }: ProductClientProps) {
               </div>
             </div>
           )}
+
+          {/* ── Trust strip — Secure Checkout + Free Shipping (after Specs) ── */}
+          <div className="pdp-trust-strip" style={{ marginTop: 'var(--space-xl)' }}>
+            <div className="pdp-trust-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              Secure Checkout
+            </div>
+            <div className="pdp-trust-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+              Free Shipping
+            </div>
+          </div>
 
           {/* ── Reviews ── */}
           <div className="pdp-section">
@@ -342,64 +359,6 @@ export function ProductClient({ product }: ProductClientProps) {
           </div>
         </div>
       </div>
-
-      {/* ── Lightbox ── */}
-      {lightboxOpen && (
-        <div
-          className="pdp-lightbox"
-          onClick={() => setLightboxOpen(false)}
-          onKeyDown={handleKeyDown}
-          tabIndex={0}
-          role="dialog"
-          aria-label="Image lightbox"
-        >
-          <button
-            className="pdp-lightbox-close"
-            onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
-            aria-label="Close lightbox"
-          >✕</button>
-
-          {totalImages > 1 && (
-            <>
-              <button
-                className="pdp-lightbox-arrow left"
-                onClick={(e) => { e.stopPropagation(); goPrev(); }}
-                aria-label="Previous image"
-              >‹</button>
-              <button
-                className="pdp-lightbox-arrow right"
-                onClick={(e) => { e.stopPropagation(); goNext(); }}
-                aria-label="Next image"
-              >›</button>
-            </>
-          )}
-
-          <div
-            className="pdp-lightbox-img-wrap"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={product.images[mainIdx]}
-              alt={product.name}
-              fill
-              style={{ objectFit: 'contain' }}
-            />
-          </div>
-
-          {totalImages > 1 && (
-            <div className="pdp-lightbox-dots">
-              {product.images.map((_, i) => (
-                <button
-                  key={i}
-                  className={`pdp-lightbox-dot${mainIdx === i ? ' active' : ''}`}
-                  onClick={(e) => { e.stopPropagation(); setMainIdx(i); }}
-                  aria-label={`Go to image ${i + 1}`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
