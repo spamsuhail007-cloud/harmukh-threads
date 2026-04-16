@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { generateOrderNumber } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { sendOrderConfirmationEmail, sendOrderStatusEmail } from '@/lib/email';
+import { sendOrderConfirmationEmail, sendOrderStatusEmail, sendAdminOrderNotification } from '@/lib/email';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 
 const OrderSchema = z.object({
@@ -60,6 +60,19 @@ export async function createOrder(data: unknown) {
         },
       },
     });
+
+    const emailPayload = { 
+      ...customerData, 
+      orderNumber, 
+      items, 
+      total: subtotal, 
+      subtotal, 
+      shipping: 0, 
+      paymentStatus: 'PENDING' 
+    };
+    await sendOrderConfirmationEmail(emailPayload);
+    await sendAdminOrderNotification(emailPayload);
+
     revalidatePath('/admin/orders');
     return { success: true, orderNumber: order.orderNumber, orderId: order.id };
   } catch (err) {

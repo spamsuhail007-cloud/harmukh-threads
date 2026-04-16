@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+const ADMIN_EMAIL = 'sofisuhail007@gmail.com';
 const UPI_ID = process.env.NEXT_PUBLIC_UPI_ID || 'harmukh@upi';
 
 type OrderItem = {
@@ -377,6 +378,46 @@ export async function sendEnquiryCopyEmail(enquiry: { name: string; email: strin
     return { success: true, id: data?.id };
   } catch (err) {
     return { success: false, error: err };
+  }
+}
+
+export async function sendAdminOrderNotification(order: OrderEmailData) {
+  const html = `
+    <h2>New Order Received: #${order.orderNumber}</h2>
+    <p><strong>Customer:</strong> ${order.firstName} ${order.lastName} (${order.email})</p>
+    <p><strong>Total:</strong> ${formatPrice(order.total)}</p>
+    <p>Log in to the <a href="https://harmukhthreads.com/admin/orders">Admin Dashboard</a> to view details.</p>
+  `;
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_EMAIL,
+      subject: `🚨 NEW ORDER: #${order.orderNumber} - ${formatPrice(order.total)}`,
+      html,
+    });
+  } catch (err) {
+    console.error('Failed to notify admin of order', err);
+  }
+}
+
+export async function sendAdminEnquiryNotification(enquiry: { name: string; email: string; subject: string; message: string }) {
+  const html = `
+    <h2>New Contact Form Submission</h2>
+    <p><strong>From:</strong> ${enquiry.name} (${enquiry.email})</p>
+    <p><strong>Subject:</strong> ${enquiry.subject}</p>
+    <hr/>
+    <p>${enquiry.message.replace(/\n/g, '<br/>')}</p>
+  `;
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_EMAIL,
+      replyTo: enquiry.email,
+      subject: `📩 Contact Form: ${enquiry.subject}`,
+      html,
+    });
+  } catch (err) {
+    console.error('Failed to notify admin of enquiry', err);
   }
 }
 

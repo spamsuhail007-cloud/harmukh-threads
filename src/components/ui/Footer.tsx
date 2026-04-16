@@ -34,6 +34,8 @@ export function Footer() {
               <li><Link href="/contact">Contact Us</Link></li>
               <li><Link href="/returns">Return Policy</Link></li>
               <li><Link href="/collections">Shop All</Link></li>
+              <li><Link href="/privacy">Privacy Policy</Link></li>
+              <li><Link href="/terms">Terms of Service</Link></li>
               <li><a href="mailto:hello@harmukh.in">hello@harmukh.in</a></li>
               <li><a href="tel:+91-849-100-6127">+91 84910 06127</a></li>
             </ul>

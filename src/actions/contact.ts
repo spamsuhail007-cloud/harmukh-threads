@@ -2,7 +2,7 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { sendEnquiryCopyEmail } from '@/lib/email';
+import { sendEnquiryCopyEmail, sendAdminEnquiryNotification } from '@/lib/email';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 
 const ContactSchema = z.object({
@@ -28,6 +28,7 @@ export async function submitContactForm(data: unknown) {
     const { token, ...dbData } = parsed.data;
     await db.contactMessage.create({ data: dbData });
     await sendEnquiryCopyEmail(dbData);
+    await sendAdminEnquiryNotification(dbData);
     return { success: true };
   } catch {
     return { success: false, error: 'Something went wrong. Please try again.' };
