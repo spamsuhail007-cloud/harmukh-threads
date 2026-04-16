@@ -4,6 +4,7 @@ import { generateOrderNumber } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { sendOrderConfirmationEmail, sendOrderStatusEmail } from '@/lib/email';
+import { verifyRecaptcha } from '@/lib/recaptcha';
 
 const OrderSchema = z.object({
   firstName: z.string().min(1),
@@ -22,6 +23,7 @@ const OrderSchema = z.object({
     price: z.number(),
     qty: z.number().min(1),
   })),
+  token: z.string().min(1),
 });
 
 export async function createOrder(data: unknown) {
@@ -30,7 +32,12 @@ export async function createOrder(data: unknown) {
     return { success: false, error: 'Invalid order data' };
   }
 
-  const { items, ...customerData } = parsed.data;
+  const isValidBot = await verifyRecaptcha(parsed.data.token);
+  if (!isValidBot) {
+    return { success: false, error: 'Google reCAPTCHA verification failed. Are you a bot?' };
+  }
+
+  const { items, token, ...customerData } = parsed.data;
   const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
   const orderNumber = generateOrderNumber();
 

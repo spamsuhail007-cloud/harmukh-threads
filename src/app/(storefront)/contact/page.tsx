@@ -1,33 +1,48 @@
 'use client';
 import { useState, FormEvent } from 'react';
 import { submitContactForm } from '@/actions/contact';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    const fd = new FormData(e.currentTarget);
-    const data = {
-      name: fd.get('name'),
-      email: fd.get('email'),
-      subject: fd.get('subject'),
-      message: fd.get('message'),
-    };
+    if (!executeRecaptcha) {
+      setError('reCAPTCHA not loaded yet. Please try again in a moment.');
+      setLoading(false);
+      return;
+    }
 
-    const res = await submitContactForm(data);
-    setLoading(false);
+    try {
+      const token = await executeRecaptcha('contact_form');
 
-    if (res.success) {
-      setSuccess(true);
-      (e.target as HTMLFormElement).reset();
-    } else {
-      setError(res.error || 'Failed to submit form.');
+      const fd = new FormData(e.currentTarget);
+      const data = {
+        name: fd.get('name'),
+        email: fd.get('email'),
+        subject: fd.get('subject'),
+        message: fd.get('message'),
+        token,
+      };
+
+      const res = await submitContactForm(data);
+      if (res.success) {
+        setSuccess(true);
+        (e.target as HTMLFormElement).reset();
+      } else {
+        setError(res.error || 'Failed to submit form.');
+      }
+    } catch (err) {
+      setError('An error occurred generating security token. Please try again.');
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -147,6 +162,9 @@ export default function ContactPage() {
                       <>Send Message ✦</>
                     )}
                   </button>
+                  <p style={{ fontSize: '11px', color: '#a08060', textAlign: 'center', marginTop: '16px', lineHeight: '1.4' }}>
+                    This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'underline'}}>Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'underline'}}>Terms of Service</a> apply.
+                  </p>
                 </form>
               </>
             )}

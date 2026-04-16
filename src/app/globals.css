@@ -2033,3 +2033,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     to { transform: translateY(0); opacity: 1; }
   }
 }
+
+/* Hide reCAPTCHA badge */
+.grecaptcha-badge { visibility: hidden !important; }
+

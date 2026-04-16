@@ -1,6 +1,8 @@
 import { db } from '@/lib/db';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { TrackOrderForm } from './TrackOrderForm';
+import { verifyRecaptcha } from '@/lib/recaptcha';
 
 const STATUS_STEPS = [
   { key: 'PENDING',    label: 'Order Placed',  icon: '📋' },
@@ -49,21 +51,30 @@ function OrderTimeline({ status }: { status: string }) {
 export default async function TrackPage({
   searchParams,
 }: {
-  searchParams: Promise<{ email?: string; order?: string }>;
+  searchParams: Promise<{ email?: string; order?: string; token?: string }>;
 }) {
   const params = await searchParams;
   const email = params.email?.trim().toLowerCase() || '';
   const orderNumber = params.order?.trim().toUpperCase() || '';
+  const token = params.token || '';
 
   let order = null;
   let notFoundError = false;
+  let botError = false;
 
   if (email && orderNumber) {
-    order = await db.order.findFirst({
-      where: { email: { equals: email, mode: 'insensitive' }, orderNumber },
-      include: { items: true },
-    });
-    if (!order) notFoundError = true;
+    if (token) {
+      const isHuman = await verifyRecaptcha(token);
+      if (!isHuman) botError = true;
+    }
+
+    if (!botError) {
+      order = await db.order.findFirst({
+        where: { email: { equals: email, mode: 'insensitive' }, orderNumber },
+        include: { items: true },
+      });
+      if (!order) notFoundError = true;
+    }
   }
 
   const formatPrice = (p: number) =>
@@ -81,44 +92,17 @@ export default async function TrackPage({
         </div>
 
         {/* Search form */}
-        <form method="GET" action="/orders/track" className="track-form">
-          <div className="track-form-grid">
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label" htmlFor="track-email">Email Address</label>
-              <input
-                id="track-email"
-                className="form-input"
-                type="email"
-                name="email"
-                required
-                placeholder="you@example.com"
-                defaultValue={email}
-                autoComplete="email"
-              />
-            </div>
-            <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label" htmlFor="track-order">Order Number</label>
-              <input
-                id="track-order"
-                className="form-input"
-                type="text"
-                name="order"
-                required
-                placeholder="e.g. HT-2026-0001"
-                defaultValue={orderNumber}
-                style={{ textTransform: 'uppercase' }}
-              />
-            </div>
-          </div>
-          <button type="submit" className="btn btn-primary track-submit">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            Track Order
-          </button>
-        </form>
+        <TrackOrderForm initialEmail={email} initialOrder={orderNumber} />
 
-        {/* Not found error */}
+        {/* Errors */}
+        {botError && (
+          <div className="track-error">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            reCAPTCHA verification failed. Please try again.
+          </div>
+        )}
         {notFoundError && (
           <div className="track-error">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

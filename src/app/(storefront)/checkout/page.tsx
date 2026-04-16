@@ -4,12 +4,14 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/components/providers/CartProvider';
 import { formatPrice } from '@/lib/utils';
 import { createOrder } from '@/actions/orders';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function CheckoutPage() {
   const { items, total, clear } = useCart();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   if (items.length === 0) {
     return (
@@ -25,9 +27,16 @@ export default function CheckoutPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    if (!executeRecaptcha) {
+      setError('reCAPTCHA not loaded yet. Please try again in a moment.');
+      setLoading(false);
+      return;
+    }
 
-    const fd = new FormData(e.currentTarget);
-    const data = {
+    try {
+      const token = await executeRecaptcha('checkout');
+      const fd = new FormData(e.currentTarget);
+      const data = {
       firstName: fd.get('firstName'),
       lastName: fd.get('lastName'),
       email: fd.get('email'),
@@ -43,10 +52,10 @@ export default function CheckoutPage() {
         price: i.product.price,
         qty: i.qty,
       })),
+      token,
     };
 
     const res = await createOrder(data);
-    setLoading(false);
 
     if (res.success && res.orderNumber) {
       clear();
@@ -54,6 +63,11 @@ export default function CheckoutPage() {
       router.push(`/orders/pay?order=${res.orderNumber}&amount=${total}`);
     } else {
       setError(res.error || 'Failed to place order.');
+    }
+    } catch (err) {
+      setError('An error occurred generating security token. Please try again.');
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -138,6 +152,9 @@ export default function CheckoutPage() {
             </button>
             <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginTop: '10px' }}>
               🔒 Your information is secure and encrypted
+            </p>
+            <p style={{ fontSize: '11px', color: '#a08060', textAlign: 'center', marginTop: '16px', lineHeight: '1.4' }}>
+              This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'underline'}}>Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'underline'}}>Terms of Service</a> apply.
             </p>
           </form>
 
