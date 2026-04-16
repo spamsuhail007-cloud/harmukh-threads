@@ -2,6 +2,7 @@
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { sendEnquiryCopyEmail } from '@/lib/email';
 
 const ContactSchema = z.object({
   name: z.string().min(2),
@@ -17,6 +18,7 @@ export async function submitContactForm(data: unknown) {
   }
   try {
     await db.contactMessage.create({ data: parsed.data });
+    await sendEnquiryCopyEmail(parsed.data);
     return { success: true };
   } catch {
     return { success: false, error: 'Something went wrong. Please try again.' };

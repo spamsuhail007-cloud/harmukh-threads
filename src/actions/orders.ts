@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { generateOrderNumber } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { sendOrderConfirmationEmail } from '@/lib/email';
+import { sendOrderConfirmationEmail, sendOrderStatusEmail } from '@/lib/email';
 
 const OrderSchema = z.object({
   firstName: z.string().min(1),
@@ -74,36 +74,39 @@ export async function updateOrderStatus(orderId: string, status: string) {
     data: { status: status as never },
   });
 
-  // Send confirmation email only when status is set to CONFIRMED
-  if (status === 'CONFIRMED') {
-    const order = await db.order.findUnique({
-      where: { id: orderId },
-      include: { items: true },
-    });
+  const order = await db.order.findUnique({
+    where: { id: orderId },
+    include: { items: true },
+  });
 
-    if (order) {
-      await sendOrderConfirmationEmail({
-        orderNumber: order.orderNumber,
-        firstName: order.firstName,
-        lastName: order.lastName,
-        email: order.email,
-        phone: order.phone,
-        address: order.address,
-        city: order.city,
-        pincode: order.pincode,
-        country: order.country,
-        total: order.total,
-        subtotal: order.subtotal,
-        shipping: order.shipping,
-        paymentMethod: order.paymentMethod,
-        paymentStatus: order.paymentStatus,
-        items: order.items.map(i => ({
-          name: i.name,
-          image: i.image,
-          price: i.price,
-          qty: i.qty,
-        })),
-      });
+  if (order) {
+    const orderData = {
+      orderNumber: order.orderNumber,
+      firstName: order.firstName,
+      lastName: order.lastName,
+      email: order.email,
+      phone: order.phone,
+      address: order.address,
+      city: order.city,
+      pincode: order.pincode,
+      country: order.country,
+      total: order.total,
+      subtotal: order.subtotal,
+      shipping: order.shipping,
+      paymentMethod: order.paymentMethod,
+      paymentStatus: order.paymentStatus,
+      items: order.items.map(i => ({
+        name: i.name,
+        image: i.image,
+        price: i.price,
+        qty: i.qty,
+      })),
+    };
+
+    if (status === 'CONFIRMED') {
+      await sendOrderConfirmationEmail(orderData);
+    } else if (['SHIPPED', 'DELIVERED', 'CANCELLED'].includes(status)) {
+      await sendOrderStatusEmail(orderData, status);
     }
   }
 

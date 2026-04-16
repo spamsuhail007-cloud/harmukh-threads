@@ -211,3 +211,166 @@ export async function sendOrderConfirmationEmail(order: OrderEmailData) {
     return { success: false, error: err };
   }
 }
+
+function buildStatusHtml(order: OrderEmailData, status: string): string {
+  let title = "Order Update";
+  let subtitle = "Your order status has changed.";
+  let bgBanner = "#dcfce7";
+  let icon = "📦";
+
+  if (status === 'SHIPPED') {
+    title = "Order Shipped!";
+    subtitle = `Your order <strong>#${order.orderNumber}</strong> has been shipped and is on its way!`;
+    bgBanner = "#dbeafe";
+    icon = "✈️";
+  } else if (status === 'DELIVERED') {
+    title = "Order Delivered!";
+    subtitle = `Your order <strong>#${order.orderNumber}</strong> has been delivered. Enjoy 400 years of tradition.`;
+    bgBanner = "#dcfce7";
+    icon = "🎁";
+  } else if (status === 'CANCELLED') {
+    title = "Order Cancelled";
+    subtitle = `Your order <strong>#${order.orderNumber}</strong> has been cancelled.`;
+    bgBanner = "#fee2e2";
+    icon = "❌";
+  }
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>${title} – Harmukh Threads</title>
+</head>
+<body style="margin:0;padding:0;background:#f5ede4;font-family:'Georgia',serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5ede4;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+          <tr>
+            <td style="background:linear-gradient(135deg,#5c3d1e,#3d1f00);padding:36px 40px;text-align:center;">
+              <div style="font-size:28px;letter-spacing:0.12em;color:#fef9f5;font-weight:700;">HARMUKH THREADS</div>
+              <div style="font-size:13px;color:#c9a882;margin-top:6px;letter-spacing:0.05em;">Custodians of Kashmiri Craft</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:${bgBanner};padding:18px 40px;text-align:center;">
+              <div style="font-size:22px;">${icon}</div>
+              <div style="font-size:18px;font-weight:700;color:#1c1c18;margin-top:6px;">${title}</div>
+              <div style="font-size:13px;color:#1c1c18;margin-top:4px;">${subtitle}</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 40px;">
+              <p style="font-size:16px;color:#3d1f00;margin:0 0 24px;">
+                Dear <strong>${order.firstName}</strong>,<br/><br/>
+                We wanted to let you know that the status of your order has been updated to: <strong>${status}</strong>.
+              </p>
+              <div style="margin-top:28px;padding:18px 20px;background:#fef9f5;border-radius:10px;border:1px solid #e8d5c4;">
+                <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#7a6550;margin-bottom:10px;">📦 Shipping To</div>
+                <div style="font-size:14px;color:#3d1f00;line-height:1.8;">
+                  ${order.firstName} ${order.lastName}<br/>
+                  ${order.address}<br/>
+                  ${order.city}, ${order.pincode}<br/>
+                  ${order.country}
+                </div>
+              </div>
+              <p style="font-size:13px;color:#a08060;margin-top:28px;line-height:1.7;text-align:center;">
+                Questions? Contact us on
+                <a href="https://wa.me/918491006127" style="color:#5c3d1e;">WhatsApp</a> — we're happy to help.<br/>
+                Order reference: <strong>${order.orderNumber}</strong>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#3d1f00;padding:20px 40px;text-align:center;">
+              <div style="font-size:12px;color:#c9a882;">© ${new Date().getFullYear()} Harmukh Threads · Made with care in Kashmir 🏔️</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+export async function sendOrderStatusEmail(order: OrderEmailData, status: string) {
+  try {
+    let subjectIcon = '📦';
+    if (status === 'SHIPPED') subjectIcon = '✈️';
+    if (status === 'DELIVERED') subjectIcon = '🎁';
+    if (status === 'CANCELLED') subjectIcon = '❌';
+
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: order.email,
+      replyTo: 'sofisuhail007@gmail.com',
+      subject: `${subjectIcon} Order ${status} – #${order.orderNumber} | Harmukh Threads`,
+      html: buildStatusHtml(order, status),
+    });
+    if (error) {
+      console.error('[Resend] Failed to send order status email:', error);
+      return { success: false, error };
+    }
+    return { success: true, id: data?.id };
+  } catch (err) {
+    return { success: false, error: err };
+  }
+}
+
+export async function sendEnquiryCopyEmail(enquiry: { name: string; email: string; subject: string; message: string }) {
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#f5ede4;font-family:'Georgia',serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5ede4;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+          <tr>
+            <td style="background:linear-gradient(135deg,#5c3d1e,#3d1f00);padding:36px 40px;text-align:center;">
+              <div style="font-size:28px;letter-spacing:0.12em;color:#fef9f5;font-weight:700;">HARMUKH THREADS</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 40px;">
+              <p style="font-size:16px;color:#3d1f00;margin:0 0 24px;">
+                Dear <strong>${enquiry.name}</strong>,<br/><br/>
+                Thank you for reaching out! We have received your message and our artisans or support team will get back to you shortly.
+              </p>
+              <div style="margin-top:20px;padding:18px 20px;background:#fef9f5;border-radius:10px;border:1px solid #e8d5c4;">
+                <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#7a6550;margin-bottom:10px;">Your Message</div>
+                <div style="font-size:14px;color:#3d1f00;line-height:1.6;">
+                  <strong>Subject:</strong> ${enquiry.subject}<br/><br/>
+                  ${enquiry.message.replace(/n/g, '<br/>')}
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background:#3d1f00;padding:20px 40px;text-align:center;">
+              <div style="font-size:12px;color:#c9a882;">© ${new Date().getFullYear()} Harmukh Threads</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: enquiry.email,
+      replyTo: 'sofisuhail007@gmail.com',
+      subject: `Thank you for contacting Harmukh Threads: ${enquiry.subject}`,
+      html,
+    });
+    if (error) return { success: false, error };
+    return { success: true, id: data?.id };
+  } catch (err) {
+    return { success: false, error: err };
+  }
+}
+
