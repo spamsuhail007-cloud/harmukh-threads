@@ -9,7 +9,6 @@ export async function getProductsWithReviews() {
     select: {
       id: true,
       name: true,
-      image: true,
       images: true, // using images array if image doesn't exist
       reviews: {
         orderBy: { createdAt: 'desc' }
