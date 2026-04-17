@@ -3,10 +3,16 @@ import { getFeaturedProducts } from '@/actions/products';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { CollectionCard } from '@/components/ui/CollectionCard';
 
+import { db } from '@/lib/db';
+
 export const revalidate = 60; // ISR every 60s
 
 export default async function HomePage() {
-  const featured = await getFeaturedProducts();
+  const [featured, rugsCount, pillowsCount] = await Promise.all([
+    getFeaturedProducts(),
+    db.product.count({ where: { category: 'Rugs', isActive: true } }),
+    db.product.count({ where: { category: 'Pillow Covers', isActive: true } })
+  ]);
 
   return (
     <>
@@ -93,14 +99,14 @@ export default async function HomePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-lg)' }}>
             <CollectionCard
               title="Hand-knotted Rugs"
-              count="12"
+              count={`${rugsCount}`}
               image="https://images.unsplash.com/photo-1600166898405-da9535204843?w=600&q=80"
               category="Rugs"
             />
             <CollectionCard
               title="Pillow Covers"
-              count="8"
-              image="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=600&q=80"
+              count={`${pillowsCount}`}
+              image="/kashmiri-pillow.png"
               category="Pillow Covers"
             />
           </div>
