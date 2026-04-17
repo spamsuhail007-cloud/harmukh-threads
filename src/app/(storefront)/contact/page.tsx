@@ -26,25 +26,23 @@ export default function ContactPage() {
       }
 
       const fd = new FormData(e.currentTarget);
-      const data = {
-        name: String(fd.get('name') || ''),
-        email: String(fd.get('email') || ''),
-        phone: String(fd.get('phone') || ''),
-        subject: String(fd.get('subject') || ''),
-        message: String(fd.get('message') || ''),
-        token: token || '',
-      };
+      if (token) {
+        fd.set('token', token);
+      } else {
+        fd.set('token', '');
+      }
 
-      const res = await submitContactForm(data);
+      const res = await submitContactForm(fd);
       if (res.success) {
         setSuccess(true);
         (e.target as HTMLFormElement).reset();
       } else {
         setError(res.error || 'Failed to submit form.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Contact Form Exception:', err);
-      setError('Something went wrong. Please try again.');
+      // Explicitly log the error message for debugging purposes
+      setError(`Error: ${err?.message || 'Something went wrong.'} Please ensure you are disconnected from any VPNs and hard-refresh (Ctrl+Shift+R) the page.`);
     } finally {
       setLoading(false);
     }

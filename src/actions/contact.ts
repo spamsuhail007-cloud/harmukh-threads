@@ -15,7 +15,8 @@ const ContactSchema = z.object({
   token: z.string(),
 });
 
-export async function submitContactForm(data: unknown) {
+export async function submitContactForm(formData: FormData) {
+  const data = Object.fromEntries(formData.entries());
   const parsed = ContactSchema.safeParse(data);
   if (!parsed.success) {
     return { success: false, error: 'Please fill all fields correctly.' };
