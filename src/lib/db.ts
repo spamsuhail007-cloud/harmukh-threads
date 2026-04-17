@@ -1,17 +1,13 @@
-import { Pool as NeonPool } from '@neondatabase/serverless';
-import { PrismaNeon } from '@prisma/adapter-neon';
 import { PrismaClient } from '@prisma/client';
 
-// Use Neon's serverless Pool driver to avoid TCP cold-start connection drops
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
+// Use standard PrismaClient to avoid TCP/WebSocket connection hangs locally.
+// Neon's Serverless Pool often hangs in local dev environments not properly passing ws.
 function createPrismaClient() {
-  const pool = new NeonPool({ connectionString: process.env.DATABASE_URL! });
-  const adapter = new PrismaNeon(pool);
   return new PrismaClient({
-    adapter,
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   });
 }

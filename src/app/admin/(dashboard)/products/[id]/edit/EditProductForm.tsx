@@ -131,6 +131,7 @@ export default function EditProductForm({ product }: { product: Product }) {
       name: formData.get('name'),
       category: formData.get('category'),
       price: Number(formData.get('price')),
+      originalPrice: formData.get('originalPrice') ? Number(formData.get('originalPrice')) : undefined,
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
       images: finalUrls,
@@ -184,9 +185,13 @@ export default function EditProductForm({ product }: { product: Product }) {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-lg)' }}>
             <div className="form-group">
-              <label className="form-label">Price (₹) *</label>
+              <label className="form-label">Regular Price (₹)</label>
+              <input type="number" name="originalPrice" className="form-input" min="1" defaultValue={product.originalPrice || ''} placeholder="e.g. 6000" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Selling Price (₹) *</label>
               <input type="number" name="price" className="form-input" required min="1" defaultValue={product.price} />
             </div>
             <div className="form-group">

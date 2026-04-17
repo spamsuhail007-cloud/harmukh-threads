@@ -32,18 +32,27 @@ const ProductSchema = z.object({
 });
 
 export async function createProduct(data: unknown) {
+  console.log('[createProduct] Incoming data:', JSON.stringify(data).substring(0, 500) + '...');
   const parsed = ProductSchema.safeParse(data);
-  if (!parsed.success) return { success: false, error: 'Invalid product data' };
+  if (!parsed.success) {
+    console.error('[createProduct] Validation failed:', parsed.error);
+    return { success: false, error: 'Invalid product data: ' + parsed.error.issues[0]?.message };
+  }
 
   const slug = slugify(parsed.data.name);
+  console.log('[createProduct] Parsed successfully, generated slug:', slug);
   try {
+    const start = Date.now();
     await db.product.create({ data: { ...parsed.data, slug } });
+    console.log('[createProduct] Database create finished in', Date.now() - start, 'ms');
+    
     revalidatePath('/');
     revalidatePath('/collections');
     revalidatePath('/admin/inventory');
     return { success: true };
-  } catch {
-    return { success: false, error: 'Failed to create product. Slug may already exist.' };
+  } catch (err: any) {
+    console.error('[createProduct] Catch block error:', err);
+    return { success: false, error: `Failed to create product. ${err.message || 'Slug may already exist.'}` };
   }
 }
 

@@ -209,6 +209,7 @@ export default function NewProductPage() {
       name: formData.get('name'),
       category: formData.get('category'),
       price: Number(formData.get('price')),
+      originalPrice: formData.get('originalPrice') ? Number(formData.get('originalPrice')) : undefined,
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
       images: uploadedUrls,
@@ -218,15 +219,24 @@ export default function NewProductPage() {
       productNote: formData.get('productNote') || undefined,
     };
 
-    const result = await createProduct(data);
-    if (!result.success) {
-      setError(result.error || 'Failed to create product');
+    try {
+      console.log('Calling createProduct with data:', data);
+      const result = await createProduct(data);
+      console.log('createProduct returned:', result);
+      if (!result.success) {
+        setError(result.error || 'Failed to create product');
+        setIsSubmitting(false);
+        setSubmitStatus('');
+      } else {
+        setSubmitStatus('Success! Redirecting…');
+        router.push('/admin/inventory');
+        router.refresh();
+      }
+    } catch (err: any) {
+      console.error('Error calling createProduct:', err);
+      setError(`Server action error: ${err?.message || 'Unknown error. Check console.'}`);
       setIsSubmitting(false);
       setSubmitStatus('');
-    } else {
-      setSubmitStatus('Success! Redirecting…');
-      router.push('/admin/inventory');
-      router.refresh();
     }
   }
 
@@ -259,9 +269,13 @@ export default function NewProductPage() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-lg)' }}>
             <div className="form-group">
-              <label className="form-label">Price (₹) *</label>
+              <label className="form-label">Regular Price (₹)</label>
+              <input type="number" name="originalPrice" className="form-input" min="1" placeholder="e.g. 6000" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Selling Price (₹) *</label>
               <input type="number" name="price" className="form-input" required min="1" placeholder="5000" />
             </div>
             <div className="form-group">
