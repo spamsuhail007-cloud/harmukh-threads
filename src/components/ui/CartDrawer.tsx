@@ -52,7 +52,7 @@ export function CartDrawer(_: CartDrawerProps) {
                   <div className="cart-item-actions">
                     <button className="qty-btn" onClick={() => updateQty(item.product.id, item.qty - 1)} aria-label="Decrease">−</button>
                     <span className="qty-val">{item.qty}</span>
-                    <button className="qty-btn" onClick={() => updateQty(item.product.id, item.qty + 1)} aria-label="Increase">+</button>
+                    <button className="qty-btn" onClick={() => updateQty(item.product.id, item.qty + 1)} disabled={item.qty >= item.product.stock} style={{ opacity: item.qty >= item.product.stock ? 0.3 : 1, cursor: item.qty >= item.product.stock ? 'not-allowed' : 'pointer'}} aria-label="Increase">+</button>
                     <button
                       style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--on-surface-variant)', textDecoration: 'underline' }}
                       onClick={() => remove(item.product.id)}

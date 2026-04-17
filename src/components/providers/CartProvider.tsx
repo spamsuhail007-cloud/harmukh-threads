@@ -8,6 +8,7 @@ export type CartProduct = {
   category: string;
   price: number;
   images: string[];
+  stock: number;
 };
 
 export type CartItem = {
@@ -38,9 +39,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const total = items.reduce((s, i) => s + i.product.price * i.qty, 0);
 
   const add = useCallback((product: CartProduct) => {
+    if (product.stock <= 0) return;
     setItems(prev => {
       const existing = prev.find(i => i.product.id === product.id);
-      if (existing) return prev.map(i => i.product.id === product.id ? { ...i, qty: i.qty + 1 } : i);
+      if (existing) {
+        if (existing.qty >= product.stock) return prev;
+        return prev.map(i => i.product.id === product.id ? { ...i, qty: i.qty + 1 } : i);
+      }
       return [...prev, { product, qty: 1 }];
     });
     setIsOpen(true);
@@ -52,7 +57,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updateQty = useCallback((productId: string, qty: number) => {
     if (qty <= 0) { remove(productId); return; }
-    setItems(prev => prev.map(i => i.product.id === productId ? { ...i, qty } : i));
+    setItems(prev => prev.map(i => {
+      if (i.product.id === productId) {
+        const finalQty = qty > i.product.stock ? i.product.stock : qty;
+        return { ...i, qty: finalQty };
+      }
+      return i;
+    }));
   }, [remove]);
 
   const clear = useCallback(() => setItems([]), []);

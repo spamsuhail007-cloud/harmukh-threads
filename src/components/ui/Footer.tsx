@@ -43,7 +43,18 @@ export function Footer() {
         </div>
         <div className="footer-bottom">
           <span className="footer-copy">© {new Date().getFullYear()} Harmukh Threads. All rights reserved.</span>
-          <span className="footer-copy">Made with care in Kashmir 🏔️</span>
+          <span className="footer-copy">
+            Handcrafted with <svg width="1em" height="1em" viewBox="0 0 24 24" fill="#e11d48" style={{ display: 'inline-block', verticalAlign: '-0.125em', animation: 'heartbeat 1.5s ease-in-out infinite' }}><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> by <a href="https://wa.me/917006604148?text=I%20like%20the%20website%20design" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline' }}>Frixl</a>
+          </span>
+          <style>{`
+            @keyframes heartbeat {
+              0%, 100% { transform: scale(1); }
+              15% { transform: scale(1.2); }
+              30% { transform: scale(1); }
+              45% { transform: scale(1.2); }
+              60% { transform: scale(1); }
+            }
+          `}</style>
         </div>
       </div>
     </footer>
