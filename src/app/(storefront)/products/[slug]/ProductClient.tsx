@@ -320,10 +320,33 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
           {/* ── Description ── */}
           <div className="pdp-section">
             <h2 className="pdp-section-title">Description</h2>
-            <p className="pdp-description">{product.description}</p>
+            <div className="pdp-description" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+              {product.description.split('\n').filter(p => p.trim() !== '').map((paragraph, i) => (
+                <p key={i} style={{ margin: 0, lineHeight: 1.6 }}>{paragraph}</p>
+              ))}
+            </div>
             {(product as any).productNote && (
-              <div className="pdp-note">
-                <strong>Note:</strong> {(product as any).productNote}
+              <div className="pdp-note-list" style={{ marginTop: 'var(--space-xl)', padding: 'var(--space-lg)', background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
+                <h3 style={{ fontSize: '0.95rem', marginBottom: 'var(--space-md)', color: 'var(--on-surface)', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{color: 'var(--primary)'}}>
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  </svg>
+                  Care & Notes
+                </h3>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {(product as any).productNote
+                    .split(/(?:\.\s+|\n+)/)
+                    .map((p: string) => p.trim().replace(/\.$/, ''))
+                    .filter((p: string) => p.length > 0)
+                    .map((point: string, i: number) => (
+                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.9rem', color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--primary)', flexShrink: 0, marginTop: '3px' }}>
+                         <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
