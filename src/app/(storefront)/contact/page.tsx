@@ -14,6 +14,9 @@ export default function ContactPage() {
     setLoading(true);
     setError('');
 
+    // Capture FormData immediately before any await makes e.currentTarget null
+    const fd = new FormData(e.currentTarget);
+
     try {
       let token = '';
       try {
@@ -25,7 +28,6 @@ export default function ContactPage() {
         console.warn('reCAPTCHA token generation failed, proceeding without:', captchaErr);
       }
 
-      const fd = new FormData(e.currentTarget);
       if (token) {
         fd.set('token', token);
       } else {
