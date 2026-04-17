@@ -168,5 +168,4 @@ export async function markOrdersAsRead() {
     where: { isRead: false },
     data: { isRead: true },
   });
-  revalidatePath('/admin/orders');
 }

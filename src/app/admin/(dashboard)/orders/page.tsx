@@ -1,14 +1,15 @@
 import { getOrders, markOrdersAsRead } from '@/actions/orders';
 import { OrderRow } from './OrderRow';
+import { ReadMarker } from '@/components/ui/ReadMarker';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrdersPage() {
   const orders = await getOrders();
-  await markOrdersAsRead();
 
   return (
     <>
+      <ReadMarker action={markOrdersAsRead} />
       <h1 className="admin-page-title">Orders</h1>
       <p style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--space-md)' }}>
         Click any row to expand customer contact details, order items, and UPI payment info.

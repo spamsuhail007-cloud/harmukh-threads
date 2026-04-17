@@ -84,5 +84,4 @@ export async function markMessagesAsRead() {
     where: { isRead: false },
     data: { isRead: true },
   });
-  revalidatePath('/admin/messages');
 }

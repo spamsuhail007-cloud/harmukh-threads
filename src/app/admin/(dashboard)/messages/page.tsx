@@ -1,14 +1,15 @@
 import { getMessages, markMessagesAsRead } from '@/actions/contact';
 import { MessageRow } from './MessageRow';
+import { ReadMarker } from '@/components/ui/ReadMarker';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MessagesPage() {
   const messages = await getMessages();
-  await markMessagesAsRead();
 
   return (
     <>
+      <ReadMarker action={markMessagesAsRead} />
       <h1 className="admin-page-title">Messages & Enquiries</h1>
       <div className="admin-table-wrap">
         <table className="admin-table">
