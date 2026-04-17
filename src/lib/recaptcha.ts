@@ -32,6 +32,13 @@ export async function verifyRecaptcha(token: string) {
     if (data.success && data.score >= 0.3) {
       return { success: true, score: data.score };
     } else {
+      // Graceful degradation: if the user's browser (e.g. adblocker, Safari ITP, Brave) 
+      // blocked the token generation causing 'browser-error', we allow it rather than blocking legitimate users.
+      if (data['error-codes']?.includes('browser-error')) {
+        console.warn('reCAPTCHA returning browser-error (likely adblocker). Failing open safely.');
+        return { success: true, score: 1.0, errorCodes: data['error-codes'] };
+      }
+
       console.warn('reCAPTCHA verification failed or score too low:', data);
       return { 
         success: false, 
