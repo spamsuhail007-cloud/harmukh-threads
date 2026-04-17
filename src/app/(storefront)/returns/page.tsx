@@ -35,7 +35,7 @@ const sections = [
     icon: '📦',
     title: 'How to Initiate a Return',
     content: `To start a return:
-1. Contact us on WhatsApp at **+91 84910 06127** or email **hello@harmukh.in** within 7 days of delivery
+1. Contact us on WhatsApp at **+91 84910 06127** or email **harmukhthreads@gmail.com** within 7 days of delivery
 2. Share your **order number** and photos of the item
 3. Our team will review and confirm eligibility within **24–48 hours**
 4. We will arrange a pickup from your address at no extra cost for eligible returns`,
@@ -197,7 +197,7 @@ export default function ReturnPolicyPage() {
               💬 WhatsApp Us
             </a>
             <a
-              href="mailto:hello@harmukh.in"
+              href="mailto:harmukhthreads@gmail.com"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 background: 'rgba(255,255,255,0.15)', color: '#fff',

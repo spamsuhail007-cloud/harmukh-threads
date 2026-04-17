@@ -74,7 +74,7 @@ export default function ContactPage() {
               <div className="contact-info-icon">✉</div>
               <div>
                 <div className="contact-info-label">Email Us</div>
-                <a href="mailto:hello@harmukh.in" className="contact-info-value contact-link">hello@harmukh.in</a>
+                <a href="mailto:harmukhthreads@gmail.com" className="contact-info-value contact-link">harmukhthreads@gmail.com</a>
               </div>
             </div>
 

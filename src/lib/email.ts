@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
-const ADMIN_EMAIL = 'sofisuhail007@gmail.com';
+const ADMIN_EMAIL = 'harmukhthreads@gmail.com';
 const UPI_ID = process.env.NEXT_PUBLIC_UPI_ID || 'harmukh@upi';
 
 type OrderItem = {
@@ -312,7 +312,7 @@ export async function sendOrderStatusEmail(order: OrderEmailData, status: string
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: order.email,
-      replyTo: 'sofisuhail007@gmail.com',
+      replyTo: 'harmukhthreads@gmail.com',
       subject: `${subjectIcon} Order ${status} – #${order.orderNumber} | Harmukh Threads`,
       html: buildStatusHtml(order, status),
     });
@@ -370,7 +370,7 @@ export async function sendEnquiryCopyEmail(enquiry: { name: string; email: strin
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: enquiry.email,
-      replyTo: 'sofisuhail007@gmail.com',
+      replyTo: 'harmukhthreads@gmail.com',
       subject: `Thank you for contacting Harmukh Threads: ${enquiry.subject}`,
       html,
     });

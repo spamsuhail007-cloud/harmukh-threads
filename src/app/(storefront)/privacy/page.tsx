@@ -29,7 +29,7 @@ export default function PrivacyPage() {
         <p>If you are a resident of certain regions, you have the right to access the personal information we hold about you, to port it to a new service, and to ask that your personal information be corrected, updated, or erased. If you would like to exercise these rights, please contact us through the contact information below.</p>
         
         <h3>6. Contact Us</h3>
-        <p>For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by email at <strong>hello@harmukh.in</strong>.</p>
+        <p>For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by email at <strong>harmukhthreads@gmail.com</strong>.</p>
       </div>
     </div>
   );

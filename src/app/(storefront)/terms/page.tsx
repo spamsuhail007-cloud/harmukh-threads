@@ -30,7 +30,7 @@ export default function TermsPage() {
         <p>You can review the most current version of the Terms of Service at any time at this page. We reserve the right, at our sole discretion, to update, change or replace any part of these Terms of Service by posting updates and changes to our website. It is your responsibility to check our website periodically for changes.</p>
         
         <h3>6. Contact Information</h3>
-        <p>Questions about the Terms of Service should be sent to us at <strong>hello@harmukh.in</strong>.</p>
+        <p>Questions about the Terms of Service should be sent to us at <strong>harmukhthreads@gmail.com</strong>.</p>
       </div>
     </div>
   );
