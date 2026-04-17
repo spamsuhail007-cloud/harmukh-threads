@@ -31,9 +31,8 @@ export default async function AdminDashboard() {
   // Merge orders and messages into a single activity feed sorted by date
   const activity = [
     ...stats.recentOrders.map((o) => {
-      const addr = o.shippingAddress as any;
-      const customerName = addr?.name || 'Customer';
-      const productName = o.items[0]?.productName || 'an item';
+      const customerName = `${o.firstName} ${o.lastName}`.trim() || 'Customer';
+      const productName = o.items[0]?.name || 'an item';
       return {
         type: 'order' as const,
         id: o.id,

@@ -109,9 +109,10 @@ export async function getAdminStats() {
       isRead: true,
       items: {
         take: 1,
-        select: { productName: true },
+        select: { name: true },
       },
-      shippingAddress: true,
+      firstName: true,
+      lastName: true,
     },
   });
 
