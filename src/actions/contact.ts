@@ -72,3 +72,17 @@ export async function updateMessageStatus(id: string, status: string) {
   });
   revalidatePath('/admin/messages');
 }
+
+export async function deleteMessage(id: string) {
+  await db.contactMessage.delete({
+    where: { id },
+  });
+  revalidatePath('/admin/messages');
+}
+export async function markMessagesAsRead() {
+  await db.contactMessage.updateMany({
+    where: { isRead: false },
+    data: { isRead: true },
+  });
+  revalidatePath('/admin/messages');
+}

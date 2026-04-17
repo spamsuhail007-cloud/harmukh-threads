@@ -65,6 +65,13 @@ export function AdminSidebar({ email, signOutAction }: AdminSidebarProps) {
         Inventory
       </Link>
 
+      <Link
+        href="/admin/reviews"
+        className={`admin-tab${isActive('/admin/reviews') ? ' active' : ''}`}
+      >
+        Reviews
+      </Link>
+
       {/* Account / Sign out */}
       <div style={{ marginTop: 'auto', padding: 'var(--space-lg)' }}>
         <div

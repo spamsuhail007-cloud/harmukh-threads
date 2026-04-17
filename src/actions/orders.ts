@@ -155,3 +155,18 @@ export async function updateOrderStatus(orderId: string, status: string) {
 
   revalidatePath('/admin/orders');
 }
+
+export async function deleteOrder(orderId: string) {
+  await db.order.delete({
+    where: { id: orderId },
+  });
+  revalidatePath('/admin/orders');
+}
+
+export async function markOrdersAsRead() {
+  await db.order.updateMany({
+    where: { isRead: false },
+    data: { isRead: true },
+  });
+  revalidatePath('/admin/orders');
+}

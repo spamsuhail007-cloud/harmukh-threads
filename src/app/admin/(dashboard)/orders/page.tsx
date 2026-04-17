@@ -1,10 +1,11 @@
-import { getOrders } from '@/actions/orders';
+import { getOrders, markOrdersAsRead } from '@/actions/orders';
 import { OrderRow } from './OrderRow';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrdersPage() {
   const orders = await getOrders();
+  await markOrdersAsRead();
 
   return (
     <>

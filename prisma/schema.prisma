@@ -74,11 +74,13 @@ model Order {
   paymentMethod   String        @default("COD")
   paymentStatus   PaymentStatus @default(PENDING)
   notes           String?       @db.Text
+  isRead          Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
   @@index([email])
   @@index([status])
+  @@index([isRead])
   @@index([createdAt])
 }
 
@@ -102,9 +104,11 @@ model ContactMessage {
   subject   String
   message   String        @db.Text
   status    MessageStatus @default(NEW)
+  isRead    Boolean       @default(false)
   createdAt DateTime      @default(now())
 
   @@index([status])
+  @@index([isRead])
 }
 
 model AdminUser {

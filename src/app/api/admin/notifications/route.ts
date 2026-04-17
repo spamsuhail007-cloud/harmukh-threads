@@ -18,8 +18,8 @@ export async function GET(req: NextRequest) {
   const [newOrdersSince, newMessagesSince, unreadOrders, unreadMessages, latestOrder, latestMessage] = await Promise.all([
     db.order.count({ where: { createdAt: { gt: since } } }),
     db.contactMessage.count({ where: { createdAt: { gt: since } } }),
-    db.order.count({ where: { status: 'PENDING' } }),
-    db.contactMessage.count({ where: { status: 'NEW' } }),
+    db.order.count({ where: { isRead: false } }),
+    db.contactMessage.count({ where: { isRead: false } }),
     db.order.findFirst({ orderBy: { createdAt: 'desc' }, select: { id: true, orderNumber: true, firstName: true, total: true, createdAt: true } }),
     db.contactMessage.findFirst({ orderBy: { createdAt: 'desc' }, select: { id: true, name: true, subject: true, createdAt: true } }),
   ]);

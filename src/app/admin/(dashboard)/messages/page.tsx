@@ -1,10 +1,11 @@
-import { getMessages } from '@/actions/contact';
+import { getMessages, markMessagesAsRead } from '@/actions/contact';
 import { MessageRow } from './MessageRow';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MessagesPage() {
   const messages = await getMessages();
+  await markMessagesAsRead();
 
   return (
     <>
