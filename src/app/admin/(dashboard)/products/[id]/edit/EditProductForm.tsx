@@ -317,8 +317,8 @@ export default function EditProductForm({ product }: { product: Product }) {
               ))}
             </div>
             <div className="form-group" style={{ marginTop: 'var(--space-md)' }}>
-              <label className="form-label">Product Note <span style={{ fontWeight: 400, textTransform: 'none' }}>(shown at bottom of description)</span></label>
-              <input type="text" name="productNote" className="form-input" placeholder="e.g. Actual color may differ slightly due to photography effects" defaultValue={(product as any).productNote ?? ''} />
+              <label className="form-label">Product Note <span style={{ fontWeight: 400, textTransform: 'none' }}>(shown under Specifications)</span></label>
+              <textarea name="productNote" className="form-input" rows={3} style={{ resize: 'vertical' }} placeholder="e.g. Dry clean recommended.&#10;Avoid direct sunlight for prolonged periods." defaultValue={(product as any).productNote ?? ''} />
             </div>
           </div>
 
