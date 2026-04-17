@@ -33,14 +33,14 @@ export default function LoginPage() {
           <div className="logo-mark" style={{ fontSize: '2rem', marginBottom: 'var(--space-sm)' }}>✦</div>
           <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem' }}>Admin Portal</h1>
         </div>
-        <form action={formAction}>
+        <form action={formAction} autoComplete="off">
           <div className="form-group">
             <label className="form-label">Email</label>
-            <input type="email" name="email" className="form-input" required defaultValue="admin@harmukh.com" />
+            <input type="email" name="email" className="form-input" required autoComplete="username" />
           </div>
           <div className="form-group">
             <label className="form-label">Password</label>
-            <input type="password" name="password" className="form-input" required defaultValue="admin123" />
+            <input type="password" name="password" className="form-input" required autoComplete="current-password" />
           </div>
           {state?.error && <div className="form-error" style={{ marginBottom: 'var(--space-md)', textAlign: 'center' }}>{state.error}</div>}
           <button type="submit" className="btn btn-primary btn-full" disabled={isPending}>
