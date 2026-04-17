@@ -35,7 +35,10 @@ export async function createOrder(data: unknown) {
 
   const recaptchaResult = await verifyRecaptcha(parsed.data.token);
   if (!recaptchaResult.success) {
-    return { success: false, error: 'Google reCAPTCHA verification failed. Are you a bot?' };
+    const errorDetails = recaptchaResult.errorCodes 
+      ? `Codes: ${recaptchaResult.errorCodes.join(',')}` 
+      : `Score: ${recaptchaResult.score || 'N/A'}`;
+    return { success: false, error: `Google reCAPTCHA verification failed. Are you a bot? (${errorDetails})` };
   }
 
   const { items, token, ...customerData } = parsed.data;

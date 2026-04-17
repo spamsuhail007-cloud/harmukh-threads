@@ -24,9 +24,12 @@ export async function submitContactForm(formData: FormData) {
 
   const recaptchaResult = await verifyRecaptcha(parsed.data.token);
   if (!recaptchaResult.success) {
+    const errorDetails = recaptchaResult.errorCodes 
+      ? `Codes: ${recaptchaResult.errorCodes.join(',')}` 
+      : `Score: ${recaptchaResult.score || 'N/A'}`;
     return { 
       success: false, 
-      error: `Google reCAPTCHA verification failed. Are you a bot? (Score: ${recaptchaResult.score || 'N/A'})` 
+      error: `Google reCAPTCHA verification failed. Are you a bot? (${errorDetails})` 
     };
   }
 
