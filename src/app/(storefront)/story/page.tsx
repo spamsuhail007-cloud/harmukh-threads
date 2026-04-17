@@ -64,8 +64,8 @@ export default function StoryPage() {
       <section className="container artisan-section" id="artisans">
         <div className="artisan-grid">
           <img
-            src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&q=80"
-            alt="Artisan loom weaving"
+            src="/cusioncover.png"
+            alt="Handcrafted Kashmiri Cushion Cover"
             className="artisan-img"
           />
           <div>
