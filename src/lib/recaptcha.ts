@@ -4,16 +4,16 @@ export async function verifyRecaptcha(token: string) {
   if (!secretKey) {
     if (process.env.NODE_ENV === 'development') {
       console.warn('⚠️ No RECAPTCHA_SECRET_KEY detected in development, bypassing reCAPTCHA.');
-      return true;
+      return { success: true, score: 1.0 };
     }
     console.error('Missing RECAPTCHA_SECRET_KEY in production.');
-    return true; // fail open rather than blocking all submissions
+    return { success: true, score: 1.0 }; // fail open rather than blocking all submissions
   }
 
   // If no token provided (client-side reCAPTCHA failure), log and allow
   if (!token) {
     console.warn('⚠️ No reCAPTCHA token provided, allowing submission.');
-    return true;
+    return { success: true, score: 1.0 };
   }
 
   try {
@@ -29,14 +29,18 @@ export async function verifyRecaptcha(token: string) {
     
     // Google returns data.score between 0.0 and 1.0. 
     // 1.0 is very likely a good interaction, 0.0 is very likely a bot.
-    if (data.success && data.score >= 0.5) {
-      return true;
+    if (data.success && data.score >= 0.3) {
+      return { success: true, score: data.score };
     } else {
       console.warn('reCAPTCHA verification failed or score too low:', data);
-      return false;
+      return { 
+        success: false, 
+        score: data.score, 
+        errorCodes: data['error-codes'] 
+      };
     }
   } catch (error) {
     console.error('Error verifying reCAPTCHA:', error);
-    return false;
+    return { success: false, error: 'Network error verifying reCAPTCHA' };
   }
 }

@@ -33,8 +33,8 @@ export async function createOrder(data: unknown) {
     return { success: false, error: 'Invalid order data' };
   }
 
-  const isValidBot = await verifyRecaptcha(parsed.data.token);
-  if (!isValidBot) {
+  const recaptchaResult = await verifyRecaptcha(parsed.data.token);
+  if (!recaptchaResult.success) {
     return { success: false, error: 'Google reCAPTCHA verification failed. Are you a bot?' };
   }
 

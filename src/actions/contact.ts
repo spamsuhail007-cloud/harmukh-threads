@@ -22,9 +22,12 @@ export async function submitContactForm(formData: FormData) {
     return { success: false, error: 'Please fill all fields correctly.' };
   }
 
-  const isValidBot = await verifyRecaptcha(parsed.data.token);
-  if (!isValidBot) {
-    return { success: false, error: 'Google reCAPTCHA verification failed. Are you a bot?' };
+  const recaptchaResult = await verifyRecaptcha(parsed.data.token);
+  if (!recaptchaResult.success) {
+    return { 
+      success: false, 
+      error: `Google reCAPTCHA verification failed. Are you a bot? (Score: ${recaptchaResult.score || 'N/A'})` 
+    };
   }
 
   try {
