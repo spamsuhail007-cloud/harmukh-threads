@@ -84,16 +84,47 @@ export async function deleteProduct(id: string) {
 }
 
 export async function getAdminStats() {
-  const [totalOrders, totalProducts, pendingOrders, lowStockProducts] = await Promise.all([
+  const [totalOrders, totalProducts, pendingOrders, lowStockProducts, unreadOrders, unreadMessages] = await Promise.all([
     db.order.count(),
     db.product.count(),
     db.order.count({ where: { status: 'PENDING' } }),
     db.product.count({ where: { stock: { lte: 3 }, isActive: true } }),
+    db.order.count({ where: { isRead: false } }),
+    db.contactMessage.count({ where: { isRead: false } }),
   ]);
 
   const revenueAgg = await db.order.aggregate({
     _sum: { total: true },
     where: { paymentStatus: 'PAID' },
+  });
+
+  const recentOrders = await db.order.findMany({
+    take: 5,
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      createdAt: true,
+      total: true,
+      status: true,
+      isRead: true,
+      items: {
+        take: 1,
+        select: { productName: true },
+      },
+      shippingAddress: true,
+    },
+  });
+
+  const recentMessages = await db.contactMessage.findMany({
+    take: 5,
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      createdAt: true,
+      name: true,
+      subject: true,
+      isRead: true,
+    },
   });
 
   return {
@@ -102,5 +133,9 @@ export async function getAdminStats() {
     pendingOrders,
     lowStockProducts,
     totalRevenue: revenueAgg._sum.total ?? 0,
+    unreadOrders,
+    unreadMessages,
+    recentOrders,
+    recentMessages,
   };
 }
