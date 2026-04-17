@@ -15,11 +15,11 @@ export default function ContactPage() {
     setError('');
 
     try {
-      // Try to get reCAPTCHA token — fail gracefully if unavailable
       let token = '';
       try {
         if (executeRecaptcha) {
-          token = await executeRecaptcha('contact_form');
+          const recaptchaResult = await executeRecaptcha('contact_form');
+          token = recaptchaResult || '';
         }
       } catch (captchaErr) {
         console.warn('reCAPTCHA token generation failed, proceeding without:', captchaErr);
@@ -27,12 +27,12 @@ export default function ContactPage() {
 
       const fd = new FormData(e.currentTarget);
       const data = {
-        name: fd.get('name'),
-        email: fd.get('email'),
-        phone: fd.get('phone'),
-        subject: fd.get('subject'),
-        message: fd.get('message'),
-        token,
+        name: String(fd.get('name') || ''),
+        email: String(fd.get('email') || ''),
+        phone: String(fd.get('phone') || ''),
+        subject: String(fd.get('subject') || ''),
+        message: String(fd.get('message') || ''),
+        token: token || '',
       };
 
       const res = await submitContactForm(data);
@@ -43,6 +43,7 @@ export default function ContactPage() {
         setError(res.error || 'Failed to submit form.');
       }
     } catch (err) {
+      console.error('Contact Form Exception:', err);
       setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
