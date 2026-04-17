@@ -39,8 +39,9 @@ export async function submitContactForm(formData: FormData) {
     // Critical: save to DB — if this fails, return error
     await db.contactMessage.create({ data: dbData });
 
-    // Non-critical: send notifications — failures are logged but don't block
-    Promise.allSettled([
+    // Critical Fix: We MUST await this on Vercel, otherwise the Serverless Function freezes 
+    // the container immediately upon returning and kills the outgoing email network requests!
+    await Promise.allSettled([
       sendEnquiryCopyEmail(dbData),
       sendAdminEnquiryNotification(dbData),
       sendTelegramAlert(
