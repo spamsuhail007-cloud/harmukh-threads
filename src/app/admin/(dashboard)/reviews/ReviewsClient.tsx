@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { createReview, deleteReview } from '@/actions/reviews';
+import { createReview, deleteReview, updateReview } from '@/actions/reviews';
 
 type ProductRow = {
   id: string;
@@ -18,6 +18,14 @@ export function ReviewsClient({ products }: { products: ProductRow[] }) {
     author: '',
     rating: 5,
     text: ''
+  });
+
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({
+    author: '',
+    rating: 5,
+    text: '',
+    createdAt: ''
   });
 
   const selectedProduct = products.find(p => p.id === selectedProductId);
@@ -49,6 +57,30 @@ export function ReviewsClient({ products }: { products: ProductRow[] }) {
     });
   };
 
+  const handleEditClick = (review: any) => {
+    setEditingReviewId(review.id);
+    setEditForm({
+      author: review.author,
+      rating: review.rating,
+      text: review.text,
+      createdAt: new Date(review.createdAt).toISOString().split('T')[0]
+    });
+  };
+
+  const handleUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingReviewId) return;
+
+    startTransition(async () => {
+      const res = await updateReview(editingReviewId, editForm);
+      if (res.success) {
+        setEditingReviewId(null);
+      } else {
+        alert(res.error || 'Failed to update review');
+      }
+    });
+  };
+
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 300px) 1fr', gap: '24px', alignItems: 'start' }}>
       {/* ── Sidebar: Product List ── */}
@@ -60,7 +92,10 @@ export function ReviewsClient({ products }: { products: ProductRow[] }) {
           {products.map(p => (
             <div 
               key={p.id}
-              onClick={() => setSelectedProductId(p.id)}
+              onClick={() => {
+                setSelectedProductId(p.id);
+                setEditingReviewId(null);
+              }}
               style={{
                 padding: '12px 16px',
                 borderBottom: '1px solid var(--outline-variant)',
@@ -153,30 +188,97 @@ export function ReviewsClient({ products }: { products: ProductRow[] }) {
               <div style={{ display: 'grid', gap: '16px' }}>
                 {selectedProduct.reviews.map(review => (
                   <div key={review.id} style={{ padding: '16px', border: '1px solid var(--outline-variant)', borderRadius: '8px', display: 'flex', gap: '16px' }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                        <strong style={{ fontSize: '1rem' }}>{review.author}</strong>
-                        <div style={{ display: 'flex', gap: '2px', color: '#f59e0b' }}>
-                          {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                    {editingReviewId === review.id ? (
+                      <form onSubmit={handleUpdate} style={{ flex: 1, display: 'grid', gap: '12px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px 150px', gap: '12px' }}>
+                          <input 
+                            type="text" 
+                            className="form-input" 
+                            required 
+                            value={editForm.author}
+                            onChange={e => setEditForm({...editForm, author: e.target.value})}
+                            placeholder="Reviewer Name"
+                          />
+                          <select 
+                            className="form-input" 
+                            value={editForm.rating}
+                            onChange={e => setEditForm({...editForm, rating: Number(e.target.value)})}
+                          >
+                            <option value={5}>5 Stars</option>
+                            <option value={4}>4 Stars</option>
+                            <option value={3}>3 Stars</option>
+                            <option value={2}>2 Stars</option>
+                            <option value={1}>1 Star</option>
+                          </select>
+                          <input 
+                            type="date" 
+                            className="form-input" 
+                            required 
+                            value={editForm.createdAt}
+                            onChange={e => setEditForm({...editForm, createdAt: e.target.value})}
+                          />
                         </div>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)' }}>
-                          {new Date(review.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p style={{ margin: 0, color: 'var(--on-surface-variant)', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                        {review.text}
-                      </p>
-                    </div>
-                    <div>
-                      <button 
-                        onClick={() => handleDelete(review.id)}
-                        disabled={isPending}
-                        className="btn btn-outline btn-sm"
-                        style={{ color: 'var(--error)', padding: '6px 12px' }}
-                      >
-                        Delete
-                      </button>
-                    </div>
+                        <textarea 
+                          className="form-input" 
+                          rows={3} 
+                          required 
+                          value={editForm.text}
+                          onChange={e => setEditForm({...editForm, text: e.target.value})}
+                        />
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button 
+                            type="submit" 
+                            className="btn btn-primary btn-sm" 
+                            disabled={isPending}
+                          >
+                            {isPending ? 'Saving...' : 'Save Changes'}
+                          </button>
+                          <button 
+                            type="button" 
+                            className="btn btn-ghost btn-sm" 
+                            onClick={() => setEditingReviewId(null)}
+                            disabled={isPending}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                            <strong style={{ fontSize: '1rem' }}>{review.author}</strong>
+                            <div style={{ display: 'flex', gap: '2px', color: '#f59e0b' }}>
+                              {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                            </div>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)' }}>
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p style={{ margin: 0, color: 'var(--on-surface-variant)', fontSize: '0.9rem', lineHeight: 1.5 }}>
+                            {review.text}
+                          </p>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <button 
+                            onClick={() => handleEditClick(review)}
+                            disabled={isPending}
+                            className="btn btn-outline btn-sm"
+                            style={{ padding: '6px 12px' }}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(review.id)}
+                            disabled={isPending}
+                            className="btn btn-outline btn-sm"
+                            style={{ color: 'var(--error)', padding: '6px 12px' }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>

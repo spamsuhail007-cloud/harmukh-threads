@@ -58,3 +58,36 @@ export async function deleteReview(reviewId: string) {
     return { success: false, error: 'Failed to delete review' };
   }
 }
+
+const UpdateReviewSchema = z.object({
+  author: z.string().min(2),
+  rating: z.number().min(1).max(5),
+  text: z.string().min(3),
+  createdAt: z.string().or(z.date()),
+});
+
+export async function updateReview(reviewId: string, data: unknown) {
+  const parsed = UpdateReviewSchema.safeParse(data);
+  if (!parsed.success) {
+    return { success: false, error: 'Invalid review update data' };
+  }
+
+  try {
+    await db.review.update({
+      where: { id: reviewId },
+      data: {
+        author: parsed.data.author,
+        rating: parsed.data.rating,
+        text: parsed.data.text,
+        createdAt: new Date(parsed.data.createdAt),
+      }
+    });
+    
+    revalidatePath('/admin/reviews');
+    revalidatePath('/products/[slug]', 'page');
+    return { success: true };
+  } catch (err) {
+    console.error('Error updating review:', err);
+    return { success: false, error: 'Failed to update review' };
+  }
+}
