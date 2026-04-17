@@ -11,7 +11,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ email, signOutAction }: AdminSidebarProps) {
   const pathname = usePathname();
-  const { newOrders, newMessages, clearOrders, clearMessages } = useNotifications();
+  const { unreadOrders, unreadMessages, clearOrders, clearMessages } = useNotifications();
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
@@ -31,12 +31,12 @@ export function AdminSidebar({ email, signOutAction }: AdminSidebarProps) {
         onClick={clearOrders}
       >
         <span style={{ flex: 1 }}>Orders</span>
-        {newOrders > 0 && (
+        {unreadOrders > 0 && (
           <span
             className="admin-notif-pill"
-            title={`${newOrders} new order${newOrders > 1 ? 's' : ''}`}
+            title={`${unreadOrders} new order${unreadOrders > 1 ? 's' : ''}`}
           >
-            {newOrders > 99 ? '99+' : newOrders}
+            {unreadOrders > 99 ? '99+' : unreadOrders}
           </span>
         )}
       </Link>
@@ -48,12 +48,12 @@ export function AdminSidebar({ email, signOutAction }: AdminSidebarProps) {
         onClick={clearMessages}
       >
         <span style={{ flex: 1 }}>Messages</span>
-        {newMessages > 0 && (
+        {unreadMessages > 0 && (
           <span
             className="admin-notif-pill"
-            title={`${newMessages} new enquir${newMessages > 1 ? 'ies' : 'y'}`}
+            title={`${unreadMessages} new enquir${unreadMessages > 1 ? 'ies' : 'y'}`}
           >
-            {newMessages > 99 ? '99+' : newMessages}
+            {unreadMessages > 99 ? '99+' : unreadMessages}
           </span>
         )}
       </Link>

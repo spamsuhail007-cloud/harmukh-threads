@@ -22,8 +22,8 @@ interface Toast {
 }
 
 interface NotifState {
-  newOrders: number;
-  newMessages: number;
+  unreadOrders: number;
+  unreadMessages: number;
   clearOrders: () => void;
   clearMessages: () => void;
 }
@@ -31,8 +31,8 @@ interface NotifState {
 // ─── Context ──────────────────────────────────────────────────
 
 export const NotifContext = createContext<NotifState>({
-  newOrders: 0,
-  newMessages: 0,
+  unreadOrders: 0,
+  unreadMessages: 0,
   clearOrders: () => {},
   clearMessages: () => {},
 });
@@ -70,8 +70,8 @@ const POLL_INTERVAL = 30_000; // 30 seconds
 const LS_KEY = 'ht_admin_last_checked';
 
 export function AdminNotificationProvider({ children }: { children: React.ReactNode }) {
-  const [newOrders, setNewOrders] = useState(0);
-  const [newMessages, setNewMessages] = useState(0);
+  const [unreadOrders, setUnreadOrders] = useState(0);
+  const [unreadMessages, setUnreadMessages] = useState(0);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isFirstRun = useRef(true);
@@ -97,17 +97,20 @@ export function AdminNotificationProvider({ children }: { children: React.ReactN
       if (!res.ok) return;
       const data = await res.json();
 
-      const { newOrders: nO, newMessages: nM, latestOrder, latestMessage, checkedAt } = data;
+      const { newOrders: nO, newMessages: nM, unreadOrders: uO, unreadMessages: uM, latestOrder, latestMessage, checkedAt } = data;
       localStorage.setItem(LS_KEY, checkedAt);
 
+      // Always update global unread badge counters from backend
+      setUnreadOrders(uO);
+      setUnreadMessages(uM);
+
       if (isFirstRun.current) {
-        // On mount: silently set counts (don't show toasts for backlog)
+        // On mount: don't show toast popups for backlog
         isFirstRun.current = false;
         return;
       }
 
       if (nO > 0) {
-        setNewOrders(prev => prev + nO);
         addToast({
           type: 'order',
           title: nO === 1 ? 'New Order Received!' : `${nO} New Orders Received!`,
@@ -119,7 +122,6 @@ export function AdminNotificationProvider({ children }: { children: React.ReactN
       }
 
       if (nM > 0) {
-        setNewMessages(prev => prev + nM);
         addToast({
           type: 'message',
           title: nM === 1 ? 'New Enquiry Received!' : `${nM} New Enquiries Received!`,
@@ -148,17 +150,19 @@ export function AdminNotificationProvider({ children }: { children: React.ReactN
   }, []);
 
   const clearOrders = useCallback(() => {
-    setNewOrders(0);
-    localStorage.setItem(LS_KEY, new Date().toISOString());
+    // Note: To persist 'read' state correctly, we'd need to update the database statuses
+    // For now, this just clears the UI badge until the next poll.
+    setUnreadOrders(0);
   }, []);
 
   const clearMessages = useCallback(() => {
-    setNewMessages(0);
-    localStorage.setItem(LS_KEY, new Date().toISOString());
+    // Note: To persist 'read' state correctly, we'd need to update the database statuses
+    // For now, this just clears the UI badge until the next poll.
+    setUnreadMessages(0);
   }, []);
 
   return (
-    <NotifContext.Provider value={{ newOrders, newMessages, clearOrders, clearMessages }}>
+    <NotifContext.Provider value={{ unreadOrders, unreadMessages, clearOrders, clearMessages }}>
       {children}
 
       {/* Toast stack */}

@@ -15,16 +15,20 @@ export async function GET(req: NextRequest) {
   const sinceParam = searchParams.get('since');
   const since = sinceParam ? new Date(sinceParam) : new Date(Date.now() - 60_000);
 
-  const [newOrders, newMessages, latestOrder, latestMessage] = await Promise.all([
+  const [newOrdersSince, newMessagesSince, unreadOrders, unreadMessages, latestOrder, latestMessage] = await Promise.all([
     db.order.count({ where: { createdAt: { gt: since } } }),
     db.contactMessage.count({ where: { createdAt: { gt: since } } }),
+    db.order.count({ where: { status: 'PENDING' } }),
+    db.contactMessage.count({ where: { status: 'NEW' } }),
     db.order.findFirst({ orderBy: { createdAt: 'desc' }, select: { id: true, orderNumber: true, firstName: true, total: true, createdAt: true } }),
     db.contactMessage.findFirst({ orderBy: { createdAt: 'desc' }, select: { id: true, name: true, subject: true, createdAt: true } }),
   ]);
 
   return NextResponse.json({
-    newOrders,
-    newMessages,
+    newOrders: newOrdersSince,
+    newMessages: newMessagesSince,
+    unreadOrders,
+    unreadMessages,
     latestOrder,
     latestMessage,
     checkedAt: new Date().toISOString(),
