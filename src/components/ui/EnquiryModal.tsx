@@ -45,7 +45,14 @@ export function EnquiryModal({ productName, onClose }: EnquiryModalProps) {
     const message = fd.get('message') as string;
     const subject = `Product Enquiry: ${productName}`;
     const fullMessage = `Phone/WhatsApp: ${phone}\n\n${message}`;
-    const res = await submitContactForm({ name, email, subject, message: fullMessage });
+    const fdToSend = new FormData();
+    fdToSend.set('name', name);
+    fdToSend.set('email', email);
+    fdToSend.set('phone', phone);
+    fdToSend.set('subject', subject);
+    fdToSend.set('message', fullMessage);
+    fdToSend.set('token', '');
+    const res = await submitContactForm(fdToSend);
     setLoading(false);
     if (res.success) setSuccess(true);
     else setError(res.error || 'Something went wrong.');
