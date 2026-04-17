@@ -95,6 +95,7 @@ export default function EditProductForm({ product }: { product: Product }) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget); // Capture before any awaits
     setIsSubmitting(true);
     setError('');
 
@@ -125,7 +126,6 @@ export default function EditProductForm({ product }: { product: Product }) {
     }
 
     setSubmitStatus('Saving changes…');
-    const formData = new FormData(e.currentTarget);
     const rawBadge = (formData.get('badge') as string)?.trim();
     const data = {
       name: formData.get('name'),
