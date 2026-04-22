@@ -34,7 +34,6 @@ export function VideoCard({ product }: { product: Product }) {
         src={product.videoUrl}
         autoPlay
         muted
-        defaultMuted
         loop
         playsInline
         onClick={(e) => {
