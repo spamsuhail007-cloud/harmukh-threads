@@ -18,10 +18,13 @@ export const metadata: Metadata = {
   },
 };
 
+import NextTopLoader from 'nextjs-toploader';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
+        <NextTopLoader color="var(--primary)" showSpinner={false} height={3} />
         <Providers>{children}</Providers>
         <Analytics />
       </body>
