@@ -24,32 +24,63 @@ export default async function HomePage() {
     <>
       <section className="hero">
         <img
-          src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1600&q=80"
-          alt="Artisan loom"
+          src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=1600&q=80"
+          alt="Luxury Kashmiri Loom"
           className="hero-bg"
         />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
-          <div className="hero-kicker">Est. 2026 — Srinagar</div>
           <h1 className="hero-headline">
-            Each piece carries<br />
-            400 years of <em>tradition.</em>
+            Heirloom Quality,<br />
+            Woven for <em>Generations.</em>
           </h1>
           <p className="hero-body">
-            Direct from the karkhanas of Kashmir. Discover museum-quality
-            hand-knotted rugs and hand-crafted pillow covers woven by master
-            artisans.
+            Harmukh Threads brings the timeless elegance of Kashmiri artistry to your home. 
+            Discover our curated collection of museum-quality hand-knotted rugs and 
+            masterfully crafted pillow covers.
           </p>
           <div className="hero-actions">
             <Link href="/collections" className="btn btn-primary">
               Explore Collections
             </Link>
             <Link href="/story" className="btn btn-secondary">
-              Meet the Artisans
+              Our Heritage
             </Link>
           </div>
         </div>
       </section>
+
+      {videoProducts.length > 0 && (
+        <section style={{ padding: 'var(--space-2xl) 0', background: 'var(--surface-container-low)' }}>
+          <div className="container">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-2xl)' }}>
+              <div>
+                <div className="section-kicker" style={{ color: 'var(--primary)' }}>Watch & Shop</div>
+                <h2 className="section-title" style={{ color: 'var(--on-surface)' }}>Artistry in Motion</h2>
+              </div>
+            </div>
+            
+            {/* Horizontal Scrolling Video Container */}
+            <div style={{
+              display: 'flex',
+              gap: 'var(--space-md)',
+              overflowX: 'auto',
+              paddingBottom: 'var(--space-md)',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none', /* Firefox */
+              msOverflowStyle: 'none',  /* Internet Explorer 10+ */
+            }} className="hide-scrollbar">
+              {videoProducts.map(product => (
+                <VideoCard key={product.id} product={product} />
+              ))}
+            </div>
+            <style dangerouslySetInnerHTML={{__html: `
+              .hide-scrollbar::-webkit-scrollbar { display: none; }
+            `}} />
+          </div>
+        </section>
+      )}
 
       <section className="trust-bar">
         <div className="container">
@@ -96,38 +127,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {videoProducts.length > 0 && (
-        <section style={{ padding: 'var(--space-2xl) 0', background: 'var(--surface-container-low)' }}>
-          <div className="container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-2xl)' }}>
-              <div>
-                <div className="section-kicker" style={{ color: 'var(--primary)' }}>Watch & Shop</div>
-                <h2 className="section-title" style={{ color: 'var(--on-surface)' }}>Trusted By Legends</h2>
-              </div>
-            </div>
-            
-            {/* Horizontal Scrolling Video Container */}
-            <div style={{
-              display: 'flex',
-              gap: 'var(--space-md)',
-              overflowX: 'auto',
-              paddingBottom: 'var(--space-md)',
-              scrollSnapType: 'x mandatory',
-              WebkitOverflowScrolling: 'touch',
-              scrollbarWidth: 'none', /* Firefox */
-              msOverflowStyle: 'none',  /* Internet Explorer 10+ */
-            }} className="hide-scrollbar">
-              {videoProducts.map(product => (
-                <VideoCard key={product.id} product={product} />
-              ))}
-            </div>
-            <style dangerouslySetInnerHTML={{__html: `
-              .hide-scrollbar::-webkit-scrollbar { display: none; }
-            `}} />
-          </div>
-        </section>
-      )}
 
       <section style={{ padding: 'var(--space-xl) 0 var(--space-3xl)' }}>
         <div className="container">

@@ -412,14 +412,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ============================================================
    HERO
    ============================================================ */
-.hero { position: relative; min-height: 90vh; display: flex; align-items: center; overflow: hidden; background: var(--surface-container-low); }
-.hero-bg { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.4; }
-.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(252,249,242,0.95) 40%, rgba(252,249,242,0.2) 100%); }
-.hero-content { position: relative; z-index: 2; max-width: 600px; }
-.hero-kicker { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--secondary); margin-bottom: var(--space-md); }
-.hero-headline { font-family: var(--font-serif); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; color: var(--on-surface); line-height: 1.1; margin-bottom: var(--space-lg); }
-.hero-headline em { font-style: italic; color: var(--primary); }
-.hero-body { font-size: 1.05rem; color: var(--on-surface-variant); line-height: 1.7; margin-bottom: var(--space-xl); max-width: 460px; }
+.hero { position: relative; min-height: 85vh; display: flex; align-items: center; overflow: hidden; background: #000; }
+.hero-bg { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.6; filter: saturate(0.8) contrast(1.1); transition: transform 20s ease-out; }
+.hero:hover .hero-bg { transform: scale(1.1); }
+.hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.3) 70%, transparent 100%); }
+.hero-content { position: relative; z-index: 2; max-width: 700px; color: #fff; }
+.hero-headline { font-family: var(--font-serif); font-size: clamp(2.75rem, 6vw, 4.5rem); font-weight: 700; letter-spacing: -0.03em; color: #fff; line-height: 1.05; margin-bottom: var(--space-lg); text-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.hero-headline em { font-style: italic; color: var(--primary-fixed-dim); }
+.hero-body { font-size: 1.15rem; color: rgba(255,255,255,0.85); line-height: 1.8; margin-bottom: var(--space-xl); max-width: 520px; }
 .hero-actions { display: flex; gap: var(--space-md); flex-wrap: wrap; }
 
 /* ============================================================
@@ -430,6 +430,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .trust-item-icon { font-size: 1.5rem; margin-bottom: var(--space-sm); color: var(--secondary); }
 .trust-item-title { font-size: 0.875rem; font-weight: 600; color: var(--on-surface); margin-bottom: 2px; }
 .trust-item-sub { font-size: 0.75rem; color: var(--on-surface-variant); }
+
+/* ============================================================
+
 
 /* ============================================================
    PRODUCT CARD
