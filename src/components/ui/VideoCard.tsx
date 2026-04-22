@@ -11,8 +11,8 @@ export function VideoCard({ product }: { product: Product }) {
       style={{
         display: 'block',
         position: 'relative',
-        width: '240px',
-        height: '426px', // ~9:16 ratio
+        width: '220px',
+        height: '391px', // ~9:16 ratio
         flexShrink: 0,
         borderRadius: 'var(--radius-md)',
         overflow: 'hidden',
@@ -24,9 +24,17 @@ export function VideoCard({ product }: { product: Product }) {
       className="video-card"
     >
       <video
+        ref={(el) => {
+          if (el) {
+            el.defaultMuted = true;
+            el.muted = true;
+            el.play().catch(() => {}); // Attempt to play if autoPlay fails
+          }
+        }}
         src={product.videoUrl}
         autoPlay
         muted
+        defaultMuted
         loop
         playsInline
         onClick={(e) => {
