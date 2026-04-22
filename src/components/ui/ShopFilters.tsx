@@ -7,7 +7,9 @@ interface ShopFiltersProps {
   currentCategory: string;
 }
 
-export function ShopFilters({ currentCategory }: ShopFiltersProps) {
+import { Suspense } from 'react';
+
+function ShopFiltersInner({ currentCategory }: ShopFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -83,5 +85,13 @@ export function ShopFilters({ currentCategory }: ShopFiltersProps) {
         </div>
       )}
     </div>
+  );
+}
+
+export function ShopFilters(props: ShopFiltersProps) {
+  return (
+    <Suspense fallback={<div style={{ height: '36px' }} />}>
+      <ShopFiltersInner {...props} />
+    </Suspense>
   );
 }

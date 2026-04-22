@@ -12,7 +12,9 @@ interface SearchBarProps {
   onClose?: () => void;
 }
 
-export function SearchBar({
+import { Suspense } from 'react';
+
+function SearchBarInner({
   initialQuery = '',
   currentCategory = '',
   searchMode = false,
@@ -139,5 +141,13 @@ export function SearchBar({
         >✕</button>
       )}
     </form>
+  );
+}
+
+export function SearchBar(props: SearchBarProps) {
+  return (
+    <Suspense fallback={<div style={{ width: '100%', height: '42px', background: 'var(--surface-container-low)', borderRadius: 'var(--radius-md)' }} />}>
+      <SearchBarInner {...props} />
+    </Suspense>
   );
 }
