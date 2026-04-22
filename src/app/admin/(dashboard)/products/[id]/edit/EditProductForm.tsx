@@ -139,7 +139,7 @@ export default function EditProductForm({ product }: { product: Product }) {
       images: finalUrls,
       badge: rawBadge || undefined,
       badgeType: rawBadge ? (formData.get('badgeType') as string) || 'badge-primary' : undefined,
-      size: formData.get('category') === 'Rugs' ? formData.get('size') || undefined : undefined,
+      size: formData.get('size') || undefined,
       specifications: specs.filter(s => s.label.trim() && s.value.trim()),
       productNote: formData.get('productNote') || undefined,
     };
@@ -188,19 +188,33 @@ export default function EditProductForm({ product }: { product: Product }) {
             </div>
           </div>
 
-          {category === 'Rugs' && (
+          {(category === 'Rugs' || category === 'Pillow Covers') && (
             <div className="form-group">
-              <label className="form-label">Rug Size</label>
+              <label className="form-label">{category === 'Rugs' ? 'Rug Size' : 'Cover Size'}</label>
               <select name="size" className="form-input" defaultValue={(product as any).size || ''}>
                 <option value="">-- Select Size --</option>
-                <option value="2x3 ft">2x3 ft</option>
-                <option value="2.5x4 ft">2.5x4 ft</option>
-                <option value="3x5 ft">3x5 ft</option>
-                <option value="4x6 ft">4x6 ft</option>
-                <option value="5x8 ft">5x8 ft</option>
-                <option value="6x9 ft">6x9 ft</option>
-                <option value="8x10 ft">8x10 ft</option>
-                <option value="9x12 ft">9x12 ft</option>
+                {category === 'Rugs' ? (
+                  <>
+                    <option value="2x3 ft">2x3 ft</option>
+                    <option value="2.5x4 ft">2.5x4 ft</option>
+                    <option value="3x5 ft">3x5 ft</option>
+                    <option value="4x6 ft">4x6 ft</option>
+                    <option value="5x8 ft">5x8 ft</option>
+                    <option value="6x9 ft">6x9 ft</option>
+                    <option value="8x10 ft">8x10 ft</option>
+                    <option value="9x12 ft">9x12 ft</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="16x16 in">16x16 in</option>
+                    <option value="18x18 in">18x18 in</option>
+                    <option value="20x20 in">20x20 in</option>
+                    <option value="22x22 in">22x22 in</option>
+                    <option value="24x24 in">24x24 in</option>
+                    <option value="12x20 in">12x20 in (Lumbar)</option>
+                    <option value="14x22 in">14x22 in (Lumbar)</option>
+                  </>
+                )}
               </select>
             </div>
           )}
