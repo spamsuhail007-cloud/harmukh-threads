@@ -2,11 +2,24 @@
 import { db } from '@/lib/db';
 import { type Product } from '@prisma/client';
 
-export async function getProducts(category?: string, query?: string): Promise<Product[]> {
+export async function getProducts(
+  category?: string, 
+  query?: string,
+  minPrice?: number,
+  maxPrice?: number,
+  size?: string
+): Promise<Product[]> {
   return db.product.findMany({
     where: {
       isActive: true,
       ...(category ? { category } : {}),
+      ...(size ? { size } : {}),
+      ...(minPrice !== undefined || maxPrice !== undefined ? {
+        price: {
+          ...(minPrice !== undefined ? { gte: minPrice } : {}),
+          ...(maxPrice !== undefined ? { lte: maxPrice } : {}),
+        }
+      } : {}),
       ...(query
         ? {
             OR: [
@@ -17,7 +30,7 @@ export async function getProducts(category?: string, query?: string): Promise<Pr
           }
         : {}),
     },
-    orderBy: { createdAt: 'asc' },
+    orderBy: { createdAt: 'desc' }, // usually desc is better for latest products
   });
 }
 

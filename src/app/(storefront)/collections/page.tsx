@@ -2,22 +2,29 @@ import Link from 'next/link';
 import { getProducts, getCategories } from '@/actions/products';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { SearchBar } from '@/components/ui/SearchBar';
+import { ShopFilters } from '@/components/ui/ShopFilters';
 
 export const dynamic = 'force-dynamic'; // search needs to be dynamic
 
 export default async function CollectionsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cat?: string; q?: string }>;
+  searchParams: Promise<{ cat?: string; q?: string; size?: string; minPrice?: string; maxPrice?: string }>;
 }) {
   const params = await searchParams;
   const currentCategory = params.cat || 'All';
   const searchQuery = params.q || '';
+  const currentSize = params.size || '';
+  const minPrice = params.minPrice ? parseInt(params.minPrice, 10) : undefined;
+  const maxPrice = params.maxPrice ? parseInt(params.maxPrice, 10) : undefined;
 
   const [products, dbCategories] = await Promise.all([
     getProducts(
       currentCategory === 'All' ? undefined : currentCategory,
       searchQuery || undefined,
+      minPrice,
+      maxPrice,
+      currentSize || undefined
     ),
     getCategories(),
   ]);
@@ -31,17 +38,30 @@ export default async function CollectionsPage({
           <h1 className="section-title" style={{ marginBottom: 'var(--space-lg)' }}>Our Collection</h1>
 
           {/* Search + Filter row */}
-          <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap', alignItems: 'center', marginBottom: 'var(--space-lg)' }}>
-            <SearchBar initialQuery={searchQuery} currentCategory={currentCategory} />
+          <div style={{ display: 'flex', gap: 'var(--space-lg)', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'space-between', marginBottom: 'var(--space-lg)' }}>
+            <div style={{ flex: '1 1 300px' }}>
+              <SearchBar initialQuery={searchQuery} currentCategory={currentCategory} />
+            </div>
+            <ShopFilters currentCategory={currentCategory} />
           </div>
 
           {/* Category filters */}
           <div style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
             {categories.map(cat => {
               const active = cat === currentCategory && !searchQuery;
-              const href = searchQuery
-                ? `/collections?q=${encodeURIComponent(searchQuery)}${cat !== 'All' ? `&cat=${cat}` : ''}`
-                : `/collections${cat === 'All' ? '' : `?cat=${cat}`}`;
+              
+              // Build href preserving existing params (except cat)
+              // We'll also drop size if switching to a non-Rugs category
+              const newParams = new URLSearchParams();
+              if (searchQuery) newParams.set('q', searchQuery);
+              if (cat !== 'All') newParams.set('cat', cat);
+              if (minPrice !== undefined) newParams.set('minPrice', minPrice.toString());
+              if (maxPrice !== undefined) newParams.set('maxPrice', maxPrice.toString());
+              if (currentSize && (cat === 'Rugs' || cat === 'All')) newParams.set('size', currentSize);
+              
+              const queryString = newParams.toString();
+              const href = `/collections${queryString ? `?${queryString}` : ''}`;
+              
               return (
                 <Link
                   key={cat}
@@ -66,7 +86,14 @@ export default async function CollectionsPage({
               <strong style={{ color: 'var(--on-surface)' }}>"{searchQuery}"</strong>
             </span>
             <Link
-              href={currentCategory !== 'All' ? `/collections?cat=${currentCategory}` : '/collections'}
+              href={`/collections?${new URLSearchParams(
+                Object.entries({
+                  cat: currentCategory !== 'All' ? currentCategory : '',
+                  size: currentSize,
+                  minPrice: minPrice?.toString() || '',
+                  maxPrice: maxPrice?.toString() || '',
+                }).filter(([, v]) => v !== '')
+              ).toString()}`}
               style={{ fontSize: '0.8rem', color: 'var(--primary)', textDecoration: 'underline' }}
             >
               Clear search

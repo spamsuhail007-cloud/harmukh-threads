@@ -66,6 +66,8 @@ export default function EditProductForm({ product }: { product: Product }) {
     setSpecs(newSpecs);
   };
 
+  const [category, setCategory] = useState(product.category || 'Rugs');
+
   const [slots, setSlots] = useState<ImageSlot[]>(
     product.images.map(url => ({ type: 'url' as const, url, preview: url }))
   );
@@ -137,6 +139,7 @@ export default function EditProductForm({ product }: { product: Product }) {
       images: finalUrls,
       badge: rawBadge || undefined,
       badgeType: rawBadge ? (formData.get('badgeType') as string) || 'badge-primary' : undefined,
+      size: formData.get('category') === 'Rugs' ? formData.get('size') || undefined : undefined,
       specifications: specs.filter(s => s.label.trim() && s.value.trim()),
       productNote: formData.get('productNote') || undefined,
     };
@@ -178,12 +181,29 @@ export default function EditProductForm({ product }: { product: Product }) {
             </div>
             <div className="form-group">
               <label className="form-label">Category *</label>
-              <select name="category" className="form-input" required defaultValue={product.category}>
+              <select name="category" className="form-input" required value={category} onChange={e => setCategory(e.target.value)}>
                 <option value="Rugs">Rugs</option>
                 <option value="Pillow Covers">Pillow Covers</option>
               </select>
             </div>
           </div>
+
+          {category === 'Rugs' && (
+            <div className="form-group">
+              <label className="form-label">Rug Size</label>
+              <select name="size" className="form-input" defaultValue={(product as any).size || ''}>
+                <option value="">-- Select Size --</option>
+                <option value="2x3 ft">2x3 ft</option>
+                <option value="2.5x4 ft">2.5x4 ft</option>
+                <option value="3x5 ft">3x5 ft</option>
+                <option value="4x6 ft">4x6 ft</option>
+                <option value="5x8 ft">5x8 ft</option>
+                <option value="6x9 ft">6x9 ft</option>
+                <option value="8x10 ft">8x10 ft</option>
+                <option value="9x12 ft">9x12 ft</option>
+              </select>
+            </div>
+          )}
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-lg)' }}>
             <div className="form-group">

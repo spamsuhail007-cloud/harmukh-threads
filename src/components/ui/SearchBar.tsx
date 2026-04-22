@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useState, useEffect, useTransition, useRef } from 'react';
 
 interface SearchBarProps {
@@ -28,22 +28,28 @@ export function SearchBar({
     if (autoFocus) inputRef.current?.focus();
   }, [autoFocus]);
 
+  const searchParams = useSearchParams();
+
   // Debounced navigation — only for collections mode (not search mode where user presses Enter)
   useEffect(() => {
     if (searchMode) return; // search page navigates on Enter only
 
     const timer = setTimeout(() => {
       if (value === initialQuery) return;
-      const params = new URLSearchParams();
+      const params = new URLSearchParams(searchParams.toString());
       if (currentCategory && currentCategory !== 'All') params.set('cat', currentCategory);
+      else params.delete('cat');
+      
       if (value.trim()) params.set('q', value.trim());
+      else params.delete('q');
+      
       startTransition(() => {
         router.push(`/collections${params.toString() ? `?${params}` : ''}`);
       });
     }, 350);
 
     return () => clearTimeout(timer);
-  }, [value, currentCategory, initialQuery, router, searchMode]);
+  }, [value, currentCategory, initialQuery, router, searchMode, searchParams]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -54,23 +60,29 @@ export function SearchBar({
         router.push(`/search?q=${encodeURIComponent(q)}`);
         onClose?.();
       } else {
-        const params = new URLSearchParams();
+        const params = new URLSearchParams(searchParams.toString());
         if (currentCategory && currentCategory !== 'All') params.set('cat', currentCategory);
+        else params.delete('cat');
+        
         if (q) params.set('q', q);
+        else params.delete('q');
+        
         router.push(`/collections${params.toString() ? `?${params}` : ''}`);
       }
     },
-    [value, currentCategory, router, searchMode, onClose]
+    [value, currentCategory, router, searchMode, onClose, searchParams]
   );
 
   const handleClear = useCallback(() => {
     setValue('');
     if (!searchMode) {
-      const params = new URLSearchParams();
+      const params = new URLSearchParams(searchParams.toString());
       if (currentCategory && currentCategory !== 'All') params.set('cat', currentCategory);
+      else params.delete('cat');
+      params.delete('q');
       router.push(`/collections${params.toString() ? `?${params}` : ''}`);
     }
-  }, [currentCategory, router, searchMode]);
+  }, [currentCategory, router, searchMode, searchParams]);
 
   return (
     <form onSubmit={handleSubmit} style={{ position: 'relative', width: '100%', maxWidth: searchMode ? '100%' : '420px' }}>
