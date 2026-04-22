@@ -5,8 +5,7 @@ export function VideoCard({ product }: { product: Product }) {
   if (!product.videoUrl) return null;
 
   return (
-    <Link 
-      href={`/products/${product.slug}`}
+    <div 
       style={{
         display: 'block',
         position: 'relative',
@@ -17,7 +16,6 @@ export function VideoCard({ product }: { product: Product }) {
         overflow: 'hidden',
         background: '#000',
         scrollSnapAlign: 'start',
-        textDecoration: 'none',
         boxShadow: 'var(--shadow-ambient)',
         transition: 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
       }}
@@ -29,12 +27,20 @@ export function VideoCard({ product }: { product: Product }) {
         muted
         loop
         playsInline
+        onClick={(e) => {
+          if (e.currentTarget.paused) {
+            e.currentTarget.play();
+          } else {
+            e.currentTarget.pause();
+          }
+        }}
         style={{
           width: '100%',
           height: '100%',
           objectFit: 'cover',
           opacity: 0.9,
           transition: 'opacity 0.3s',
+          cursor: 'pointer'
         }}
         className="video-player"
       />
@@ -59,18 +65,20 @@ export function VideoCard({ product }: { product: Product }) {
         padding: '16px',
         color: '#fff',
       }}>
-        <h3 style={{
-          fontSize: '1rem',
-          fontWeight: 700,
-          margin: '0 0 4px 0',
-          textShadow: '0 1px 4px rgba(0,0,0,0.6)',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden'
-        }}>
-          {product.name}
-        </h3>
+        <Link href={`/products/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <h3 style={{
+            fontSize: '1rem',
+            fontWeight: 700,
+            margin: '0 0 4px 0',
+            textShadow: '0 1px 4px rgba(0,0,0,0.6)',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden'
+          }}>
+            {product.name}
+          </h3>
+        </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>₹{product.price.toLocaleString()}</span>
           {product.originalPrice && (
@@ -101,6 +109,6 @@ export function VideoCard({ product }: { product: Product }) {
         .video-card:hover { transform: translateY(-4px); }
         .video-card:hover .video-player { opacity: 1; }
       `}} />
-    </Link>
+    </div>
   );
 }
