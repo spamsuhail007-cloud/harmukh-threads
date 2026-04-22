@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { updateProduct } from '@/actions/admin';
 import Link from 'next/link';
 import { type Product } from '@prisma/client';
+import { upload } from '@vercel/blob/client';
 
 const MAX_IMAGES = 6;
 
@@ -45,13 +46,12 @@ async function uploadFile(file: File): Promise<string> {
 
 // ─── Video upload utility ────────────────────────────────────────────────────
 async function uploadVideoFile(file: File, onStatus: (s: string) => void): Promise<string> {
-  onStatus('Uploading video to Vercel Blob (please wait)…');
-  const fd = new FormData();
-  fd.append('file', file);
-  const res = await fetch('/api/upload', { method: 'POST', body: fd });
-  const json = await res.json();
-  if (!res.ok) throw new Error(json.error || `Upload failed (${res.status})`);
-  return json.url as string;
+  onStatus('Uploading video directly to Vercel Blob (please wait)…');
+  const blob = await upload(file.name, file, {
+    access: 'public',
+    handleUploadUrl: '/api/upload-client',
+  });
+  return blob.url;
 }
 
 // An image slot is either an existing URL (already uploaded) or a new File (pending upload)
