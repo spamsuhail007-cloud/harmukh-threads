@@ -98,12 +98,12 @@ export default async function HomePage() {
       </section>
 
       {videoProducts.length > 0 && (
-        <section style={{ padding: 'var(--space-2xl) 0', background: '#0a0a0a', color: '#fff' }}>
+        <section style={{ padding: 'var(--space-2xl) 0', background: 'var(--surface-container-low)' }}>
           <div className="container">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-2xl)' }}>
               <div>
                 <div className="section-kicker" style={{ color: 'var(--primary)' }}>Watch & Shop</div>
-                <h2 className="section-title" style={{ color: '#fff' }}>Trusted By Legends</h2>
+                <h2 className="section-title" style={{ color: 'var(--on-surface)' }}>Trusted By Legends</h2>
               </div>
             </div>
             
