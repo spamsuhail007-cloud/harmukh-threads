@@ -109,6 +109,7 @@ export function VideoCard({ product }: { product: Product }) {
 
       <style dangerouslySetInnerHTML={{__html: `
         .video-card:hover { transform: translateY(-4px); }
+        .video-card:active { transform: scale(0.97); }
         .video-card:hover .video-player { opacity: 1; }
       `}} />
     </div>

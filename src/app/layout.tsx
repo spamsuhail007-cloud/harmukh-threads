@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <NextTopLoader color="var(--primary)" showSpinner={false} height={3} />
+        <NextTopLoader color="var(--primary)" showSpinner={true} height={5} />
         <Providers>{children}</Providers>
         <Analytics />
       </body>
