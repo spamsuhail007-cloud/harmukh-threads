@@ -22,6 +22,7 @@ model Product {
   specifications Json?
   productNote   String?   @db.Text
   images        String[]
+  videoUrl      String?
   size          String?
   stock         Int         @default(0)
   isActive      Boolean     @default(true)

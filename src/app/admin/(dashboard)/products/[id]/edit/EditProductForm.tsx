@@ -39,6 +39,18 @@ async function uploadFile(file: File): Promise<string> {
   fd.append('file', optimized);
   const res = await fetch('/api/upload', { method: 'POST', body: fd });
   const json = await res.json();
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || `Upload failed (${res.status})`);
+  return json.url as string;
+}
+
+// ─── Video upload utility ────────────────────────────────────────────────────
+async function uploadVideoFile(file: File, onStatus: (s: string) => void): Promise<string> {
+  onStatus('Uploading video to Vercel Blob (please wait)…');
+  const fd = new FormData();
+  fd.append('file', file);
+  const res = await fetch('/api/upload', { method: 'POST', body: fd });
+  const json = await res.json();
   if (!res.ok) throw new Error(json.error || `Upload failed (${res.status})`);
   return json.url as string;
 }
@@ -70,6 +82,11 @@ export default function EditProductForm({ product }: { product: Product }) {
 
   const [slots, setSlots] = useState<ImageSlot[]>(
     product.images.map(url => ({ type: 'url' as const, url, preview: url }))
+  );
+
+  type VideoSlot = { type: 'url'; url: string } | { type: 'file'; file: File; src: string } | null;
+  const [videoSlot, setVideoSlot] = useState<VideoSlot>(
+    product.videoUrl ? { type: 'url', url: product.videoUrl } : null
   );
 
   const handleAddFiles = (files: FileList) => {
@@ -127,6 +144,25 @@ export default function EditProductForm({ product }: { product: Product }) {
       }
     }
 
+    let finalVideoUrl: string | undefined | null = undefined;
+    if (videoSlot) {
+      if (videoSlot.type === 'url') {
+        finalVideoUrl = videoSlot.url;
+      } else if (videoSlot.type === 'file') {
+        try {
+          setSubmitStatus('Uploading product video…');
+          finalVideoUrl = await uploadVideoFile(videoSlot.file, setSubmitStatus);
+        } catch (err: any) {
+          setError(`Failed to upload video: ${err.message}`);
+          setIsSubmitting(false);
+          setSubmitStatus('');
+          return;
+        }
+      }
+    } else {
+      finalVideoUrl = null; // Clear video if removed
+    }
+
     setSubmitStatus('Saving changes…');
     const rawBadge = (formData.get('badge') as string)?.trim();
     const data = {
@@ -137,6 +173,7 @@ export default function EditProductForm({ product }: { product: Product }) {
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
       images: finalUrls,
+      videoUrl: finalVideoUrl,
       badge: rawBadge || undefined,
       badgeType: rawBadge ? (formData.get('badgeType') as string) || 'badge-primary' : undefined,
       size: formData.get('size') || undefined,
@@ -284,6 +321,57 @@ export default function EditProductForm({ product }: { product: Product }) {
               )}
             </div>
             <p style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginTop: '8px' }}>Drag to reorder. First image is the hero image shown on listings.</p>
+          </div>
+
+          {/* Video upload section */}
+          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
+            <h3 style={{ marginBottom: 'var(--space-sm)', fontSize: '1.1rem' }}>Product Video (Optional)</h3>
+            <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--space-md)' }}>
+              Upload a vertical video (9:16) for the homepage carousel. E.g., a short reel or showcase.
+            </p>
+            {!videoSlot ? (
+              <label style={{
+                display: 'inline-flex', padding: '12px 24px', background: 'var(--surface-container)',
+                border: '1px dashed var(--outline-variant)', borderRadius: 'var(--radius-sm)', cursor: 'pointer'
+              }}>
+                <span style={{ fontSize: '0.9rem' }}>+ Choose Video (MP4, WebM)</span>
+                <input
+                  type="file" accept="video/*" style={{ display: 'none' }}
+                  onChange={e => {
+                    if (e.target.files && e.target.files[0]) {
+                      const file = e.target.files[0];
+                      if (file.size > 50 * 1024 * 1024) {
+                        alert('Video size must be less than 50MB. Please compress it first.');
+                        return;
+                      }
+                      setVideoSlot({ type: 'file', file, src: URL.createObjectURL(file) });
+                    }
+                  }}
+                />
+              </label>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+                <div style={{ position: 'relative', width: '80px', height: '142px', borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: '#000' }}>
+                  <video src={videoSlot.type === 'file' ? videoSlot.src : videoSlot.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted autoPlay loop playsInline />
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '4px' }}>
+                    {videoSlot.type === 'file' ? videoSlot.file.name : 'Uploaded Video'}
+                  </div>
+                  {videoSlot.type === 'file' && (
+                    <div style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginBottom: '12px' }}>
+                      {(videoSlot.file.size / 1024 / 1024).toFixed(2)} MB
+                    </div>
+                  )}
+                  <button type="button" onClick={() => {
+                    if (videoSlot.type === 'file') URL.revokeObjectURL(videoSlot.src);
+                    setVideoSlot(null);
+                  }} className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: '0.8rem', color: 'var(--error)' }}>
+                    Remove Video
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Badge section */}

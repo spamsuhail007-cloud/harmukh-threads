@@ -2,16 +2,22 @@ import Link from 'next/link';
 import { getFeaturedProducts } from '@/actions/products';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { CollectionCard } from '@/components/ui/CollectionCard';
+import { VideoCard } from '@/components/ui/VideoCard';
 
 import { db } from '@/lib/db';
 
 export const revalidate = 60; // ISR every 60s
 
 export default async function HomePage() {
-  const [featured, rugsCount, pillowsCount] = await Promise.all([
+  const [featured, rugsCount, pillowsCount, videoProducts] = await Promise.all([
     getFeaturedProducts(),
     db.product.count({ where: { category: 'Rugs', isActive: true } }),
-    db.product.count({ where: { category: 'Pillow Covers', isActive: true } })
+    db.product.count({ where: { category: 'Pillow Covers', isActive: true } }),
+    db.product.findMany({ 
+      where: { videoUrl: { not: null }, isActive: true },
+      take: 10,
+      orderBy: { createdAt: 'desc' }
+    })
   ]);
 
   return (
@@ -90,6 +96,38 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {videoProducts.length > 0 && (
+        <section style={{ padding: 'var(--space-2xl) 0', background: '#0a0a0a', color: '#fff' }}>
+          <div className="container">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-2xl)' }}>
+              <div>
+                <div className="section-kicker" style={{ color: 'var(--primary)' }}>Watch & Shop</div>
+                <h2 className="section-title" style={{ color: '#fff' }}>Trusted By Legends</h2>
+              </div>
+            </div>
+            
+            {/* Horizontal Scrolling Video Container */}
+            <div style={{
+              display: 'flex',
+              gap: 'var(--space-md)',
+              overflowX: 'auto',
+              paddingBottom: 'var(--space-md)',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'none', /* Firefox */
+              msOverflowStyle: 'none',  /* Internet Explorer 10+ */
+            }} className="hide-scrollbar">
+              {videoProducts.map(product => (
+                <VideoCard key={product.id} product={product} />
+              ))}
+            </div>
+            <style dangerouslySetInnerHTML={{__html: `
+              .hide-scrollbar::-webkit-scrollbar { display: none; }
+            `}} />
+          </div>
+        </section>
+      )}
 
       <section style={{ padding: 'var(--space-xl) 0 var(--space-3xl)' }}>
         <div className="container">

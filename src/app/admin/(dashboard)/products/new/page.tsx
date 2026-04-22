@@ -46,6 +46,17 @@ async function uploadFile(file: File, onStatus: (s: string) => void): Promise<st
   return json.url as string;
 }
 
+// ─── Video upload utility ────────────────────────────────────────────────────
+async function uploadVideoFile(file: File, onStatus: (s: string) => void): Promise<string> {
+  onStatus('Uploading video to Vercel Blob (please wait, this may take a while)…');
+  const fd = new FormData();
+  fd.append('file', file);
+  const res = await fetch('/api/upload', { method: 'POST', body: fd });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || `Upload failed (${res.status})`);
+  return json.url as string;
+}
+
 // ─── Multi-image picker component ────────────────────────────────────────────
 function ImagePicker({
   previews,
@@ -146,6 +157,7 @@ export default function NewProductPage() {
   const [submitStatus, setSubmitStatus] = useState('');
   const [error, setError] = useState('');
   const [imagePreviews, setImagePreviews] = useState<{ src: string; file: File; uploading?: boolean }[]>([]);
+  const [videoFile, setVideoFile] = useState<{ file: File; src: string } | null>(null);
   const [specs, setSpecs] = useState<{ label: string; value: string }[]>([]);
   const [category, setCategory] = useState('Rugs');
 
@@ -204,6 +216,20 @@ export default function NewProductPage() {
       }
     }
 
+    // Upload video if present
+    let finalVideoUrl: string | undefined = undefined;
+    if (videoFile) {
+      try {
+        setSubmitStatus('Uploading product video…');
+        finalVideoUrl = await uploadVideoFile(videoFile.file, setSubmitStatus);
+      } catch (err: any) {
+        setError(`Failed to upload video: ${err.message}. If the video is too large, try compressing it first.`);
+        setIsSubmitting(false);
+        setSubmitStatus('');
+        return;
+      }
+    }
+
     setSubmitStatus('Saving product to database…');
     const rawBadge = (formData.get('badge') as string)?.trim();
     const data = {
@@ -214,6 +240,7 @@ export default function NewProductPage() {
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
       images: uploadedUrls,
+      videoUrl: finalVideoUrl,
       badge: rawBadge || undefined,
       badgeType: rawBadge ? (formData.get('badgeType') as string) || 'badge-primary' : undefined,
       size: formData.get('size') || undefined,
@@ -325,6 +352,48 @@ export default function NewProductPage() {
             onReorder={handleReorder}
             disabled={isSubmitting}
           />
+
+          {/* Video upload section */}
+          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
+            <h3 style={{ marginBottom: 'var(--space-sm)', fontSize: '1.1rem' }}>Product Video (Optional)</h3>
+            <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--space-md)' }}>
+              Upload a vertical video (9:16) for the homepage carousel. E.g., a short reel or showcase.
+            </p>
+            {!videoFile ? (
+              <label style={{
+                display: 'inline-flex', padding: '12px 24px', background: 'var(--surface-container)',
+                border: '1px dashed var(--outline-variant)', borderRadius: 'var(--radius-sm)', cursor: 'pointer'
+              }}>
+                <span style={{ fontSize: '0.9rem' }}>+ Choose Video (MP4, WebM)</span>
+                <input
+                  type="file" accept="video/*" style={{ display: 'none' }}
+                  onChange={e => {
+                    if (e.target.files && e.target.files[0]) {
+                      const file = e.target.files[0];
+                      if (file.size > 50 * 1024 * 1024) {
+                        alert('Video size must be less than 50MB. Please compress it first.');
+                        return;
+                      }
+                      setVideoFile({ file, src: URL.createObjectURL(file) });
+                    }
+                  }}
+                />
+              </label>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+                <div style={{ position: 'relative', width: '80px', height: '142px', borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: '#000' }}>
+                  <video src={videoFile.src} style={{ width: '100%', height: '100%', objectFit: 'cover' }} muted autoPlay loop playsInline />
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '4px' }}>{videoFile.file.name}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginBottom: '12px' }}>{(videoFile.file.size / 1024 / 1024).toFixed(2)} MB</div>
+                  <button type="button" onClick={() => { URL.revokeObjectURL(videoFile.src); setVideoFile(null); }} className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: '0.8rem', color: 'var(--error)' }}>
+                    Remove Video
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Badge section */}
           <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>

@@ -28,6 +28,7 @@ const ProductSchema = z.object({
   specifications: z.any().optional(),
   productNote: z.string().optional(),
   images: z.array(z.string().url()).min(1),
+  videoUrl: z.string().optional(),
   size: z.string().optional(),
   stock: z.coerce.number().min(0),
 });
