@@ -1,4 +1,5 @@
 import Link from 'next/link';
+// Triggering new deployment to ensure homepage updates are picked up.
 import { getFeaturedProducts } from '@/actions/products';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { CollectionCard } from '@/components/ui/CollectionCard';
