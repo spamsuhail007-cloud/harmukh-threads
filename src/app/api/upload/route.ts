@@ -1,5 +1,5 @@
-import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 // Use nodejs runtime so we can handle larger bodies
 export const runtime = 'nodejs';
@@ -13,13 +13,15 @@ export async function POST(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    // Server-side put() — no client SDK, no webhook, no hanging
-    const blob = await put(file.name, file, {
-      access: 'public',
-      addRandomSuffix: true,
-    });
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    
+    // Determine if it's a video based on mime type
+    const resourceType = file.type.startsWith('video/') ? 'video' : 'image';
 
-    return NextResponse.json({ url: blob.url });
+    const url = await uploadToCloudinary(buffer, 'harmukh-threads', resourceType);
+
+    return NextResponse.json({ url });
   } catch (error) {
     console.error('[Upload Error]', error);
     return NextResponse.json(

@@ -1,6 +1,6 @@
 'use server';
 
-import { put } from '@vercel/blob';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export async function uploadImage(formData: FormData) {
   try {
@@ -10,14 +10,13 @@ export async function uploadImage(formData: FormData) {
       return { success: false, error: 'No file provided' };
     }
 
-    const blob = await put(`products/${file.name}`, file, {
-      access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    });
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const url = await uploadToCloudinary(buffer, 'harmukh-threads', 'image');
 
-    return { success: true, url: blob.url };
+    return { success: true, url };
   } catch (error: any) {
-    console.error('Blob upload error:', error);
+    console.error('Cloudinary upload error:', error);
     return { success: false, error: error.message || String(error) };
   }
 }

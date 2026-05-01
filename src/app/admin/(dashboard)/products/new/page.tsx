@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createProduct } from '@/actions/admin';
 import Link from 'next/link';
-import { upload } from '@vercel/blob/client';
 
 const MAX_IMAGES = 6;
 
@@ -38,7 +37,7 @@ async function compressImage(file: File): Promise<File> {
 async function uploadFile(file: File, onStatus: (s: string) => void): Promise<string> {
   onStatus('Optimizing image…');
   const optimized = await compressImage(file);
-  onStatus('Uploading to Vercel Blob…');
+  onStatus('Uploading to Cloudinary…');
   const fd = new FormData();
   fd.append('file', optimized);
   const res = await fetch('/api/upload', { method: 'POST', body: fd });
@@ -49,12 +48,13 @@ async function uploadFile(file: File, onStatus: (s: string) => void): Promise<st
 
 // ─── Video upload utility ────────────────────────────────────────────────────
 async function uploadVideoFile(file: File, onStatus: (s: string) => void): Promise<string> {
-  onStatus('Uploading video directly to Vercel Blob (please wait, this may take a while)…');
-  const blob = await upload(file.name, file, {
-    access: 'public',
-    handleUploadUrl: '/api/upload-client',
-  });
-  return blob.url;
+  onStatus('Uploading video to Cloudinary (please wait, this may take a while)…');
+  const fd = new FormData();
+  fd.append('file', file);
+  const res = await fetch('/api/upload', { method: 'POST', body: fd });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || `Upload failed (${res.status})`);
+  return json.url as string;
 }
 
 // ─── Multi-image picker component ────────────────────────────────────────────
