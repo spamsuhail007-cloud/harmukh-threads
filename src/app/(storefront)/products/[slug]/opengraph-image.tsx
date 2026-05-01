@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { prisma } from '@/lib/db';
+import { db } from '@/lib/db';
  
 export const runtime = 'edge';
  
@@ -11,7 +11,7 @@ export const size = {
 export const contentType = 'image/png';
  
 export default async function Image({ params }: { params: { slug: string } }) {
-  const product = await prisma.product.findUnique({
+  const product = await db.product.findUnique({
     where: { slug: params.slug },
   });
  
