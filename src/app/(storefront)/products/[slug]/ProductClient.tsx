@@ -317,6 +317,61 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
           {/* Share buttons */}
           <ShareButtons product={product} />
 
+          {/* ── Trust Badges ── */}
+          <div style={{ 
+            marginTop: 'var(--space-xl)', 
+            padding: 'var(--space-lg)', 
+            background: 'linear-gradient(135deg, #fdfbf7 0%, #f7f0e6 100%)',
+            border: '1px solid var(--outline-variant)',
+            borderRadius: 'var(--radius-lg)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 'var(--space-md)'
+          }}>
+            <h3 style={{ 
+              fontSize: '0.85rem', 
+              color: 'var(--primary)', 
+              fontWeight: 700, 
+              textTransform: 'uppercase', 
+              letterSpacing: '0.1em',
+              margin: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              Handmade Guarantee
+            </h3>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>
+              Every thread in this masterpiece is hand-woven by master artisans in Kashmir. We guarantee 100% authenticity and museum-grade quality.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-md)', marginTop: 'var(--space-sm)' }}>
+              {[
+                { label: 'Authentic Art', icon: '🎨' },
+                { label: 'Secure Delivery', icon: '📦' },
+                { label: 'Direct from Artisans', icon: '🤝' }
+              ].map((badge) => (
+                <div key={badge.label} style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px', 
+                  fontSize: '0.75rem', 
+                  fontWeight: 600,
+                  color: 'var(--on-surface)',
+                  background: 'white',
+                  padding: '4px 10px',
+                  borderRadius: '99px',
+                  border: '1px solid rgba(0,0,0,0.05)',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                }}>
+                  <span>{badge.icon}</span> {badge.label}
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* ── Description ── */}
           <div className="pdp-section">
             <h2 className="pdp-section-title">Description</h2>
