@@ -21,3 +21,23 @@ export function slugify(text: string): string {
 
 export const CATEGORIES = ['Rugs', 'Pillow Covers'] as const;
 export type Category = typeof CATEGORIES[number];
+
+/**
+ * Automatically injects Cloudinary optimization parameters (f_auto, q_auto)
+ * into Cloudinary URLs.
+ */
+export function optimizeCloudinaryUrl(url: string): string {
+  if (!url || !url.includes('cloudinary.com')) return url;
+  
+  // For images
+  if (url.includes('/image/upload/')) {
+    return url.replace('/image/upload/', '/image/upload/f_auto,q_auto/');
+  }
+  
+  // For videos
+  if (url.includes('/video/upload/')) {
+    return url.replace('/video/upload/', '/video/upload/f_auto,q_auto/');
+  }
+  
+  return url;
+}

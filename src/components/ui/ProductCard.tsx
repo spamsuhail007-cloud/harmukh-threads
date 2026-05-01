@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { type Product } from '@prisma/client';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, optimizeCloudinaryUrl } from '@/lib/utils';
 
 export function ProductCard({ product }: { product: Product }) {
   return (
     <Link href={`/products/${product.slug}`} className="product-card">
       <div className="product-card-image">
         <Image
-          src={product.images[0]}
+          src={optimizeCloudinaryUrl(product.images[0])}
           alt={product.name}
           width={400}
           height={400}

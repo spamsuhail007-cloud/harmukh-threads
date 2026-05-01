@@ -3,10 +3,13 @@
 import Link from 'next/link';
 import { type Product } from '@prisma/client';
 import { useState } from 'react';
-
-export function VideoCard({ product }: { product: Product }) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  if (!product.videoUrl) return null;
+import { optimizeCloudinaryUrl } from '@/lib/utils';
+ 
+ export function VideoCard({ product }: { product: Product }) {
+   const [isPlaying, setIsPlaying] = useState(false);
+   
+   if (!product.videoUrl) return null;
+   const optimizedUrl = optimizeCloudinaryUrl(product.videoUrl);
 
   return (
     <div 
@@ -32,8 +35,9 @@ export function VideoCard({ product }: { product: Product }) {
             el.muted = true;
           }
         }}
-        src={product.videoUrl}
-        preload="none"
+        src={optimizedUrl}
+        autoPlay
+        preload="metadata"
         muted
         loop
         playsInline
