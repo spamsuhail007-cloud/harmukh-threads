@@ -9,7 +9,16 @@ import { optimizeCloudinaryUrl } from '@/lib/utils';
    const [isPlaying, setIsPlaying] = useState(false);
    
    if (!product.videoUrl) return null;
-   const optimizedUrl = optimizeCloudinaryUrl(product.videoUrl);
+  const optimizedUrl = optimizeCloudinaryUrl(product.videoUrl);
+  
+  // Generate a poster image from the video (Cloudinary magic)
+  let posterUrl = optimizedUrl;
+  if (posterUrl.includes('/video/upload/')) {
+    // Change to image format and add start offset auto
+    posterUrl = posterUrl
+      .replace('/video/upload/', '/video/upload/so_auto,f_auto,q_auto/')
+      .replace(/\.[^.]+$/, '.jpg'); 
+  }
 
   return (
     <div 
@@ -36,8 +45,9 @@ import { optimizeCloudinaryUrl } from '@/lib/utils';
           }
         }}
         src={optimizedUrl}
+        poster={posterUrl}
         autoPlay
-        preload="metadata"
+        preload="auto"
         muted
         loop
         playsInline
