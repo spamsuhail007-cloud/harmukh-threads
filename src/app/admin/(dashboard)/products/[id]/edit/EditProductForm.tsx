@@ -73,6 +73,12 @@ export default function EditProductForm({ product }: { product: Product }) {
     ? (product as any).specifications as { label: string; value: string }[]
     : [];
   const [specs, setSpecs] = useState<{ label: string; value: string }[]>(initialSpecs);
+  const [price, setPrice] = useState(product.price);
+  const [originalPrice, setOriginalPrice] = useState<number | ''>(product.originalPrice || '');
+
+  const discount = typeof originalPrice === 'number' && price < originalPrice
+    ? Math.round((1 - price / originalPrice) * 100)
+    : 0;
 
   const handleAddSpec = () => setSpecs([...specs, { label: '', value: '' }]);
   const handleRemoveSpec = (i: number) => setSpecs(specs.filter((_, idx) => idx !== i));
@@ -118,9 +124,18 @@ export default function EditProductForm({ product }: { product: Product }) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget); // Capture before any awaits
+    const formData = new FormData(e.currentTarget);
     setIsSubmitting(true);
     setError('');
+
+    const submittedPrice = Number(formData.get('price'));
+    const submittedOriginalPrice = formData.get('originalPrice') ? Number(formData.get('originalPrice')) : null;
+
+    if (submittedOriginalPrice && submittedPrice > submittedOriginalPrice) {
+      setError('Selling Price cannot be greater than Regular Price.');
+      setIsSubmitting(false);
+      return;
+    }
 
     if (slots.length === 0) {
       setError('Please add at least one product image.');
@@ -164,7 +179,7 @@ export default function EditProductForm({ product }: { product: Product }) {
         }
       }
     } else {
-      finalVideoUrl = null; // Clear video if removed
+      finalVideoUrl = null;
     }
 
     setSubmitStatus('Saving changes…');
@@ -172,8 +187,8 @@ export default function EditProductForm({ product }: { product: Product }) {
     const data = {
       name: formData.get('name'),
       category: formData.get('category'),
-      price: Number(formData.get('price')),
-      originalPrice: formData.get('originalPrice') ? Number(formData.get('originalPrice')) : null,
+      price: submittedPrice,
+      originalPrice: submittedOriginalPrice,
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
       images: finalUrls,
@@ -198,29 +213,43 @@ export default function EditProductForm({ product }: { product: Product }) {
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--space-xl)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
-        <Link href="/admin/inventory" className="btn btn-ghost" style={{ padding: '8px' }}>← Back</Link>
-        <div>
-          <h1 className="admin-page-title" style={{ margin: 0 }}>Edit Product</h1>
-          <p style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', marginTop: '2px' }}>{product.name}</p>
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'var(--space-xl)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-lg)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
+          <Link href="/admin/inventory" className="btn btn-ghost" style={{ padding: '8px' }}>← Back</Link>
+          <div>
+            <h1 className="admin-page-title" style={{ margin: 0 }}>Edit Product</h1>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '4px' }}>
+              <p style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', margin: 0 }}>{product.name}</p>
+              <span style={{ color: 'var(--outline-variant)' }}>|</span>
+              <Link href={`/products/${product.slug}`} target="_blank" style={{ fontSize: '0.8rem', color: 'var(--primary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
+                View on Store <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+              </Link>
+            </div>
+          </div>
         </div>
+        <button type="button" onClick={() => document.getElementById('submitBtn')?.click()} className="btn btn-primary" disabled={isSubmitting} style={{ padding: '10px 24px' }}>
+          {isSubmitting ? 'Saving…' : 'Save Changes'}
+        </button>
       </div>
 
       {error && (
-        <div style={{ background: '#ffebee', color: '#c62828', padding: 'var(--space-md)', borderRadius: 'var(--radius-sm)', marginBottom: 'var(--space-lg)', fontSize: '0.9rem' }}>
+        <div style={{ background: '#ffebee', color: '#c62828', padding: 'var(--space-md)', borderRadius: 'var(--radius-sm)', marginBottom: 'var(--space-lg)', fontSize: '0.9rem', border: '1px solid #ef9a9a' }}>
           ❌ {error}
         </div>
       )}
 
-      <div style={{ background: 'var(--surface-container-low)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-md)' }}>
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 'var(--space-lg)' }}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-xl)' }}>
+        
+        {/* Core Details */}
+        <div style={{ background: '#fff', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--outline-variant)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-lg)', fontWeight: 600, color: '#1a1a1a' }}>Core Details</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
-            <div className="form-group">
+            <div className="form-group" style={{ margin: 0 }}>
               <label className="form-label">Product Name *</label>
               <input type="text" name="name" className="form-input" required defaultValue={product.name} />
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{ margin: 0 }}>
               <label className="form-label">Category *</label>
               <select name="category" className="form-input" required value={category} onChange={e => setCategory(e.target.value)}>
                 <option value="Rugs">Rugs</option>
@@ -230,9 +259,9 @@ export default function EditProductForm({ product }: { product: Product }) {
           </div>
 
           {(category === 'Rugs' || category === 'Pillow Covers') && (
-            <div className="form-group">
+            <div className="form-group" style={{ margin: 'var(--space-lg) 0 0 0' }}>
               <label className="form-label">{category === 'Rugs' ? 'Rug Size' : 'Cover Size'}</label>
-              <select name="size" className="form-input" defaultValue={(product as any).size || ''}>
+              <select name="size" className="form-input" defaultValue={(product as any).size || ''} style={{ maxWidth: '50%' }}>
                 <option value="">-- Select Size --</option>
                 {category === 'Rugs' ? (
                   <>
@@ -259,23 +288,45 @@ export default function EditProductForm({ product }: { product: Product }) {
               </select>
             </div>
           )}
+        </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-lg)' }}>
-            <div className="form-group">
-              <label className="form-label">Regular Price (₹)</label>
-              <input type="number" name="originalPrice" className="form-input" min="1" defaultValue={product.originalPrice || ''} placeholder="e.g. 6000" />
+        {/* Pricing & Inventory */}
+        <div style={{ background: '#fff', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--outline-variant)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-lg)', fontWeight: 600, color: '#1a1a1a' }}>Pricing & Inventory</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-lg)', alignItems: 'start' }}>
+            <div className="form-group" style={{ margin: 0 }}>
+              <label className="form-label" style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>Regular Price (₹)</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--on-surface-variant)', fontWeight: 400 }}>Original price before discount</span>
+              </label>
+              <input type="number" name="originalPrice" className="form-input" min="1" value={originalPrice} onChange={e => setOriginalPrice(e.target.value ? Number(e.target.value) : '')} placeholder="e.g. 6000" />
             </div>
-            <div className="form-group">
-              <label className="form-label">Selling Price (₹) *</label>
-              <input type="number" name="price" className="form-input" required min="1" defaultValue={product.price} />
+            <div className="form-group" style={{ margin: 0, position: 'relative' }}>
+              <label className="form-label" style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>Selling Price (₹) *</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--on-surface-variant)', fontWeight: 400 }}>Actual price customer pays</span>
+              </label>
+              <input type="number" name="price" className="form-input" required min="1" value={price} onChange={e => setPrice(Number(e.target.value))} />
+              {discount > 0 && (
+                <div style={{ position: 'absolute', top: 0, right: 0, background: '#fee2e2', color: '#991b1b', fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                  Save {discount}%
+                </div>
+              )}
             </div>
-            <div className="form-group">
-              <label className="form-label">Stock *</label>
+            <div className="form-group" style={{ margin: 0 }}>
+              <label className="form-label" style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>Available Stock *</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--on-surface-variant)', fontWeight: 400 }}>Quantity in warehouse</span>
+              </label>
               <input type="number" name="stock" className="form-input" required min="0" defaultValue={product.stock} />
             </div>
           </div>
+        </div>
 
-          {/* Multi-image picker */}
+        {/* Media */}
+        <div style={{ background: '#fff', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--outline-variant)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-lg)', fontWeight: 600, color: '#1a1a1a' }}>Media</h2>
+          
           <div>
             <label className="form-label">
               PRODUCT IMAGES &nbsp;
@@ -328,7 +379,7 @@ export default function EditProductForm({ product }: { product: Product }) {
           </div>
 
           {/* Video upload section */}
-          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
+          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)', marginTop: 'var(--space-xl)' }}>
             <h3 style={{ marginBottom: 'var(--space-sm)', fontSize: '1.1rem' }}>Product Video (Optional)</h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--space-md)' }}>
               Upload a vertical video (9:16) for the homepage carousel. E.g., a short reel or showcase.
@@ -377,44 +428,49 @@ export default function EditProductForm({ product }: { product: Product }) {
               </div>
             )}
           </div>
+        </div>
 
-          {/* Badge section */}
-          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
-            <h3 style={{ marginBottom: 'var(--space-sm)', fontSize: '1.1rem' }}>Product Badge</h3>
-            <p style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--space-md)' }}>
-              Optional pill shown on the product card. Leave blank to remove badge.
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Badge Text</label>
-                <input
-                  type="text"
-                  name="badge"
-                  className="form-input"
-                  placeholder="e.g. Best Seller, GI Tagged, New Arrival…"
-                  maxLength={30}
-                  defaultValue={product.badge ?? ''}
-                />
-              </div>
-              <div className="form-group" style={{ margin: 0 }}>
-                <label className="form-label">Badge Colour Style</label>
-                <select name="badgeType" className="form-input" defaultValue={product.badgeType ?? 'badge-primary'}>
-                  <option value="badge-primary">🟠 Amber — Best Seller / Featured</option>
-                  <option value="badge-gi">🟢 Green — GI Tagged / Certified</option>
-                  <option value="badge-new">🔵 Blue — New Arrival</option>
-                  <option value="badge-sale">🔴 Red — Sale / Offer</option>
-                  <option value="badge-secondary">🟡 Gold — Heritage / Premium</option>
-                </select>
-              </div>
+        {/* Visibility & Badges */}
+        <div style={{ background: '#fff', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--outline-variant)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-lg)', fontWeight: 600, color: '#1a1a1a' }}>Visibility & Badges</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-lg)' }}>
+            <div className="form-group" style={{ margin: 0 }}>
+              <label className="form-label" style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>Badge Text</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--on-surface-variant)', fontWeight: 400 }}>If left empty, no badge will be displayed</span>
+              </label>
+              <input
+                type="text"
+                name="badge"
+                className="form-input"
+                placeholder="e.g. Best Seller, GI Tagged, New Arrival…"
+                maxLength={30}
+                defaultValue={product.badge ?? ''}
+              />
+            </div>
+            <div className="form-group" style={{ margin: 0 }}>
+              <label className="form-label">Badge Colour Style</label>
+              <select name="badgeType" className="form-input" defaultValue={product.badgeType ?? 'badge-primary'}>
+                <option value="badge-primary">🟠 Amber — Best Seller / Featured</option>
+                <option value="badge-gi">🟢 Green — GI Tagged / Certified</option>
+                <option value="badge-new">🔵 Blue — New Arrival</option>
+                <option value="badge-sale">🔴 Red — Sale / Offer</option>
+                <option value="badge-secondary">🟡 Gold — Heritage / Premium</option>
+              </select>
             </div>
           </div>
+        </div>
 
-          <div className="form-group">
+        {/* Content & Details */}
+        <div style={{ background: '#fff', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--outline-variant)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-lg)', fontWeight: 600, color: '#1a1a1a' }}>Content & Details</h2>
+          
+          <div className="form-group" style={{ marginBottom: 'var(--space-xl)' }}>
             <label className="form-label">Description *</label>
             <textarea name="description" className="form-input" required rows={4} style={{ resize: 'vertical' }} defaultValue={product.description} />
           </div>
 
-          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-md)' }}>
+          <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: 'var(--space-xl)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-md)' }}>
               <h3 style={{ fontSize: '1.1rem', margin: 0 }}>Product Specifications</h3>
               <button type="button" className="btn btn-ghost" onClick={handleAddSpec} style={{ padding: '6px 12px', fontSize: '0.85rem' }}>
@@ -442,20 +498,21 @@ export default function EditProductForm({ product }: { product: Product }) {
                 </div>
               ))}
             </div>
-            <div className="form-group" style={{ marginTop: 'var(--space-md)' }}>
-              <label className="form-label">Product Note <span style={{ fontWeight: 400, textTransform: 'none' }}>(shown under Specifications)</span></label>
+            <div className="form-group" style={{ marginTop: 'var(--space-lg)' }}>
+              <label className="form-label" style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>Product Note</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--on-surface-variant)', fontWeight: 400 }}>Shown under Specifications (e.g., care instructions)</span>
+              </label>
               <textarea name="productNote" className="form-input" rows={3} style={{ resize: 'vertical' }} placeholder="e.g. Dry clean recommended.&#10;Avoid direct sunlight for prolonged periods." defaultValue={(product as any).productNote ?? ''} />
             </div>
           </div>
+        </div>
+        
+        {/* Hidden submit button to allow triggering from top header */}
+        <button id="submitBtn" type="submit" style={{ display: 'none' }}>Submit</button>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-md)', marginTop: 'var(--space-lg)' }}>
-            <Link href="/admin/inventory" className="btn btn-ghost" style={{ padding: '12px var(--space-xl)' }}>Cancel</Link>
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ padding: '12px var(--space-xl)', minWidth: '180px' }}>
-              {isSubmitting ? (submitStatus || 'Saving…') : 'Save Changes'}
-            </button>
-          </div>
-        </form>
-      </div>
+      </form>
+    </div>
     </div>
   );
 }
