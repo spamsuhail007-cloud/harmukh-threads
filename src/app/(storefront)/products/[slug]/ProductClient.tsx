@@ -347,9 +347,6 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
           {(product as any).productNote && (
             <div className="pdp-note-list" style={{ marginTop: 'var(--space-xl)', padding: 'var(--space-lg)', background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
               <h3 style={{ fontSize: '0.95rem', marginBottom: 'var(--space-md)', color: 'var(--on-surface)', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{color: 'var(--primary)'}}>
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                </svg>
                 Care & Notes
               </h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>

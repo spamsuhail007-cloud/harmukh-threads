@@ -44,7 +44,6 @@ export function Navbar() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/collections', label: 'Shop' },
-    { href: '/collections?cat=Rugs', label: 'Rugs' },
     { href: '/story', label: 'Our Story' },
     { href: '/contact', label: 'Contact Us' },
   ];
