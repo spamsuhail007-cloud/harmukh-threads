@@ -32,52 +32,107 @@ export default async function CollectionsPage({
   const categories = ['All', ...dbCategories];
 
   return (
-    <>
-      <div style={{ background: 'var(--surface-container)', padding: 'var(--space-2xl) 0' }}>
-        <div className="container">
-          <h1 className="section-title" style={{ marginBottom: 'var(--space-lg)' }}>Our Collection</h1>
-
-          {/* Search + Filter row */}
-          <div style={{ display: 'flex', gap: 'var(--space-lg)', flexWrap: 'wrap', alignItems: 'center', justifyItems: 'space-between', marginBottom: 'var(--space-lg)' }}>
-            <div style={{ flex: '1 1 300px' }}>
-              <SearchBar initialQuery={searchQuery} currentCategory={currentCategory} />
-            </div>
-            <ShopFilters currentCategory={currentCategory} />
+    <div className="page-fade-in">
+      <div className="shop-hero" style={{ padding: 'var(--space-3xl) 0 var(--space-xl)' }}>
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ maxWidth: '700px' }}>
+            <h1 className="section-title" style={{ 
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)', 
+              lineHeight: 1.1, 
+              marginBottom: 'var(--space-md)',
+              fontFamily: 'var(--font-serif)'
+            }}>
+              The Art of <br />
+              <span style={{ color: 'var(--primary)' }}>Kashmiri Craftsmanship</span>
+            </h1>
+            <p style={{ 
+              fontSize: '1.1rem', 
+              color: 'var(--on-surface-variant)', 
+              marginBottom: 'var(--space-xl)',
+              maxWidth: '500px'
+            }}>
+              Discover our curated collection of hand-knotted rugs and artisan textiles, 
+              delivered directly from the looms of Kashmir to your home.
+            </p>
           </div>
 
-          {/* Category filters */}
-          <div style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-            {categories.map(cat => {
-              const active = cat === currentCategory && !searchQuery;
-              
-              // Build href preserving existing params (except cat)
-              // We'll also drop size if switching to a non-Rugs category
-              const newParams = new URLSearchParams();
-              if (searchQuery) newParams.set('q', searchQuery);
-              if (cat !== 'All') newParams.set('cat', cat);
-              if (minPrice !== undefined) newParams.set('minPrice', minPrice.toString());
-              if (maxPrice !== undefined) newParams.set('maxPrice', maxPrice.toString());
-              if (currentSize && (cat === 'Rugs' || cat === 'All')) newParams.set('size', currentSize);
-              
-              const queryString = newParams.toString();
-              const href = `/collections${queryString ? `?${queryString}` : ''}`;
-              
-              return (
-                <Link
-                  key={cat}
-                  href={href}
-                  className={`badge ${active ? 'badge-primary' : 'badge-secondary'}`}
-                  style={{ padding: '8px 16px', fontSize: '0.8rem', cursor: 'pointer' }}
-                >
-                  {cat}
-                </Link>
-              );
-            })}
+          <div className="trust-strip">
+            <div className="trust-item">
+              <span className="trust-icon">🚚</span>
+              <span>Free Worldwide Shipping</span>
+            </div>
+            <div className="trust-item">
+              <span className="trust-icon">🔒</span>
+              <span>Secure Prepaid Payments</span>
+            </div>
+            <div className="trust-item">
+              <span className="trust-icon">✨</span>
+              <span>Authentic Artisan Quality</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="container" style={{ padding: 'var(--space-2xl) var(--space-xl)' }}>
+      <div style={{ position: 'sticky', top: 'var(--navbar-height)', zIndex: 100, background: 'rgba(252, 249, 242, 0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--outline-variant)', padding: 'var(--space-md) 0' }}>
+        <div className="container">
+          <div style={{ display: 'flex', gap: 'var(--space-lg)', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+            {/* Category filters */}
+            <div style={{ display: 'flex', gap: 'var(--space-xs)', flexWrap: 'nowrap', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
+              {categories.map(cat => {
+                const active = cat === currentCategory && !searchQuery;
+                const newParams = new URLSearchParams();
+                if (searchQuery) newParams.set('q', searchQuery);
+                if (cat !== 'All') newParams.set('cat', cat);
+                if (minPrice !== undefined) newParams.set('minPrice', minPrice.toString());
+                if (maxPrice !== undefined) newParams.set('maxPrice', maxPrice.toString());
+                if (currentSize && (cat === 'Rugs' || cat === 'All')) newParams.set('size', currentSize);
+                
+                const queryString = newParams.toString();
+                const href = `/collections${queryString ? `?${queryString}` : ''}`;
+                
+                return (
+                  <Link
+                    key={cat}
+                    href={href}
+                    className={`category-tab ${active ? 'active' : ''}`}
+                    style={{ whiteSpace: 'nowrap' }}
+                  >
+                    {cat}
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div style={{ display: 'flex', gap: 'var(--space-md)', alignItems: 'center', flex: '1 1 300px', justifyContent: 'flex-end' }}>
+              <SearchBar initialQuery={searchQuery} currentCategory={currentCategory} />
+              <ShopFilters currentCategory={currentCategory} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container" style={{ padding: 'var(--space-2xl) 0' }}>
+        {/* Trust Banner - Secondary */}
+        {!searchQuery && currentCategory === 'All' && (
+          <div style={{ 
+            background: 'var(--surface-container-low)', 
+            padding: 'var(--space-md) var(--space-xl)', 
+            borderRadius: 'var(--radius-md)', 
+            marginBottom: 'var(--space-xl)',
+            border: '1px dashed var(--outline-variant)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 'var(--space-md)',
+            textAlign: 'center'
+          }}>
+            <span style={{ fontSize: '1.2rem' }}>🛡️</span>
+            <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--on-surface-variant)' }}>
+              100% Secure Shopping Experience. We process all orders as prepaid for faster, insured delivery.
+            </span>
+          </div>
+        )}
+
         {/* Search result info */}
         {searchQuery && (
           <div style={{ marginBottom: 'var(--space-lg)', display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -115,6 +170,6 @@ export default async function CollectionsPage({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
