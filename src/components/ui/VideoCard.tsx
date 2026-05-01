@@ -2,13 +2,26 @@
 
 import Link from 'next/link';
 import { type Product } from '@prisma/client';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { optimizeCloudinaryUrl } from '@/lib/utils';
  
  export function VideoCard({ product }: { product: Product }) {
    const [isPlaying, setIsPlaying] = useState(false);
-   
-   if (!product.videoUrl) return null;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.playsInline = true;
+      videoRef.current.play().catch(() => {
+        // Autoplay blocked (e.g., iOS Low Power Mode) - it's fine, the custom play button will show
+        setIsPlaying(false);
+      });
+    }
+  }, []);
+
+  if (!product.videoUrl) return null;
   const optimizedUrl = optimizeCloudinaryUrl(product.videoUrl);
   
   // Generate a poster image from the video (Cloudinary magic)
@@ -38,12 +51,7 @@ import { optimizeCloudinaryUrl } from '@/lib/utils';
       className="video-card"
     >
       <video
-        ref={(el) => {
-          if (el) {
-            el.defaultMuted = true;
-            el.muted = true;
-          }
-        }}
+        ref={videoRef}
         src={optimizedUrl}
         poster={posterUrl}
         autoPlay
@@ -53,7 +61,7 @@ import { optimizeCloudinaryUrl } from '@/lib/utils';
         playsInline
         onClick={(e) => {
           if (e.currentTarget.paused) {
-            e.currentTarget.play();
+            e.currentTarget.play().catch(() => {});
           } else {
             e.currentTarget.pause();
           }
@@ -158,6 +166,8 @@ import { optimizeCloudinaryUrl } from '@/lib/utils';
         .video-card:hover { transform: translateY(-4px); }
         .video-card:active { transform: scale(0.97); }
         .video-card:hover .video-player { opacity: 1; }
+        .video-player::-webkit-media-controls { display: none !important; }
+        .video-player::-webkit-media-controls-start-playback-button { display: none !important; }
       `}} />
     </div>
   );
