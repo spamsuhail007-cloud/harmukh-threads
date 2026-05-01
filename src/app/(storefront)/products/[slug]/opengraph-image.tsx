@@ -1,8 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { db } from '@/lib/db';
  
-export const runtime = 'edge';
- 
 export const alt = 'Harmukh Threads';
 export const size = {
   width: 1200,
