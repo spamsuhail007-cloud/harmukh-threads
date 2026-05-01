@@ -168,16 +168,16 @@ export default function EditProductForm({ product }: { product: Product }) {
       name: formData.get('name'),
       category: formData.get('category'),
       price: Number(formData.get('price')),
-      originalPrice: formData.get('originalPrice') ? Number(formData.get('originalPrice')) : undefined,
+      originalPrice: formData.get('originalPrice') ? Number(formData.get('originalPrice')) : null,
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
       images: finalUrls,
       videoUrl: finalVideoUrl,
-      badge: rawBadge || undefined,
-      badgeType: rawBadge ? (formData.get('badgeType') as string) || 'badge-primary' : undefined,
-      size: formData.get('size') || undefined,
+      badge: rawBadge || null,
+      badgeType: rawBadge ? (formData.get('badgeType') as string) || 'badge-primary' : null,
+      size: formData.get('size') || null,
       specifications: specs.filter(s => s.label.trim() && s.value.trim()),
-      productNote: formData.get('productNote') || undefined,
+      productNote: formData.get('productNote') || null,
     };
 
     const result = await updateProduct(product.id, data);

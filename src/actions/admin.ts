@@ -21,15 +21,15 @@ const ProductSchema = z.object({
   name: z.string().min(1),
   category: z.string().min(1),
   price: z.coerce.number().min(1),
-  originalPrice: z.coerce.number().optional(),
-  badge: z.string().optional(),
-  badgeType: z.string().optional(),
+  originalPrice: z.coerce.number().nullable().optional(),
+  badge: z.string().nullable().optional(),
+  badgeType: z.string().nullable().optional(),
   description: z.string().min(10),
   specifications: z.any().optional(),
-  productNote: z.string().optional(),
+  productNote: z.string().nullable().optional(),
   images: z.array(z.string().url()).min(1),
-  videoUrl: z.string().optional(),
-  size: z.string().optional(),
+  videoUrl: z.string().nullable().optional(),
+  size: z.string().nullable().optional(),
   stock: z.coerce.number().min(0),
 });
 
@@ -60,7 +60,10 @@ export async function createProduct(data: unknown) {
 
 export async function updateProduct(id: string, data: unknown) {
   const parsed = ProductSchema.safeParse(data);
-  if (!parsed.success) return { success: false, error: 'Invalid product data' };
+  if (!parsed.success) {
+    console.error('[updateProduct] Validation failed:', parsed.error);
+    return { success: false, error: 'Invalid product data: ' + parsed.error.issues[0]?.message };
+  }
 
   try {
     await db.product.update({ where: { id }, data: parsed.data });
