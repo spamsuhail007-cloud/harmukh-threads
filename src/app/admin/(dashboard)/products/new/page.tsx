@@ -46,15 +46,20 @@ async function uploadFile(file: File, onStatus: (s: string) => void): Promise<st
   return json.url as string;
 }
 
-// ─── Video upload utility ────────────────────────────────────────────────────
+// ─── Video upload utility (direct browser → Cloudinary, no server size limit) ─
 async function uploadVideoFile(file: File, onStatus: (s: string) => void): Promise<string> {
   onStatus('Uploading video to Cloudinary (please wait, this may take a while)…');
   const fd = new FormData();
   fd.append('file', file);
-  const res = await fetch('/api/upload', { method: 'POST', body: fd });
+  fd.append('upload_preset', 'harmukh-threads');
+  // Upload directly from browser to Cloudinary — bypasses Next.js/Vercel size limits
+  const res = await fetch('https://api.cloudinary.com/v1_1/dvkfb2tnx/video/upload', {
+    method: 'POST',
+    body: fd,
+  });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.error || `Upload failed (${res.status})`);
-  return json.url as string;
+  if (!res.ok || !json.secure_url) throw new Error(json.error?.message || `Upload failed (${res.status})`);
+  return json.secure_url as string;
 }
 
 // ─── Multi-image picker component ────────────────────────────────────────────
