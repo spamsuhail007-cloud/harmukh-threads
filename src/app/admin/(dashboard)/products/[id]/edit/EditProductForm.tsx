@@ -513,6 +513,5 @@ export default function EditProductForm({ product }: { product: Product }) {
 
       </form>
     </div>
-    </div>
   );
 }
