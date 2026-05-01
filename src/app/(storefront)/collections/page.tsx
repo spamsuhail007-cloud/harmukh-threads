@@ -74,7 +74,7 @@ export default async function CollectionsPage({
         </div>
       </div>
 
-      <div style={{ position: 'sticky', top: 'var(--navbar-height)', zIndex: 100, background: 'rgba(252, 249, 242, 0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--outline-variant)', padding: 'var(--space-sm) 0' }}>
+      <div style={{ background: 'rgba(252, 249, 242, 0.95)', borderBottom: '1px solid var(--outline-variant)', padding: 'var(--space-sm) 0' }}>
         <div className="container" style={{ padding: '0 var(--space-md)' }}>
           <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             {/* Category filters */}
@@ -178,8 +178,8 @@ export default async function CollectionsPage({
         ) : (
           <div className="product-grid" style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(150px, 45vw, 280px), 1fr))', 
-            gap: 'clamp(var(--space-sm), 3vw, var(--space-lg))' 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(140px, 46vw, 280px), 1fr))', 
+            gap: 'clamp(var(--space-sm), 4vw, var(--space-lg))' 
           }}>
             {products.map(product => (
               <ProductCard key={product.id} product={product} />
