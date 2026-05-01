@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { type Product } from '@prisma/client';
+import { useState } from 'react';
 
 export function VideoCard({ product }: { product: Product }) {
+  const [isPlaying, setIsPlaying] = useState(false);
   if (!product.videoUrl) return null;
 
   return (
@@ -28,11 +30,10 @@ export function VideoCard({ product }: { product: Product }) {
           if (el) {
             el.defaultMuted = true;
             el.muted = true;
-            el.play().catch(() => {}); // Attempt to play if autoPlay fails
           }
         }}
         src={product.videoUrl}
-        autoPlay
+        preload="none"
         muted
         loop
         playsInline
@@ -43,6 +44,8 @@ export function VideoCard({ product }: { product: Product }) {
             e.currentTarget.pause();
           }
         }}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
         style={{
           width: '100%',
           height: '100%',
@@ -54,6 +57,29 @@ export function VideoCard({ product }: { product: Product }) {
         className="video-player"
       />
       
+      {/* Play Button Overlay */}
+      {!isPlaying && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '48px',
+          height: '48px',
+          background: 'rgba(0,0,0,0.5)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+          zIndex: 2,
+        }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" stroke="none">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </div>
+      )}
+
       {/* Gradient Overlay for text readability */}
       <div style={{
         position: 'absolute',
