@@ -33,33 +33,34 @@ export default async function CollectionsPage({
 
   return (
     <div className="page-fade-in">
-      <div className="shop-hero" style={{ padding: 'var(--space-3xl) 0 var(--space-xl)' }}>
+      <div className="shop-hero" style={{ padding: 'clamp(var(--space-xl), 8vw, var(--space-3xl)) 0 var(--space-lg)' }}>
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ maxWidth: '700px' }}>
             <h1 className="section-title" style={{ 
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)', 
-              lineHeight: 1.1, 
-              marginBottom: 'var(--space-md)',
+              fontSize: 'clamp(1.75rem, 5vw, 3.5rem)', 
+              lineHeight: 1.15, 
+              marginBottom: 'var(--space-sm)',
               fontFamily: 'var(--font-serif)'
             }}>
               The Art of <br />
               <span style={{ color: 'var(--primary)' }}>Kashmiri Craftsmanship</span>
             </h1>
             <p style={{ 
-              fontSize: '1.1rem', 
+              fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', 
               color: 'var(--on-surface-variant)', 
-              marginBottom: 'var(--space-xl)',
-              maxWidth: '500px'
+              marginBottom: 'var(--space-lg)',
+              maxWidth: '500px',
+              lineHeight: 1.5
             }}>
               Discover our curated collection of hand-knotted rugs and artisan textiles, 
               delivered directly from the looms of Kashmir to your home.
             </p>
           </div>
 
-          <div className="trust-strip">
+          <div className="trust-strip" style={{ marginTop: 'var(--space-lg)', paddingTop: 'var(--space-md)' }}>
             <div className="trust-item">
               <span className="trust-icon">🚚</span>
-              <span>Free Worldwide Shipping</span>
+              <span>Free Shipping PAN India</span>
             </div>
             <div className="trust-item">
               <span className="trust-icon">🔒</span>
@@ -73,11 +74,21 @@ export default async function CollectionsPage({
         </div>
       </div>
 
-      <div style={{ position: 'sticky', top: 'var(--navbar-height)', zIndex: 100, background: 'rgba(252, 249, 242, 0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--outline-variant)', padding: 'var(--space-md) 0' }}>
-        <div className="container">
-          <div style={{ display: 'flex', gap: 'var(--space-lg)', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ position: 'sticky', top: 'var(--navbar-height)', zIndex: 100, background: 'rgba(252, 249, 242, 0.95)', backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--outline-variant)', padding: 'var(--space-sm) 0' }}>
+        <div className="container" style={{ padding: '0 var(--space-md)' }}>
+          <div style={{ display: 'flex', gap: 'var(--space-md)', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             {/* Category filters */}
-            <div style={{ display: 'flex', gap: 'var(--space-xs)', flexWrap: 'nowrap', overflowX: 'auto', paddingBottom: '4px', scrollbarWidth: 'none' }}>
+            <div style={{ 
+              display: 'flex', 
+              gap: 'var(--space-xs)', 
+              flexWrap: 'nowrap', 
+              overflowX: 'auto', 
+              paddingBottom: '4px', 
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+              flex: '1 1 100%'
+            }}>
               {categories.map(cat => {
                 const active = cat === currentCategory && !searchQuery;
                 const newParams = new URLSearchParams();
@@ -95,7 +106,7 @@ export default async function CollectionsPage({
                     key={cat}
                     href={href}
                     className={`category-tab ${active ? 'active' : ''}`}
-                    style={{ whiteSpace: 'nowrap' }}
+                    style={{ whiteSpace: 'nowrap', padding: '8px 16px', fontSize: '0.75rem' }}
                   >
                     {cat}
                   </Link>
@@ -103,40 +114,42 @@ export default async function CollectionsPage({
               })}
             </div>
 
-            <div style={{ display: 'flex', gap: 'var(--space-md)', alignItems: 'center', flex: '1 1 300px', justifyContent: 'flex-end' }}>
-              <SearchBar initialQuery={searchQuery} currentCategory={currentCategory} />
+            <div style={{ display: 'flex', gap: 'var(--space-sm)', alignItems: 'center', flex: '1 1 100%', justifyContent: 'space-between' }}>
+              <div style={{ flex: 1, maxWidth: '300px' }}>
+                <SearchBar initialQuery={searchQuery} currentCategory={currentCategory} />
+              </div>
               <ShopFilters currentCategory={currentCategory} />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container" style={{ padding: 'var(--space-2xl) 0' }}>
+      <div className="container" style={{ padding: 'var(--space-xl) var(--space-md)' }}>
         {/* Trust Banner - Secondary */}
         {!searchQuery && currentCategory === 'All' && (
           <div style={{ 
             background: 'var(--surface-container-low)', 
-            padding: 'var(--space-md) var(--space-xl)', 
+            padding: 'var(--space-md)', 
             borderRadius: 'var(--radius-md)', 
-            marginBottom: 'var(--space-xl)',
+            marginBottom: 'var(--space-lg)',
             border: '1px dashed var(--outline-variant)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 'var(--space-md)',
+            gap: 'var(--space-sm)',
             textAlign: 'center'
           }}>
-            <span style={{ fontSize: '1.2rem' }}>🛡️</span>
-            <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--on-surface-variant)' }}>
-              100% Secure Shopping Experience. We process all orders as prepaid for faster, insured delivery.
+            <span style={{ fontSize: '1rem' }}>🛡️</span>
+            <span style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--on-surface-variant)', lineHeight: 1.4 }}>
+              100% Secure Shopping. Pre-paid orders for faster, insured delivery across India.
             </span>
           </div>
         )}
 
         {/* Search result info */}
         {searchQuery && (
-          <div style={{ marginBottom: 'var(--space-lg)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>
+          <div style={{ marginBottom: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem' }}>
               {products.length} result{products.length !== 1 ? 's' : ''} for&nbsp;
               <strong style={{ color: 'var(--on-surface)' }}>"{searchQuery}"</strong>
             </span>
@@ -149,9 +162,9 @@ export default async function CollectionsPage({
                   maxPrice: maxPrice?.toString() || '',
                 }).filter(([, v]) => v !== '')
               ).toString()}`}
-              style={{ fontSize: '0.8rem', color: 'var(--primary)', textDecoration: 'underline' }}
+              style={{ fontSize: '0.75rem', color: 'var(--primary)', textDecoration: 'underline' }}
             >
-              Clear search
+              Clear
             </Link>
           </div>
         )}
@@ -159,11 +172,15 @@ export default async function CollectionsPage({
         {products.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--space-3xl) 0', color: 'var(--on-surface-variant)' }}>
             {searchQuery
-              ? `No products found for "${searchQuery}". Try a different search.`
-              : 'No products found in this category.'}
+              ? `No products found for "${searchQuery}".`
+              : 'No products found.'}
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--space-lg)' }}>
+          <div className="product-grid" style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(150px, 45vw, 280px), 1fr))', 
+            gap: 'clamp(var(--space-sm), 3vw, var(--space-lg))' 
+          }}>
             {products.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
