@@ -73,7 +73,7 @@ export function CartDrawer(_: CartDrawerProps) {
               <span className="cart-total-label">Subtotal</span>
               <span className="cart-total-amount">{formatPrice(total)}</span>
             </div>
-            <p className="cart-shipping-note">🚚 Free shipping on all orders · Cash on Delivery available</p>
+            <p className="cart-shipping-note">🚚 Free shipping on all orders · Secure payments</p>
             <button className="btn btn-primary btn-full" onClick={() => { closeCart(); router.push('/checkout'); }}>
               Proceed to Checkout
             </button>
