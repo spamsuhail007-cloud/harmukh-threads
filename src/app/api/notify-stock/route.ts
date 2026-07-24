@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { sendTelegramAlert } from '@/lib/telegram';
 
 const Schema = z.object({
   email: z.string().email(),
@@ -12,8 +13,11 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { email, productId } = Schema.parse(body);
 
-    // Verify product exists
-    const product = await db.product.findUnique({ where: { id: productId }, select: { id: true } });
+    // Verify product exists and fetch details for the notification
+    const product = await db.product.findUnique({ 
+      where: { id: productId }, 
+      select: { id: true, name: true, price: true, category: true, slug: true } 
+    });
     if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
 
     await db.stockNotification.upsert({
@@ -21,6 +25,15 @@ export async function POST(req: NextRequest) {
       create: { email: email.toLowerCase(), productId },
       update: {},
     });
+
+    // Send Telegram Alert for out-of-stock request
+    await sendTelegramAlert(
+      `🔔 <b>STOCK ALERT REQUEST</b>\n` +
+      `📧 <b>Customer Email:</b> ${email.toLowerCase()}\n` +
+      `📦 <b>Product:</b> ${product.name} (${product.category})\n` +
+      `💰 <b>Price:</b> ₹${product.price.toLocaleString('en-IN')}\n\n` +
+      `🔗 <a href="https://harmukhthreads.com/products/${product.slug}">View Product</a>`
+    );
 
     return NextResponse.json({ ok: true });
   } catch (err) {
