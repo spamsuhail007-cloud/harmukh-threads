@@ -71,8 +71,8 @@ export default function CheckoutPage() {
       } else {
         setError(res.error || 'Failed to place order.');
       }
-    } catch (err) {
-      setError('An error occurred placing your order. Please try again.');
+    } catch (err: any) {
+      setError(err?.message || 'An error occurred placing your order. Please try again.');
     } finally {
       setLoading(false);
     }

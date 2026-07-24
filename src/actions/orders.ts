@@ -28,24 +28,24 @@ const OrderSchema = z.object({
 });
 
 export async function createOrder(data: unknown) {
-  const parsed = OrderSchema.safeParse(data);
-  if (!parsed.success) {
-    return { success: false, error: 'Invalid order data' };
-  }
-
-  const recaptchaResult = await verifyRecaptcha(parsed.data.token);
-  if (!recaptchaResult.success) {
-    const errorDetails = recaptchaResult.errorCodes 
-      ? `Codes: ${recaptchaResult.errorCodes.join(',')}` 
-      : `Score: ${recaptchaResult.score || 'N/A'}`;
-    return { success: false, error: `Google reCAPTCHA verification failed. Are you a bot? (${errorDetails})` };
-  }
-
-  const { items, token, ...customerData } = parsed.data;
-  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
-  const orderNumber = generateOrderNumber();
-
   try {
+    const parsed = OrderSchema.safeParse(data);
+    if (!parsed.success) {
+      return { success: false, error: 'Invalid order data: ' + parsed.error.message };
+    }
+
+    const recaptchaResult = await verifyRecaptcha(parsed.data.token);
+    if (!recaptchaResult.success) {
+      const errorDetails = recaptchaResult.errorCodes 
+        ? `Codes: ${recaptchaResult.errorCodes.join(',')}` 
+        : `Score: ${recaptchaResult.score || 'N/A'}`;
+      return { success: false, error: `Google reCAPTCHA verification failed. (${errorDetails})` };
+    }
+
+    const { items, token, ...customerData } = parsed.data;
+    const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const orderNumber = generateOrderNumber();
+
     const order = await db.order.create({
       data: {
         ...customerData,
@@ -74,24 +74,39 @@ export async function createOrder(data: unknown) {
       shipping: 0, 
       paymentStatus: 'PENDING' 
     };
-    await sendOrderConfirmationEmail(emailPayload);
-    await sendAdminOrderNotification(emailPayload);
+    
+    // Attempt sending notifications, but log if they fail so they don't block order completion
+    try {
+      await sendOrderConfirmationEmail(emailPayload);
+    } catch (e) {
+      console.error('Failed to send customer order confirmation email:', e);
+    }
 
-    const itemSummary = items.map(i => `  • ${i.name} ×${i.qty}`).join('\n');
-    await sendTelegramAlert(
-      `🛒 <b>NEW ORDER</b> #${orderNumber}\n` +
-      `👤 ${customerData.firstName} ${customerData.lastName}\n` +
-      `📞 ${customerData.phone}\n` +
-      `💰 ₹${subtotal.toLocaleString('en-IN')}\n\n` +
-      `${itemSummary}\n\n` +
-      `🔗 <a href="https://harmukhthreads.com/admin/orders">View in Admin</a>`
-    );
+    try {
+      await sendAdminOrderNotification(emailPayload);
+    } catch (e) {
+      console.error('Failed to send admin order notification email:', e);
+    }
+
+    try {
+      const itemSummary = items.map(i => `  • ${i.name} ×${i.qty}`).join('\n');
+      await sendTelegramAlert(
+        `🛒 <b>NEW ORDER</b> #${orderNumber}\n` +
+        `👤 ${customerData.firstName} ${customerData.lastName}\n` +
+        `📞 ${customerData.phone}\n` +
+        `💰 ₹${subtotal.toLocaleString('en-IN')}\n\n` +
+        `${itemSummary}\n\n` +
+        `🔗 <a href="https://harmukhthreads.com/admin/orders">View in Admin</a>`
+      );
+    } catch (e) {
+      console.error('Failed to send Telegram alert:', e);
+    }
 
     revalidatePath('/admin/orders');
     return { success: true, orderNumber: order.orderNumber, orderId: order.id };
-  } catch (err) {
-    console.error('Order creation error:', err);
-    return { success: false, error: 'Failed to create order' };
+  } catch (err: any) {
+    console.error('Order creation critical error:', err);
+    return { success: false, error: err.message || 'An unexpected error occurred while placing the order' };
   }
 }
 
