@@ -33,39 +33,46 @@ export default function CheckoutPage() {
       return;
     }
 
+    let token = '';
     try {
-      const token = await executeRecaptcha('checkout');
+      token = await executeRecaptcha('checkout');
+    } catch (err) {
+      console.warn('reCAPTCHA execution failed, falling back to client-error token:', err);
+      token = 'client-error';
+    }
+
+    try {
       const fd = new FormData(e.currentTarget);
       const data = {
-      firstName: fd.get('firstName'),
-      lastName: fd.get('lastName'),
-      email: fd.get('email'),
-      phone: fd.get('phone'),
-      address: fd.get('address'),
-      city: fd.get('city'),
-      pincode: fd.get('pincode'),
-      paymentMethod: 'UPI',
-      items: items.map(i => ({
-        productId: i.product.id,
-        name: i.product.name,
-        image: i.product.images[0],
-        price: i.product.price,
-        qty: i.qty,
-      })),
-      token,
-    };
+        firstName: fd.get('firstName'),
+        lastName: fd.get('lastName'),
+        email: fd.get('email'),
+        phone: fd.get('phone'),
+        address: fd.get('address'),
+        city: fd.get('city'),
+        pincode: fd.get('pincode'),
+        paymentMethod: 'UPI',
+        items: items.map(i => ({
+          productId: i.product.id,
+          name: i.product.name,
+          image: i.product.images[0],
+          price: i.product.price,
+          qty: i.qty,
+        })),
+        token,
+      };
 
-    const res = await createOrder(data);
+      const res = await createOrder(data);
 
-    if (res.success && res.orderNumber) {
-      clear();
-      // Redirect to UPI payment page instead of success
-      router.push(`/orders/pay?order=${res.orderNumber}&amount=${total}`);
-    } else {
-      setError(res.error || 'Failed to place order.');
-    }
+      if (res.success && res.orderNumber) {
+        clear();
+        // Redirect to UPI payment page instead of success
+        router.push(`/orders/pay?order=${res.orderNumber}&amount=${total}`);
+      } else {
+        setError(res.error || 'Failed to place order.');
+      }
     } catch (err) {
-      setError('An error occurred generating security token. Please try again.');
+      setError('An error occurred placing your order. Please try again.');
     } finally {
       setLoading(false);
     }
