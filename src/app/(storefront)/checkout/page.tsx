@@ -25,6 +25,7 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const formEl = e.currentTarget; // Capture synchronously before any async await yields the thread
     setLoading(true);
     setError('');
     if (!executeRecaptcha) {
@@ -42,7 +43,7 @@ export default function CheckoutPage() {
     }
 
     try {
-      const fd = new FormData(e.currentTarget);
+      const fd = new FormData(formEl);
       const data = {
         firstName: fd.get('firstName'),
         lastName: fd.get('lastName'),
