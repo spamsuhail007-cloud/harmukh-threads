@@ -5,11 +5,11 @@ import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: { default: 'Harmukh Threads — Premium Kashmir Handicrafts', template: '%s | Harmukh Threads' },
-  description: 'Hand-knotted rugs and exquisite pillow covers. Each piece carries 600 years of tradition. Direct from master artisans in Kashmir.',
-  keywords: ['Kashmir rugs', 'pillow covers', 'Kashmir handicrafts', 'hand-knotted rug', 'authentic Kashmir', 'Harmukh Threads'],
+  description: 'Hand-knotted rugs and exquisite cushion covers. Each piece carries 600 years of tradition. Direct from master artisans in Kashmir.',
+  keywords: ['Kashmir rugs', 'cushion covers', 'Kashmir handicrafts', 'hand-knotted rug', 'authentic Kashmir', 'Harmukh Threads'],
   openGraph: {
     title: 'Harmukh Threads — Premium Kashmir Handicrafts',
-    description: 'Hand-knotted rugs and exquisite pillow covers. 600 years of tradition, delivered to your doorstep.',
+    description: 'Hand-knotted rugs and exquisite cushion covers. 600 years of tradition, delivered to your doorstep.',
     type: 'website',
     siteName: 'Harmukh Threads',
     images: [{ url: '/harmukhlogo.png', width: 800, height: 800 }]

@@ -298,12 +298,12 @@ export default function NewProductPage() {
               <label className="form-label">Category *</label>
               <select name="category" className="form-input" required value={category} onChange={e => setCategory(e.target.value)}>
                 <option value="Rugs">Rugs</option>
-                <option value="Pillow Covers">Pillow Covers</option>
+                <option value="Cushion Covers">Cushion Covers</option>
               </select>
             </div>
           </div>
 
-          {(category === 'Rugs' || category === 'Pillow Covers') && (
+          {(category === 'Rugs' || category === 'Cushion Covers') && (
             <div className="form-group">
               <label className="form-label">{category === 'Rugs' ? 'Rug Size' : 'Cover Size'}</label>
               <select name="size" className="form-input">

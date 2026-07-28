@@ -16,7 +16,7 @@ export function Footer() {
             <h4>Collections</h4>
             <ul>
               <li><Link href="/collections?cat=Rugs">Hand-knotted Rugs</Link></li>
-              <li><Link href="/collections?cat=Pillow%20Covers">Pillow Covers</Link></li>
+              <li><Link href="/collections?cat=Cushion%20Covers">Cushion Covers</Link></li>
             </ul>
           </div>
           <div className="footer-col">

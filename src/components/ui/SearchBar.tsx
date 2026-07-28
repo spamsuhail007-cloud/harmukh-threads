@@ -102,7 +102,7 @@ function SearchBarInner({
         ref={inputRef}
         type="search"
         id="product-search"
-        placeholder={searchMode ? 'Search our collection…' : 'Search rugs, pillow covers…'}
+        placeholder={searchMode ? 'Search our collection…' : 'Search rugs, cushion covers…'}
         value={value}
         onChange={e => setValue(e.target.value)}
         style={{

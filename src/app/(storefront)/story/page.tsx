@@ -14,7 +14,7 @@ export default function StoryPage() {
           <h1>Hands that weave<br />history.</h1>
           <p>
             In the secluded valleys of Kashmir, time moves differently. Here, a single rug
-            takes months to knot. A finely crafted pillow cover takes weeks to weave. Discover the
+            takes months to knot. A finely crafted cushion cover takes weeks to weave. Discover the
             artisans behind Harmukh Threads.
           </p>
         </div>
@@ -28,7 +28,7 @@ export default function StoryPage() {
             <p className="section-lead" style={{ marginBottom: 'var(--space-lg)' }}>
               Unlike industrial manufacturing, our process relies entirely on human hands, 
               passed down through generations of families in Srinagar, Anantnag, and Pampore.
-              Each knot in our rugs is tied individually. Each thread in our pillow covers is 
+              Each knot in our rugs is tied individually. Each thread in our cushion covers is 
               spun on a traditional <em>charkha</em>.
             </p>
             <p className="section-lead">
@@ -44,7 +44,7 @@ export default function StoryPage() {
         </div>
       </section>
 
-      <section style={{ background: 'var(--surface-container-low)' }}>
+      <section style={{ background: 'var(--surface-container-low)', padding: 'clamp(var(--space-lg), 6vw, var(--space-3xl)) 0' }}>
         <div className="container artisan-stat-grid">
           <div>
             <div className="artisan-stat-num">300+</div>
@@ -55,8 +55,8 @@ export default function StoryPage() {
             <div className="artisan-stat-label">Handcrafted</div>
           </div>
           <div>
-            <div className="artisan-stat-num">Zero</div>
-            <div className="artisan-stat-label">Synthetic Dyes</div>
+            <div className="artisan-stat-num">600+</div>
+            <div className="artisan-stat-label">Years of Tradition</div>
           </div>
         </div>
       </section>

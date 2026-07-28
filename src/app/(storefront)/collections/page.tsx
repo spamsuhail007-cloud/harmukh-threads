@@ -114,8 +114,8 @@ export default async function CollectionsPage({
               })}
             </div>
 
-            <div style={{ display: 'flex', gap: 'var(--space-sm)', alignItems: 'center', flex: '1 1 100%', justifyContent: 'space-between' }}>
-              <div style={{ flex: 1, maxWidth: '300px' }}>
+            <div style={{ display: 'flex', gap: 'var(--space-sm)', alignItems: 'center', flex: '1 1 100%', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: '140px', maxWidth: '300px' }}>
                 <SearchBar initialQuery={searchQuery} currentCategory={currentCategory} />
               </div>
               <ShopFilters currentCategory={currentCategory} />

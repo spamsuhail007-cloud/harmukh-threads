@@ -253,12 +253,12 @@ export default function EditProductForm({ product }: { product: Product }) {
               <label className="form-label">Category *</label>
               <select name="category" className="form-input" required value={category} onChange={e => setCategory(e.target.value)}>
                 <option value="Rugs">Rugs</option>
-                <option value="Pillow Covers">Pillow Covers</option>
+                <option value="Cushion Covers">Cushion Covers</option>
               </select>
             </div>
           </div>
 
-          {(category === 'Rugs' || category === 'Pillow Covers') && (
+          {(category === 'Rugs' || category === 'Cushion Covers') && (
             <div className="form-group" style={{ margin: 'var(--space-lg) 0 0 0' }}>
               <label className="form-label">{category === 'Rugs' ? 'Rug Size' : 'Cover Size'}</label>
               <select name="size" className="form-input" defaultValue={(product as any).size || ''} style={{ maxWidth: '50%' }}>

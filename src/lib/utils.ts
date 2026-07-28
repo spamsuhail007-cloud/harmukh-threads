@@ -19,7 +19,7 @@ export function slugify(text: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
-export const CATEGORIES = ['Rugs', 'Pillow Covers'] as const;
+export const CATEGORIES = ['Rugs', 'Cushion Covers'] as const;
 export type Category = typeof CATEGORIES[number];
 
 /**

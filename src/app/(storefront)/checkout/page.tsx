@@ -80,7 +80,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div style={{ background: 'var(--surface-container-lowest)', padding: 'var(--space-2xl) 0' }}>
+    <div style={{ background: 'var(--surface-container-lowest)', padding: 'var(--space-2xl) 0', paddingTop: 'calc(var(--navbar-height) + var(--space-2xl))' }}>
       <div className="container">
         <h1 className="section-title" style={{ marginBottom: 'var(--space-xl)' }}>Secure Checkout</h1>
         
@@ -166,7 +166,7 @@ export default function CheckoutPage() {
             </p>
           </form>
 
-          <aside style={{ background: 'var(--surface-container)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-md)', position: 'sticky', top: '100px' }}>
+          <aside style={{ background: 'var(--surface-container)', padding: 'var(--space-xl)', borderRadius: 'var(--radius-md)' }}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-lg)' }}>Order Summary</h2>
             <div style={{ marginBottom: 'var(--space-xl)' }}>
               {items.map(item => (

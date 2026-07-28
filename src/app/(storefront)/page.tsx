@@ -10,10 +10,10 @@ import { db } from '@/lib/db';
 export const revalidate = 60; // ISR every 60s
 
 export default async function HomePage() {
-  const [featured, rugsCount, pillowsCount, videoProducts] = await Promise.all([
+  const [featured, rugsCount, cushionsCount, videoProducts] = await Promise.all([
     getFeaturedProducts(),
     db.product.count({ where: { category: 'Rugs', isActive: true } }),
-    db.product.count({ where: { category: 'Pillow Covers', isActive: true } }),
+    db.product.count({ where: { category: 'Cushion Covers', isActive: true } }),
     db.product.findMany({ 
       where: { videoUrl: { not: null }, isActive: true },
       take: 10,
@@ -36,9 +36,7 @@ export default async function HomePage() {
             Woven for <em>Generations.</em>
           </h1>
           <p className="hero-body">
-            Harmukh Threads brings the timeless elegance of Kashmiri artistry to your home. 
-            Discover our curated collection of museum-quality hand-knotted rugs and 
-            masterfully crafted pillow covers.
+            Harmukh Threads brings the timeless elegance of Kashmiri artistry to your home. Discover our curated collection of handcrafted home décor, premium textiles, and artisan-made pieces that celebrate the rich heritage of Kashmir.
           </p>
           <div className="hero-actions">
             <Link href="/collections" className="btn btn-primary">
@@ -54,7 +52,7 @@ export default async function HomePage() {
       {videoProducts.length > 0 && (
         <section style={{ padding: 'var(--space-2xl) 0', background: 'var(--surface-container-low)' }}>
           <div className="container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-2xl)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-2xl)', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
               <div>
                 <div className="section-kicker" style={{ color: 'var(--primary)' }}>Watch & Shop</div>
                 <h2 className="section-title" style={{ color: 'var(--on-surface)' }}>Artistry in Motion</h2>
@@ -112,7 +110,7 @@ export default async function HomePage() {
 
       <section style={{ padding: 'var(--space-3xl) 0' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-2xl)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'var(--space-2xl)', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
             <div>
               <div className="section-kicker">Curated</div>
               <h2 className="section-title">Latest & Bestselling</h2>
@@ -121,7 +119,7 @@ export default async function HomePage() {
               View all <span>→</span>
             </Link>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--space-lg)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(145px, 43vw, 280px), 1fr))', gap: 'var(--space-lg)' }}>
             {featured.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -142,10 +140,10 @@ export default async function HomePage() {
               category="Rugs"
             />
             <CollectionCard
-              title="Pillow Covers"
-              count={`${pillowsCount}`}
-              image="/kashmiri-pillow.png"
-              category="Pillow Covers"
+              title="Cushion Covers"
+              count={`${cushionsCount}`}
+              image="/kashmiri-cushion.png"
+              category="Cushion Covers"
             />
           </div>
         </div>
