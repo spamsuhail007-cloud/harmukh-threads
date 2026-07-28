@@ -50,9 +50,9 @@ export function CartDrawer(_: CartDrawerProps) {
                   <div className="cart-item-name">{item.product.name}</div>
                   <div className="cart-item-meta">
                     {item.product.category}
-                    {item.product.category === 'Cushion Covers' && (
+                    {((item.product.minOrderQty && item.product.minOrderQty > 1) || item.product.category === 'Cushion Covers') && (
                       <span style={{ color: 'var(--primary)', fontWeight: 600, marginLeft: '6px', fontSize: '0.72rem' }}>
-                        (Min. Qty: 2)
+                        (Min. Qty: {item.product.minOrderQty || (item.product.category === 'Cushion Covers' ? 2 : 1)})
                       </span>
                     )}
                   </div>
@@ -80,9 +80,9 @@ export function CartDrawer(_: CartDrawerProps) {
               <span className="cart-total-label">Subtotal</span>
               <span className="cart-total-amount">{formatPrice(total)}</span>
             </div>
-            {items.some(i => i.product.category === 'Cushion Covers') && (
+            {items.some(i => (i.product.minOrderQty && i.product.minOrderQty > 1) || i.product.category === 'Cushion Covers') && (
               <p className="cart-shipping-note" style={{ color: 'var(--primary)', fontWeight: 500, marginBottom: '6px' }}>
-                ℹ️ Min. order quantity for Cushion Covers is 2 pieces.
+                ℹ️ Some items in your bag have a minimum order quantity.
               </p>
             )}
             <p className="cart-shipping-note">🚚 Free shipping on all orders · Secure payments</p>

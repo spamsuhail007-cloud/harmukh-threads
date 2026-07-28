@@ -89,6 +89,12 @@ export default function EditProductForm({ product }: { product: Product }) {
   };
 
   const [category, setCategory] = useState(product.category || 'Rugs');
+  const [minOrderQty, setMinOrderQty] = useState((product as any).minOrderQty || (product.category === 'Cushion Covers' ? 2 : 1));
+
+  const handleCategoryChange = (newCat: string) => {
+    setCategory(newCat);
+    setMinOrderQty(newCat === 'Cushion Covers' ? 2 : 1);
+  };
 
   const [slots, setSlots] = useState<ImageSlot[]>(
     product.images.map(url => ({ type: 'url' as const, url, preview: url }))
@@ -191,6 +197,7 @@ export default function EditProductForm({ product }: { product: Product }) {
       originalPrice: submittedOriginalPrice,
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
+      minOrderQty: Number(formData.get('minOrderQty')) || 1,
       images: finalUrls,
       videoUrl: finalVideoUrl,
       badge: rawBadge || null,
@@ -251,7 +258,7 @@ export default function EditProductForm({ product }: { product: Product }) {
             </div>
             <div className="form-group" style={{ margin: 0 }}>
               <label className="form-label">Category *</label>
-              <select name="category" className="form-input" required value={category} onChange={e => setCategory(e.target.value)}>
+              <select name="category" className="form-input" required value={category} onChange={e => handleCategoryChange(e.target.value)}>
                 <option value="Rugs">Rugs</option>
                 <option value="Cushion Covers">Cushion Covers</option>
               </select>
@@ -293,7 +300,7 @@ export default function EditProductForm({ product }: { product: Product }) {
         {/* Pricing & Inventory */}
         <div style={{ background: '#fff', padding: 'var(--space-xl)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--outline-variant)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
           <h2 style={{ fontSize: '1.25rem', marginBottom: 'var(--space-lg)', fontWeight: 600, color: '#1a1a1a' }}>Pricing & Inventory</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-lg)', alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 'var(--space-lg)', alignItems: 'start' }}>
             <div className="form-group" style={{ margin: 0 }}>
               <label className="form-label" style={{ display: 'flex', flexDirection: 'column' }}>
                 <span>Regular Price (₹)</span>
@@ -319,6 +326,13 @@ export default function EditProductForm({ product }: { product: Product }) {
                 <span style={{ fontSize: '0.7rem', color: 'var(--on-surface-variant)', fontWeight: 400 }}>Quantity in warehouse</span>
               </label>
               <input type="number" name="stock" className="form-input" required min="0" defaultValue={product.stock} />
+            </div>
+            <div className="form-group" style={{ margin: 0 }}>
+              <label className="form-label" style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>Min. Order Qty *</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--on-surface-variant)', fontWeight: 400 }}>Min pcs customer can buy</span>
+              </label>
+              <input type="number" name="minOrderQty" className="form-input" required min="1" value={minOrderQty} onChange={e => setMinOrderQty(Number(e.target.value))} />
             </div>
           </div>
         </div>

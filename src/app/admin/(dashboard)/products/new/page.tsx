@@ -165,6 +165,12 @@ export default function NewProductPage() {
   const [videoFile, setVideoFile] = useState<{ file: File; src: string } | null>(null);
   const [specs, setSpecs] = useState<{ label: string; value: string }[]>([]);
   const [category, setCategory] = useState('Rugs');
+  const [minOrderQty, setMinOrderQty] = useState(1);
+
+  const handleCategoryChange = (newCat: string) => {
+    setCategory(newCat);
+    setMinOrderQty(newCat === 'Cushion Covers' ? 2 : 1);
+  };
 
   const handleAddSpec = () => setSpecs([...specs, { label: '', value: '' }]);
   const handleRemoveSpec = (i: number) => setSpecs(specs.filter((_, idx) => idx !== i));
@@ -244,6 +250,7 @@ export default function NewProductPage() {
       originalPrice: formData.get('originalPrice') ? Number(formData.get('originalPrice')) : undefined,
       description: formData.get('description'),
       stock: Number(formData.get('stock')),
+      minOrderQty: Number(formData.get('minOrderQty')) || 1,
       images: uploadedUrls,
       videoUrl: finalVideoUrl,
       badge: rawBadge || undefined,
@@ -296,7 +303,7 @@ export default function NewProductPage() {
             </div>
             <div className="form-group">
               <label className="form-label">Category *</label>
-              <select name="category" className="form-input" required value={category} onChange={e => setCategory(e.target.value)}>
+              <select name="category" className="form-input" required value={category} onChange={e => handleCategoryChange(e.target.value)}>
                 <option value="Rugs">Rugs</option>
                 <option value="Cushion Covers">Cushion Covers</option>
               </select>
@@ -334,7 +341,7 @@ export default function NewProductPage() {
             </div>
           )}
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-lg)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 'var(--space-lg)' }}>
             <div className="form-group">
               <label className="form-label">Regular Price (₹)</label>
               <input type="number" name="originalPrice" className="form-input" min="1" placeholder="e.g. 6000" />
@@ -346,6 +353,10 @@ export default function NewProductPage() {
             <div className="form-group">
               <label className="form-label">Initial Stock *</label>
               <input type="number" name="stock" className="form-input" required min="0" defaultValue="1" />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Min. Order Qty *</label>
+              <input type="number" name="minOrderQty" className="form-input" required min="1" value={minOrderQty} onChange={e => setMinOrderQty(Number(e.target.value))} />
             </div>
           </div>
 

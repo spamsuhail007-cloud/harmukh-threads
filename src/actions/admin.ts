@@ -31,6 +31,7 @@ const ProductSchema = z.object({
   videoUrl: z.string().nullable().optional(),
   size: z.string().nullable().optional(),
   stock: z.coerce.number().min(0),
+  minOrderQty: z.coerce.number().min(1).default(1),
 });
 
 export async function createProduct(data: unknown) {

@@ -180,9 +180,9 @@ export default function CheckoutPage() {
                       <div style={{ fontWeight: 600 }}>{item.product.name}</div>
                       <div style={{ color: 'var(--on-surface-variant)', fontSize: '0.8rem' }}>
                         {item.product.category}
-                        {item.product.category === 'Cushion Covers' && (
+                        {(((item.product as any).minOrderQty && (item.product as any).minOrderQty > 1) || item.product.category === 'Cushion Covers') && (
                           <span style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600, display: 'block', marginTop: '2px' }}>
-                            Min. Order Qty: 2 pcs
+                            Min. Order Qty: {(item.product as any).minOrderQty || (item.product.category === 'Cushion Covers' ? 2 : 1)} pcs
                           </span>
                         )}
                       </div>
@@ -193,7 +193,7 @@ export default function CheckoutPage() {
               ))}
             </div>
 
-            {items.some(i => i.product.category === 'Cushion Covers') && (
+            {items.some(i => ((i.product as any).minOrderQty && (i.product as any).minOrderQty > 1) || i.product.category === 'Cushion Covers') && (
               <div style={{
                 background: 'var(--primary-fixed)',
                 color: 'var(--primary)',
@@ -207,7 +207,7 @@ export default function CheckoutPage() {
                 gap: '6px'
               }}>
                 <span style={{ fontSize: '0.9rem' }}>ℹ️</span>
-                <span>Minimum order quantity for Cushion Covers is 2 pieces.</span>
+                <span>Some items in your order have a minimum order quantity requirement.</span>
               </div>
             )}
 

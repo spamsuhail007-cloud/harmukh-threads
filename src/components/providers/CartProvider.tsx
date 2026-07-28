@@ -9,6 +9,7 @@ export type CartProduct = {
   price: number;
   images: string[];
   stock: number;
+  minOrderQty?: number;
 };
 
 export type CartItem = {
@@ -46,7 +47,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (existing.qty >= product.stock) return prev;
         return prev.map(i => i.product.id === product.id ? { ...i, qty: i.qty + 1 } : i);
       }
-      const initialQty = (product.category === 'Cushion Covers') ? Math.min(2, product.stock) : 1;
+      const minQty = product.minOrderQty && product.minOrderQty > 1 ? product.minOrderQty : (product.category === 'Cushion Covers' ? 2 : 1);
+      const initialQty = Math.min(minQty, product.stock);
       return [...prev, { product, qty: initialQty }];
     });
     setIsOpen(true);
@@ -60,7 +62,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(prev => {
       const item = prev.find(i => i.product.id === productId);
       if (!item) return prev;
-      const minQty = item.product.category === 'Cushion Covers' ? 2 : 1;
+      const minQty = item.product.minOrderQty && item.product.minOrderQty > 1 ? item.product.minOrderQty : (item.product.category === 'Cushion Covers' ? 2 : 1);
       if (qty < minQty) {
         return prev.filter(i => i.product.id !== productId);
       }

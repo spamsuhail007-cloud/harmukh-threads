@@ -281,7 +281,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
             )}
           </div>
 
-          {product.category === 'Cushion Covers' && (
+          {(((product as any).minOrderQty && (product as any).minOrderQty > 1) || product.category === 'Cushion Covers') && (
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -295,7 +295,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
               marginBottom: 'var(--space-md)',
               width: 'fit-content'
             }}>
-              <span>ℹ️</span> Minimum Order Quantity: 2 pieces
+              <span>ℹ️</span> Minimum Order Quantity: {(product as any).minOrderQty || (product.category === 'Cushion Covers' ? 2 : 1)} pieces
             </div>
           )}
 

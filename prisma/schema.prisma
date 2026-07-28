@@ -25,6 +25,7 @@ model Product {
   videoUrl      String?
   size          String?
   stock         Int         @default(0)
+  minOrderQty   Int         @default(1)
   isActive      Boolean     @default(true)
   reviews       Review[]
   orderItems    OrderItem[]
