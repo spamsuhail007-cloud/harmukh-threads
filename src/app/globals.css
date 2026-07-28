@@ -59,7 +59,7 @@
    RESET
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
+html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100vw; }
 body {
   font-family: var(--font-sans);
   background: var(--background);
@@ -67,6 +67,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  max-width: 100vw;
 }
 ::selection { background: var(--primary-fixed); color: var(--primary); }
 img { display: block; max-width: 100%; }
@@ -862,12 +863,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .pdp-root {
   background: var(--surface);
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Breadcrumb */
 .pdp-breadcrumb {
   padding: var(--space-md) var(--space-lg) !important;
   border-bottom: 1px solid var(--outline-variant);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .pdp-breadcrumb-nav {
   display: flex;
@@ -875,13 +881,22 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   align-items: center;
   font-size: 0.8rem;
   color: var(--on-surface-variant);
+  flex-wrap: wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .pdp-breadcrumb-nav a {
   color: inherit;
   transition: color var(--transition-fast);
+  white-space: nowrap;
 }
 .pdp-breadcrumb-nav a:hover { color: var(--primary); }
-.pdp-breadcrumb-current { color: var(--on-surface); font-weight: 500; }
+.pdp-breadcrumb-current {
+  color: var(--on-surface);
+  font-weight: 500;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
 /* Main layout */
 .pdp-layout {
@@ -890,6 +905,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   gap: var(--space-2xl);
   padding: var(--space-2xl) var(--space-lg) !important;
   align-items: start;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── Gallery ── */
@@ -898,6 +916,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   gap: var(--space-md);
   position: sticky;
   top: calc(var(--navbar-height) + 24px);
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Thumbnail strip */
@@ -934,6 +954,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .pdp-main-image-wrap {
   flex: 1;
   min-width: 0;
+  max-width: 100%;
 }
 .pdp-main-image-btn {
   position: relative;
@@ -1060,6 +1081,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   display: flex;
   flex-direction: column;
   gap: 0;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .pdp-category {
@@ -1232,10 +1255,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--outline-variant);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .pdp-spec-row {
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 35% 65%;
+  width: 100%;
 }
 .pdp-spec-label {
   padding: 11px 14px;
@@ -1245,11 +1272,17 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   letter-spacing: 0.06em;
   color: var(--on-surface);
   border-right: 1px solid var(--outline-variant);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 .pdp-spec-value {
   padding: 11px 14px;
   font-size: 0.9rem;
   color: var(--on-surface-variant);
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 
 /* Rating summary */
@@ -1458,16 +1491,25 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .pdp-layout {
     grid-template-columns: 1fr;
     gap: var(--space-xl);
+    width: 100%;
+    max-width: 100%;
   }
   .pdp-gallery {
     position: static;
     flex-direction: column-reverse; /* thumbs below on mobile */
     gap: var(--space-md);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
   .pdp-thumbs {
     flex-direction: row;
     overflow-x: auto;
     padding-bottom: 4px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    -webkit-overflow-scrolling: touch;
   }
   .pdp-thumb { width: 62px; height: 62px; }
   .pdp-thumb:hover { transform: translateY(-2px); }
@@ -1476,7 +1518,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 @media (max-width: 600px) {
-  .pdp-title { font-size: 1.5rem; }
+  .pdp-title { font-size: clamp(1.35rem, 5vw, 1.75rem); word-break: break-word; }
   .pdp-price { font-size: 1.75rem; }
   .pdp-cta-group { grid-template-columns: 1fr; }
   .pdp-btn-enquire { text-align: center; }
@@ -1486,6 +1528,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .pdp-rating-big { text-align: left; display: flex; align-items: center; gap: var(--space-md); }
   .pdp-rating-num { font-size: 2.5rem; margin-bottom: 0; }
   .pdp-breadcrumb { padding: var(--space-sm) var(--space-md) !important; }
+  .pdp-spec-label { padding: 8px 10px; font-size: 0.7rem; }
+  .pdp-spec-value { padding: 8px 10px; font-size: 0.85rem; }
 }
 
 /* ============================================================
@@ -1599,6 +1643,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   padding: var(--space-3xl) 0;
   margin-top: var(--space-3xl);
   border-top: 1px solid var(--outline-variant);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 .related-title {
   font-family: var(--font-serif);
@@ -1609,8 +1656,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .related-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 43vw, 240px), 1fr));
   gap: var(--space-lg);
+  width: 100%;
 }
 
 /* ============================================================

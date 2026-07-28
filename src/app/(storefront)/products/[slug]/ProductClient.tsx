@@ -320,13 +320,15 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
           {/* ── Trust Badges ── */}
           <div style={{ 
             marginTop: 'var(--space-xl)', 
-            padding: 'var(--space-lg)', 
+            padding: 'clamp(12px, 4vw, 24px)', 
             background: 'linear-gradient(135deg, #fdfbf7 0%, #f7f0e6 100%)',
             border: '1px solid var(--outline-variant)',
             borderRadius: 'var(--radius-lg)',
             display: 'flex',
             flexDirection: 'column',
-            gap: 'var(--space-md)'
+            gap: 'var(--space-md)',
+            maxWidth: '100%',
+            boxSizing: 'border-box'
           }}>
             <h3 style={{ 
               fontSize: '0.85rem', 
@@ -347,7 +349,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
             <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>
               Every thread in this masterpiece is hand-woven by master artisans in Kashmir. We guarantee 100% authenticity and museum-grade quality.
             </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-md)', marginTop: 'var(--space-sm)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-sm)', marginTop: 'var(--space-sm)' }}>
               {[
                 { label: 'Authentic Art', icon: '🎨' },
                 { label: 'Secure Delivery', icon: '📦' },
@@ -400,7 +402,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
 
           {/* ── Care & Notes ── */}
           {(product as any).productNote && (
-            <div className="pdp-note-list" style={{ marginTop: 'var(--space-xl)', padding: 'var(--space-lg)', background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
+            <div className="pdp-note-list" style={{ marginTop: 'var(--space-xl)', padding: 'clamp(12px, 4vw, 24px)', background: 'var(--surface-container-low)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)', maxWidth: '100%', boxSizing: 'border-box' }}>
               <h3 style={{ fontSize: '0.95rem', marginBottom: 'var(--space-md)', color: 'var(--on-surface)', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
                 Care & Notes
               </h3>
