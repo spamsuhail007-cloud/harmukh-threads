@@ -46,7 +46,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (existing.qty >= product.stock) return prev;
         return prev.map(i => i.product.id === product.id ? { ...i, qty: i.qty + 1 } : i);
       }
-      return [...prev, { product, qty: 1 }];
+      const initialQty = (product.category === 'Cushion Covers') ? Math.min(2, product.stock) : 1;
+      return [...prev, { product, qty: initialQty }];
     });
     setIsOpen(true);
   }, []);
@@ -56,15 +57,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const updateQty = useCallback((productId: string, qty: number) => {
-    if (qty <= 0) { remove(productId); return; }
-    setItems(prev => prev.map(i => {
-      if (i.product.id === productId) {
-        const finalQty = qty > i.product.stock ? i.product.stock : qty;
-        return { ...i, qty: finalQty };
+    setItems(prev => {
+      const item = prev.find(i => i.product.id === productId);
+      if (!item) return prev;
+      const minQty = item.product.category === 'Cushion Covers' ? 2 : 1;
+      if (qty < minQty) {
+        return prev.filter(i => i.product.id !== productId);
       }
-      return i;
-    }));
-  }, [remove]);
+      const finalQty = qty > item.product.stock ? item.product.stock : qty;
+      return prev.map(i => i.product.id === productId ? { ...i, qty: finalQty } : i);
+    });
+  }, []);
 
   const clear = useCallback(() => setItems([]), []);
   const openCart = useCallback(() => setIsOpen(true), []);

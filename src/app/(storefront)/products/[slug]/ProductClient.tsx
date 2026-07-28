@@ -281,6 +281,24 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
             )}
           </div>
 
+          {product.category === 'Cushion Covers' && (
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              color: 'var(--primary)',
+              background: 'var(--primary-fixed)',
+              padding: '4px 12px',
+              borderRadius: 'var(--radius-full)',
+              marginBottom: 'var(--space-md)',
+              width: 'fit-content'
+            }}>
+              <span>ℹ️</span> Minimum Order Quantity: 2 pieces
+            </div>
+          )}
+
           <div className="pdp-divider" />
 
           {product.stock > 0 && product.stock <= 5 && (

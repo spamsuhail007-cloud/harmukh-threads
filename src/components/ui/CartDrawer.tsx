@@ -48,7 +48,14 @@ export function CartDrawer(_: CartDrawerProps) {
                 />
                 <div className="cart-item-info">
                   <div className="cart-item-name">{item.product.name}</div>
-                  <div className="cart-item-meta">{item.product.category}</div>
+                  <div className="cart-item-meta">
+                    {item.product.category}
+                    {item.product.category === 'Cushion Covers' && (
+                      <span style={{ color: 'var(--primary)', fontWeight: 600, marginLeft: '6px', fontSize: '0.72rem' }}>
+                        (Min. Qty: 2)
+                      </span>
+                    )}
+                  </div>
                   <div className="cart-item-actions">
                     <button className="qty-btn" onClick={() => updateQty(item.product.id, item.qty - 1)} aria-label="Decrease">−</button>
                     <span className="qty-val">{item.qty}</span>
@@ -73,6 +80,11 @@ export function CartDrawer(_: CartDrawerProps) {
               <span className="cart-total-label">Subtotal</span>
               <span className="cart-total-amount">{formatPrice(total)}</span>
             </div>
+            {items.some(i => i.product.category === 'Cushion Covers') && (
+              <p className="cart-shipping-note" style={{ color: 'var(--primary)', fontWeight: 500, marginBottom: '6px' }}>
+                ℹ️ Min. order quantity for Cushion Covers is 2 pieces.
+              </p>
+            )}
             <p className="cart-shipping-note">🚚 Free shipping on all orders · Secure payments</p>
             <button className="btn btn-primary btn-full" onClick={() => { closeCart(); router.push('/checkout'); }}>
               Proceed to Checkout

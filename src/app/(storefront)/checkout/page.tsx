@@ -178,13 +178,38 @@ export default function CheckoutPage() {
                     </div>
                     <div>
                       <div style={{ fontWeight: 600 }}>{item.product.name}</div>
-                      <div style={{ color: 'var(--on-surface-variant)', fontSize: '0.8rem' }}>{item.product.category}</div>
+                      <div style={{ color: 'var(--on-surface-variant)', fontSize: '0.8rem' }}>
+                        {item.product.category}
+                        {item.product.category === 'Cushion Covers' && (
+                          <span style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600, display: 'block', marginTop: '2px' }}>
+                            Min. Order Qty: 2 pcs
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div style={{ fontWeight: 600 }}>{formatPrice(item.product.price * item.qty)}</div>
                 </div>
               ))}
             </div>
+
+            {items.some(i => i.product.category === 'Cushion Covers') && (
+              <div style={{
+                background: 'var(--primary-fixed)',
+                color: 'var(--primary)',
+                padding: '8px 12px',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                marginBottom: 'var(--space-md)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}>
+                <span style={{ fontSize: '0.9rem' }}>ℹ️</span>
+                <span>Minimum order quantity for Cushion Covers is 2 pieces.</span>
+              </div>
+            )}
 
             <div style={{ borderTop: '1px solid var(--surface-container-high)', paddingTop: 'var(--space-md)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--space-sm)', color: 'var(--on-surface-variant)' }}>
