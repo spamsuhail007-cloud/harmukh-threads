@@ -95,9 +95,9 @@ Router.register('returns', () => {
               color:#1c1c18;margin-bottom:var(--space-sm);line-height:1.3;
             ">We do not accept returns or exchanges.</h2>
             <p style="color:#574238;font-size:0.95rem;line-height:1.7;margin:0;">
-              All sales at Harmukh Threads are <strong>final</strong>. Because every order undergoes a rigorous
-              hands-on inspection by our artisans before dispatch, we are fully confident in the quality
-              of each shipment. We ask that you review your order carefully before placing it.
+              All sales at Harmukh Threads are <strong>final</strong>. We manually check and inspect each product
+              for quality and craftsmanship prior to shipping. Because only pristine items leave our facility,
+              we do not accept returns or process exchanges.
             </p>
           </div>
         </div>
@@ -128,7 +128,7 @@ Router.register('returns', () => {
               step: '01',
               icon: '🧵',
               title: 'Material Verification',
-              desc: 'Each piece is sourced and verified for 100% authentic Kashmiri origin. Material purity and GI compliance are confirmed at intake.'
+              desc: 'Each piece is sourced and verified for 100% authentic Kashmiri origin and material purity.'
             },
             {
               step: '02',
@@ -146,7 +146,7 @@ Router.register('returns', () => {
               step: '04',
               icon: '📦',
               title: 'Pre-Shipment Sign-Off',
-              desc: 'Only after a final sign-off by our senior quality lead is your order sealed, documented, and dispatched with full insurance.'
+              desc: 'Only after a final sign-off by our senior quality lead is your order sealed, documented, and dispatched directly to your address.'
             }
           ].map(s => `
             <div style="
@@ -252,11 +252,7 @@ Router.register('returns', () => {
   const faqs = [
     {
       q: 'Why don\'t you accept returns?',
-      a: 'Every order is personally inspected and verified by our master craftsmen before it is shipped. We guarantee the condition, authenticity, and quality of each piece when it leaves our atelier. Because we absorb all quality risk on our end before dispatch, we are unable to process returns once an order is fulfilled.'
-    },
-    {
-      q: 'What if my item arrives damaged in transit?',
-      a: 'All orders are shipped fully insured. In the extremely rare event that your piece is damaged during transit, please photograph the damage and the packaging within 24 hours of delivery and contact us immediately at care@harmukhthreads.com. Transit damage claims are handled directly through the shipping insurer and are separate from our no-returns policy.'
+      a: 'Every order is personally inspected and verified by our master craftsmen before it is shipped. We guarantee the condition, authenticity, and quality of each piece when it leaves our atelier. Because we manually inspect every product prior to shipping, we do not accept returns or exchanges.'
     },
     {
       q: 'Can I cancel my order after placing it?',
@@ -272,7 +268,7 @@ Router.register('returns', () => {
     },
     {
       q: 'What does the pre-shipment inspection cover?',
-      a: 'Our inspection covers: material authenticity (GI compliance), structural integrity (weave, knotting, stitching), surface condition (no stains, snags, or uneven dye), colour consistency, and finishing quality (fringes, borders, backing). A quality sign-off document accompanies every shipment.'
+      a: 'Our inspection covers material authenticity, structural integrity (weave, knotting, stitching), surface condition, colour consistency, and finishing quality (fringes, borders, backing).'
     },
   ];
 
