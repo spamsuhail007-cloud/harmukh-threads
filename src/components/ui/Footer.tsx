@@ -32,7 +32,7 @@ export function Footer() {
             <h4>Help</h4>
             <ul>
               <li><Link href="/contact">Contact Us</Link></li>
-              <li><Link href="/returns">Return Policy</Link></li>
+              <li><Link href="/returns">Quality &amp; Return Policy</Link></li>
               <li><Link href="/collections">Shop All</Link></li>
               <li><Link href="/privacy">Privacy Policy</Link></li>
               <li><Link href="/terms">Terms of Service</Link></li>
