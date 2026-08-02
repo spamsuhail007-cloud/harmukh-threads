@@ -82,6 +82,21 @@ export default function StoryPage() {
           </div>
         </div>
       </section>
+
+      <section className="container" style={{ padding: 'var(--space-xl) 0 var(--space-3xl)', textAlign: 'center' }}>
+        <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.75rem', marginBottom: 'var(--space-md)' }}>Connect With Our Studio</h2>
+        <p style={{ color: 'var(--on-surface-variant)', maxWidth: '540px', margin: '0 auto var(--space-lg)', lineHeight: 1.6 }}>
+          Want to know more about our weavers, inspect piece details, or enquire about custom sizing? Reach us directly via WhatsApp or Email.
+        </p>
+        <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a href="https://wa.me/918491006127" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            💬 Chat on WhatsApp
+          </a>
+          <a href="mailto:harmukhthreads@gmail.com" className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+            ✉️ Email Us
+          </a>
+        </div>
+      </section>
     </>
   );
 }

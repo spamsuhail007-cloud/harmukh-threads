@@ -87,7 +87,7 @@ function NotifyForm({ productId }: { productId: string }) {
 /* ── Share buttons ── */
 function ShareButtons({ product }: { product: Product }) {
   const [copied, setCopied] = useState(false);
-  const url = typeof window !== 'undefined' ? window.location.href : `https://harmukh-threads.vercel.app/products/${product.slug}`;
+  const url = typeof window !== 'undefined' ? window.location.href : `https://harmukhthreads.com/products/${product.slug}`;
   const text = `Check out ${product.name} on Harmukh Threads — ${formatPrice(product.price)}`;
 
   const copyLink = async () => {

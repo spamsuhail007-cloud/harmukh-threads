@@ -7,7 +7,7 @@ import { formatPrice } from '@/lib/utils';
 // ─── UPI config from env ───────────────────────────────────────────────────
 const UPI_ID = process.env.NEXT_PUBLIC_UPI_ID || 'yourname@upi';
 const UPI_NAME = process.env.NEXT_PUBLIC_UPI_NAME || 'Harmukh Threads';
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP || '919000000000';
+const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP || '918491006127';
 
 function buildUpiUrl(amountRupees: number, orderNumber: string) {
   // Prices are stored as plain rupees (integer). UPI spec requires amount in rupees with 2 decimal places.

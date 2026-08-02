@@ -11,7 +11,7 @@ export default async function SuccessPage({ searchParams }: { searchParams: Prom
         <h1>Order Confirmed</h1>
         <p>
           Thank you for choosing Harmukh Threads. Your order has been placed and is currently being processed.
-          We will reach out to you shortly to confirm delivery details.
+          We will reach out to you shortly to confirm delivery details. If you have any questions, feel free to contact support at <strong>harmukhthreads@gmail.com</strong> or WhatsApp us at <strong>+91 84910 06127</strong>.
         </p>
         <div className="success-order-id">
           Order Number: <strong>{orderNumber}</strong>
