@@ -50,7 +50,7 @@ export default function SaleLayout({ children }: { children: React.ReactNode }) 
 
       <Navbar />
       <CartDrawer />
-      <main style={{ minHeight: '100vh', background: '#fcf9f2' }}>
+      <main className="page-content" style={{ minHeight: '100vh', background: '#fcf9f2' }}>
         {children}
       </main>
       <WhatsAppButton />
