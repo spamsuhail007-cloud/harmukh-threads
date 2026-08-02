@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "surface": "#fcf9f2",
+                        "on-primary-fixed": "#341100",
+                        "surface-dim": "#dcdad3",
+                        "secondary": "#765a24",
+                        "on-tertiary-container": "#f6fff4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#574238",
+                        "on-tertiary-fixed": "#0e1f13",
+                        "on-secondary-fixed-variant": "#5c420e",
+                        "primary": "#9b4000",
+                        "surface-container": "#f0eee7",
+                        "primary-container": "#c25303",
+                        "surface-variant": "#e5e2db",
+                        "on-primary-fixed-variant": "#793000",
+                        "surface-bright": "#fcf9f2",
+                        "on-secondary-fixed": "#271900",
+                        "tertiary": "#4e6151",
+                        "surface-container-low": "#f6f3ec",
+                        "surface-container-high": "#ebe8e1",
+                        "inverse-primary": "#ffb692",
+                        "inverse-surface": "#31312c",
+                        "inverse-on-surface": "#f3f0ea",
+                        "tertiary-fixed": "#d3e8d4",
+                        "error-container": "#ffdad6",
+                        "outline": "#8b7266",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "tertiary-container": "#667969",
+                        "tertiary-fixed-dim": "#b7ccb8",
+                        "background": "#fcf9f2",
+                        "on-tertiary-fixed-variant": "#394b3c",
+                        "on-background": "#1c1c18",
+                        "surface-tint": "#9f4200",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#795c26",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb692",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1c1c18",
+                        "secondary-container": "#fed795",
+                        "secondary-fixed": "#ffdea8",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#e7c181",
+                        "outline-variant": "#dfc0b3",
+                        "surface-container-highest": "#e5e2db",
+                        "primary-fixed": "#ffdbcb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>body {
+    font-family: "Inter", sans-serif
+    }
+.font-serif {
+    font-family: "Noto Serif", serif
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24
+    }
+/* Subtle texture overlay to mimic 4% grain */
+.grain-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCEv5ErBXij7h_ACfS9xBpsLrwSLd9P-pJKWNPCP1UfLR94vwRwMGXj-wRAp7IB9w0jmYDr0rzuqFnn8SFR6q0rCpoPmo-rDMs0BFYZfwIWF7W7p-WAvRdjF7Ii9yA5mQcM0dxda43lbfb4R8o49miMNK2fmX0LnfBXuQC-cCIyOa2yEdvSko1fjBvMOVWODZYBKvEWP28Qoqb6Fn0Vx5urYGjNbOeI9_7ybda7EcYPsCLvMF6HeC4yFNufXaY4HPcdaArvR-EPppQD);
+    opacity: 0.04
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<div class="grain-overlay"></div>
+<!-- TopNavBar -->
+<header class="bg-[#fcf9f2]/90 dark:bg-[#1c1c18]/90 backdrop-blur-xl docked full-width top-0 sticky z-[100] shadow-[0px_12px_32px_rgba(44,38,34,0.06)] tonal-transition bg-[#fcf9f2]">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<button class="text-[#1c1c18] hover:opacity-80 transition-opacity duration-300">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+</div>
+<div class="text-2xl font-serif tracking-tighter text-[#1c1c18] dark:text-[#fcf9f2]">
+                Vaer Kashmir
+            </div>
+<div class="flex items-center gap-4">
+<button class="text-[#1c1c18] hover:opacity-80 transition-opacity duration-300">
+<span class="material-symbols-outlined text-2xl" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section: Full-screen Cinematic -->
+<section class="relative h-[795px] w-full flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover grayscale-[20%] brightness-[0.85]" data-alt="Cinematic close-up of an elderly Kashmiri artisan weaving an intricate pashmina shawl on a traditional wooden loom in a sun-drenched atelier" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGbQeaA06-YKfLaqwfGlhZMB8D_H7VmMixwj7GNCb7UIKJ6BMNbEZL6y29ovwnmnr2xWe7GxnO_kHtowsVlWjvK-b9V1r1FlncX3xtgvPguds3-gj_QInMmaU7uve5_ovphyQ2q_bh5-elt37wJa6nGKpI8KoXIBKNag-hIls2HLj9TtSL2CSXb9fqaWrPcVJf0yW12QJYx90O2lKaq1tvvHbWFM05lgktfJH0uDFtI_pp_MnJnExbpUzrJ8oqXK5vCnKQKh1t5qKB"/>
+<div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#fcf9f2]"></div>
+</div>
+<div class="relative z-10 text-center px-8">
+<h1 class="text-4xl md:text-6xl font-serif text-white leading-tight mb-6 drop-shadow-sm">
+                    Woven from the <br/><span class="italic text-primary-fixed">Heart of Kashmir</span>
+</h1>
+<p class="text-white/90 font-body tracking-wide mb-10 max-w-xs mx-auto">
+                    Preserving the soul of Himalayan craftsmanship through every silken thread.
+                </p>
+<button class="bg-primary hover:bg-primary-container text-on-primary px-10 py-4 rounded-xl shadow-lg transition-transform active:scale-95 duration-200 text-sm font-medium tracking-widest uppercase">
+                    Explore Collections
+                </button>
+</div>
+</section>
+<!-- Product Teaser Section -->
+<section class="px-6 py-20 bg-surface">
+<div class="mb-12">
+<h2 class="font-serif text-3xl text-on-surface leading-tight">The Heirloom <br/>Series</h2>
+<div class="w-12 h-px bg-primary mt-4"></div>
+</div>
+<div class="flex flex-col gap-16">
+<!-- Product Card 1 -->
+<div class="group relative">
+<div class="aspect-[3/4] w-full overflow-hidden rounded-lg bg-surface-container-low mb-6">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Detail shot of a deep saffron hand-embroidered pashmina shawl draped over an antique wooden chair, warm dramatic side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2ce2pHa0x_UxJ9OfH9CYyWGgTDaTnVIO73F2c6qvSY9wGL_6XvONSCCH10hZck1Lc3NEpMNUAsMY6mR87x4mj3OuxvB6EU57IrysyAnUJkgLpj1bq0FkHgfayGG-abedgU8kGdgnDZsxhpcM7bOUx-1s_JU4icX3EfurixLeJK4BCqjTX1kA1_0DCtG4Z4XtZDVWc42yJcnQ73aVyHaA0ypjBDlPj5D1aAVcrKn3jm-aqjAPKmj2eR0iNWlVqxKl9EYrNaLq4wAYq"/>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between items-end mb-2">
+<div>
+<span class="text-[10px] uppercase tracking-widest text-secondary font-medium">Limited Edition</span>
+<h3 class="font-serif text-xl text-on-surface mt-1">Saffron Petal Wrap</h3>
+</div>
+<span class="font-body text-on-surface-variant">₹840</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                            100% pure Pashmina, naturally dyed using Himalayan crocus stigmas. A testament to patience.
+                        </p>
+<button class="w-full border border-outline-variant/40 py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">shopping_bag</span>
+<span class="text-xs font-semibold tracking-wider uppercase">Add to Bag</span>
+</button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group relative">
+<div class="aspect-[3/4] w-full overflow-hidden rounded-lg bg-surface-container-low mb-6">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Close up texture of a fine ivory wool rug with intricate geometric tribal patterns, soft morning light, shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5QT6w7pViK37G11VEiUrW5MYsU5QjsJ_-dzxoavq4ETgsuhwy3JGqJXJJKfwdnofeMWNIwj541l8PG8BVCQ0lzbVcEv4JFlAL8Do3aOkMwjW00P2g9EcWIT7cdhE2zDjJ5qNLlw0xgHDP1cEYI_9oOBc6blM2BVFy5nL9jf6cLYzX7Xj0VJ3AYsm6htICXHJw2V6ehg93Wf9v5WQksx5ennfRlD10NKPJkMM1xJuYTphV7pcl8ddki1VheBSxdwHVB-Hxm4wwZ0Bv"/>
+</div>
+<div class="flex flex-col">
+<div class="flex justify-between items-end mb-2">
+<div>
+<span class="text-[10px] uppercase tracking-widest text-secondary font-medium">The Artisans</span>
+<h3 class="font-serif text-xl text-on-surface mt-1">Nomad's Ivory Rug</h3>
+</div>
+<span class="font-body text-on-surface-variant">₹1,200</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                            Hand-knotted over six months in the high valleys of Gulmarg. Featuring ancestral geometric motifs.
+                        </p>
+<button class="w-full border border-outline-variant/40 py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">shopping_bag</span>
+<span class="text-xs font-semibold tracking-wider uppercase">Add to Bag</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Editorial Story Block -->
+<section class="bg-surface-container-high py-24 px-8 text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-6">auto_awesome</span>
+<h2 class="font-serif text-3xl text-on-surface mb-6 leading-tight italic">"Every knot tells a story of survival, beauty, and heritage."</h2>
+<p class="font-body text-secondary text-sm tracking-wide uppercase font-medium">— Tariq Ahmad, Master Weaver</p>
+<div class="mt-12">
+<a class="text-on-surface underline underline-offset-8 decoration-primary/30 font-medium text-sm" href="#">Read the Journal</a>
+</div>
+</section>
+<!-- Value Props - Bento-ish Mobile Layout -->
+<section class="py-20 px-6 space-y-4">
+<div class="bg-surface-container-low p-8 rounded-xl">
+<span class="material-symbols-outlined text-secondary mb-4">eco</span>
+<h4 class="font-serif text-lg mb-2">Ethical Provenance</h4>
+<p class="text-sm text-on-surface-variant">Trace your piece back to the exact village and artisan who crafted it.</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container p-6 rounded-xl">
+<span class="material-symbols-outlined text-secondary mb-3">history</span>
+<h4 class="font-serif text-md mb-1">Legacy</h4>
+<p class="text-xs text-on-surface-variant">Centuries of technique.</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-secondary mb-3">verified</span>
+<h4 class="font-serif text-md mb-1">Authentic</h4>
+<p class="text-xs text-on-surface-variant">GI Certified Pashmina.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#ebe8e1] dark:bg-[#1c1c18] w-full mt-24">
+<div class="grid grid-cols-1 gap-12 px-8 py-20 w-full max-w-screen-2xl mx-auto">
+<div>
+<div class="font-serif italic text-2xl mb-6">Vaer Kashmir</div>
+<p class="text-[#1c1c18]/60 text-sm leading-relaxed max-w-xs">
+                    Dedicated to the preservation of the world's finest hand-weaving traditions.
+                </p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-4">
+<h5 class="text-xs font-bold tracking-widest uppercase text-on-surface/40">Shop</h5>
+<ul class="space-y-3">
+<li><a class="text-[#1c1c18]/60 hover:text-[#9b4000] text-sm transition-colors" href="#">Collections</a></li>
+<li><a class="text-[#1c1c18]/60 hover:text-[#9b4000] text-sm transition-colors" href="#">Rugs</a></li>
+<li><a class="text-[#1c1c18]/60 hover:text-[#9b4000] text-sm transition-colors" href="#">New Arrivals</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="text-xs font-bold tracking-widest uppercase text-on-surface/40">Explore</h5>
+<ul class="space-y-3">
+<li><a class="text-[#1c1c18]/60 hover:text-[#9b4000] text-sm transition-colors" href="#">The Artisans</a></li>
+<li><a class="text-[#1c1c18]/60 hover:text-[#9b4000] text-sm transition-colors" href="#">Journal</a></li>
+<li><a class="text-[#1c1c18]/60 hover:text-[#9b4000] text-sm transition-colors" href="#">Care Guide</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-12 border-t border-black/5">
+<p class="text-[#1c1c18]/60 font-['Inter'] text-xs tracking-wide">
+                    © 2024 Vaer Kashmir. Handwoven in the Himalayas.
+                </p>
+</div>
+</div>
+</footer>
+<!-- Bottom Nav for Mobile (Floating Contextual) -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] flex items-center bg-white/80 backdrop-blur-md rounded-full px-6 py-3 shadow-2xl shadow-primary/10 border border-white/20">
+<div class="flex items-center gap-8">
+<button class="text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+</button>
+<button class="text-on-surface/60">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="text-on-surface/60">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="text-on-surface/60">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</div>
+</body></html>

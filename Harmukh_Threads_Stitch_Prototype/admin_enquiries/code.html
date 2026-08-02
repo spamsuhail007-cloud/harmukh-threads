@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#f6fff4",
+                        "outline-variant": "#dfc0b3",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#fcf9f2",
+                        "on-primary-fixed-variant": "#793000",
+                        "surface": "#fcf9f2",
+                        "tertiary-fixed-dim": "#b7ccb8",
+                        "surface-dim": "#dcdad3",
+                        "inverse-surface": "#31312c",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#341100",
+                        "surface-variant": "#e5e2db",
+                        "primary-fixed": "#ffdbcb",
+                        "surface-container-low": "#f6f3ec",
+                        "surface-tint": "#9f4200",
+                        "surface-container": "#f0eee7",
+                        "primary-container": "#c25303",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary-fixed": "#0e1f13",
+                        "on-secondary-fixed-variant": "#5c420e",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#ffb692",
+                        "tertiary-container": "#667969",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#4e6151",
+                        "surface-container-highest": "#e5e2db",
+                        "surface-container-high": "#ebe8e1",
+                        "primary": "#9b4000",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#574238",
+                        "on-secondary-container": "#795c26",
+                        "background": "#fcf9f2",
+                        "on-secondary-fixed": "#271900",
+                        "on-tertiary-fixed-variant": "#394b3c",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1c1c18",
+                        "tertiary-fixed": "#d3e8d4",
+                        "outline": "#8b7266",
+                        "inverse-on-surface": "#f3f0ea",
+                        "on-surface": "#1c1c18",
+                        "secondary-fixed": "#ffdea8",
+                        "secondary-container": "#fed795",
+                        "inverse-primary": "#ffb692",
+                        "secondary-fixed-dim": "#e7c181",
+                        "secondary": "#765a24"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .serif { font-family: 'Noto Serif', serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-72 fixed left-0 top-0 border-r-0 bg-[#fcf9f2] dark:bg-[#1c1c18] flex flex-col py-8 px-4 space-y-2 z-40 hidden md:flex">
+<div class="mb-10 px-4">
+<h1 class="font-['Noto_Serif'] font-bold text-lg text-[#1c1c18] dark:text-[#fcf9f2]">Vaer Curator</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-secondary opacity-70">Master Admin</p>
+</div>
+<nav class="flex-grow space-y-1">
+<div class="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#765a24] dark:text-[#ebe8e1] opacity-60 hover:bg-[#ebe8e1] dark:hover:bg-[#2c2c26] hover:text-[#9b4000] transition-all cursor-pointer">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Dashboard</span>
+</div>
+<div class="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#765a24] dark:text-[#ebe8e1] opacity-60 hover:bg-[#ebe8e1] dark:hover:bg-[#2c2c26] hover:text-[#9b4000] transition-all cursor-pointer">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Inventory</span>
+</div>
+<div class="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#765a24] dark:text-[#ebe8e1] opacity-60 hover:bg-[#ebe8e1] dark:hover:bg-[#2c2c26] hover:text-[#9b4000] transition-all cursor-pointer">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Orders</span>
+</div>
+<!-- Active Tab: Enquiries -->
+<div class="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#9b4000] dark:text-[#c25303] bg-[#f6f3ec] dark:bg-[#2c2c26] border-r-4 border-[#9b4000] cursor-pointer">
+<span class="material-symbols-outlined" data-icon="contact_support" style="font-variation-settings: 'FILL' 1;">contact_support</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Enquiries</span>
+</div>
+<div class="flex items-center space-x-3 px-4 py-3 rounded-lg text-[#765a24] dark:text-[#ebe8e1] opacity-60 hover:bg-[#ebe8e1] dark:hover:bg-[#2c2c26] hover:text-[#9b4000] transition-all cursor-pointer">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Contact Messages</span>
+</div>
+</nav>
+<div class="mt-auto px-4 pb-4">
+<button class="w-full bg-primary text-on-primary py-3 px-4 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-transform active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+<span>Create Listing</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-72 min-h-screen flex flex-col">
+<!-- TopAppBar (Shared Component Context) -->
+<header class="flex justify-between items-center w-full px-8 h-20 sticky top-0 z-50 bg-[#fcf9f2] dark:bg-[#1c1c18] opacity-90 backdrop-blur-md shadow-[0px_12px_32px_rgba(44,38,34,0.06)]">
+<div class="flex items-center space-x-4">
+<h2 class="text-xl font-headline font-bold tracking-tighter text-[#1c1c18] dark:text-[#fcf9f2]">Product Enquiries</h2>
+</div>
+<div class="flex items-center space-x-6">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-sm focus:ring-1 focus:ring-primary w-64" placeholder="Search enquiries..." type="text"/>
+</div>
+<div class="flex items-center space-x-4">
+<span class="material-symbols-outlined text-secondary cursor-pointer hover:text-primary transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-secondary cursor-pointer hover:text-primary transition-colors" data-icon="settings">settings</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="Administrator profile" data-alt="professional portrait of a high-end gallery curator with neutral background and soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGZva4Vv7mVcHU75gp7e4LYQNN-q9lPIwoaGwuI6NUfmupUX4IekkOQwja2ETCFUBSe1_v9RMAxWrnPG27nHTUocZ8vBu2_kZ3wcSLVE_NiM1Y-cB6SpGZ-2x1incPf0nVq2Vnk7s9xDf_4aeSXatgZbE1aGQFBmiV5BLT1EQwg1Bo16tJqFpDlZtgzj8ybMKobcR7f0Q-VKHKWJRlFe3jyh7XlskM8Tu8eV95z-R7Gn6Hm9ULiYm9notB-2K6wF6mnZhKfysY5Izx"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Sub-Header & Tabs -->
+<div class="px-8 pt-8 flex flex-col space-y-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between space-y-4 md:space-y-0">
+<div class="space-y-1">
+<p class="text-label-md text-secondary tracking-widest uppercase">Administrative Hub</p>
+<h3 class="text-3xl font-headline font-bold text-on-surface">Client Interest &amp; Bespoke Requests</h3>
+</div>
+<div class="flex space-x-2">
+<button class="bg-surface-container-high px-4 py-2 rounded-full text-xs font-bold text-secondary uppercase tracking-wider hover:bg-surface-variant transition-colors">Export CSV</button>
+<button class="bg-primary px-4 py-2 rounded-full text-xs font-bold text-on-primary uppercase tracking-wider shadow-md hover:bg-primary-container transition-colors">Process All</button>
+</div>
+</div>
+<!-- Custom Tabs -->
+<div class="flex space-x-8 border-b border-outline-variant/20 overflow-x-auto no-scrollbar">
+<button class="pb-4 border-b-2 border-primary text-primary font-bold text-sm transition-all">All Enquiries</button>
+<button class="pb-4 border-b-2 border-transparent text-secondary opacity-60 hover:opacity-100 font-medium text-sm transition-all">Pending (12)</button>
+<button class="pb-4 border-b-2 border-transparent text-secondary opacity-60 hover:opacity-100 font-medium text-sm transition-all">Responded</button>
+<button class="pb-4 border-b-2 border-transparent text-secondary opacity-60 hover:opacity-100 font-medium text-sm transition-all">Archived</button>
+</div>
+</div>
+<!-- Split Screen Layout Content -->
+<div class="flex-grow flex flex-col lg:flex-row px-8 py-8 gap-8">
+<!-- Left Column: List -->
+<div class="flex-grow lg:w-2/5 flex flex-col space-y-4">
+<!-- Enquiry Card 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary shadow-[0px_4px_16px_rgba(44,38,34,0.04)] cursor-pointer hover:translate-x-1 transition-transform">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-primary/10 text-primary px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest">New</span>
+<span class="text-[11px] text-outline">Oct 12, 10:45 AM</span>
+</div>
+<h4 class="text-on-surface font-bold text-base mb-1">Amara Al-Zayed</h4>
+<p class="text-secondary text-xs font-medium italic mb-3">Interested in: Gulmarg Medallion Rug</p>
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed opacity-80">"I am looking for a custom size of the Gulmarg Medallion for a specific penthouse project in Dubai. Do you offer custom dimensions..."</p>
+</div>
+<!-- Enquiry Card 2 -->
+<div class="bg-surface-container-low p-5 rounded-xl opacity-80 cursor-pointer hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest">Contacted</span>
+<span class="text-[11px] text-outline">Oct 11, 2:15 PM</span>
+</div>
+<h4 class="text-on-surface font-bold text-base mb-1">Julian Thorne</h4>
+<p class="text-secondary text-xs font-medium italic mb-3">Interested in: Pashmina Shawl (Hand-Embroidered)</p>
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed opacity-80">"Hello, could you provide more high-resolution images of the embroidery detail on the charcoal pashmina? We are interior..."</p>
+</div>
+<!-- Enquiry Card 3 -->
+<div class="bg-surface-container-low p-5 rounded-xl opacity-80 cursor-pointer hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary/10 text-secondary px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest">Contacted</span>
+<span class="text-[11px] text-outline">Oct 11, 09:30 AM</span>
+</div>
+<h4 class="text-on-surface font-bold text-base mb-1">Elena Rossi</h4>
+<p class="text-secondary text-xs font-medium italic mb-3">Interested in: Walnut Wood Hand-Carved Panel</p>
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed opacity-80">"Does the shipping to Milan include insurance for artisanal woodwork? We are very interested in the 4x6 panel..."</p>
+</div>
+</div>
+<!-- Right Column: Detail View (The Canvas) -->
+<div class="lg:w-3/5 bg-surface-container-lowest rounded-2xl shadow-lg flex flex-col overflow-hidden sticky top-28 h-[calc(100vh-160px)]">
+<!-- Detail Header -->
+<div class="px-8 py-8 border-b border-outline-variant/10">
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 bg-primary-fixed text-primary rounded-full flex items-center justify-center font-bold text-lg">AA</div>
+<div>
+<h2 class="text-xl font-bold text-on-surface">Amara Al-Zayed</h2>
+<p class="text-sm text-secondary">Dubai, United Arab Emirates • High-Value Lead</p>
+</div>
+</div>
+<div class="flex space-x-2">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors text-outline">
+<span class="material-symbols-outlined" data-icon="archive">archive</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors text-outline">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm">
+<div class="flex items-center space-x-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg" data-icon="mail">mail</span>
+<span>a.alzayed@designstudio.ae</span>
+</div>
+<div class="flex items-center space-x-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg" data-icon="phone">phone</span>
+<span>+971 50 123 4567</span>
+</div>
+</div>
+</div>
+<!-- Message Content -->
+<div class="flex-grow overflow-y-auto p-8 space-y-8 no-scrollbar">
+<div class="bg-surface-container-low p-6 rounded-xl relative">
+<div class="absolute -top-3 left-6 bg-surface px-2 py-1 text-[10px] font-bold text-primary uppercase tracking-tighter">Initial Enquiry</div>
+<h4 class="font-headline font-bold text-lg mb-4">Subject: Custom sizing for Gulmarg Medallion Rug</h4>
+<p class="text-on-surface-variant leading-relaxed mb-6">
+                            Dear Vaer Curator Team,<br/><br/>
+                            I am currently working on a high-end residential project in Dubai and we have fallen in love with the Gulmarg Medallion Rug. However, the standard dimensions do not fit the living salon's proportions. <br/><br/>
+                            Would it be possible to commission a piece that is 500cm x 750cm? If so, what would be the estimated lead time for a weave of this scale, and what are the shipping logistics for such a large item to the UAE?<br/><br/>
+                            I look forward to hearing from you.<br/><br/>
+                            Best regards,<br/>
+                            Amara Al-Zayed
+                        </p>
+<div class="flex items-center p-4 bg-white rounded-lg border border-outline-variant/30 space-x-4">
+<img alt="Rug Product" class="w-16 h-16 rounded object-cover" data-alt="exquisite hand-knotted persian style rug with intricate floral medallion patterns in terracotta and deep saffron colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq-KM0jbZ5GapI758xnRUHnKG4HTJQV3b_Pv3IceHxsg7_eotUHRnQKIcLrD3bLzZP4blITclAKCn226-0QMCKlSZL_Is23bqCdGq3EoZcuSTUWQ-Thg95sz_1Eg3srrPiOSxJuT6vtFyLNojrT_kWFPdt0Zc527uE5FVIx1KIXH049bhWWCU40OWGflbEXEHBIfhlbmmTl6ItfKjdRFJ4acVNZsDP3_eV_ojVxPJBVrrvc4FuXMDbliHTCsJLp5LxA3OIk3eea6rm"/>
+<div>
+<p class="text-xs text-secondary font-bold uppercase tracking-tighter">Referenced Product</p>
+<p class="text-sm font-bold">Gulmarg Medallion Rug - Heritage Series</p>
+<p class="text-xs text-outline">Starting at $4,200.00</p>
+</div>
+<button class="ml-auto text-primary text-sm font-bold hover:underline">View Product</button>
+</div>
+</div>
+</div>
+<!-- Quick Reply Box -->
+<div class="p-8 bg-surface-container-high border-t border-outline-variant/10">
+<div class="relative bg-white rounded-xl shadow-inner border border-outline-variant/20 overflow-hidden">
+<textarea class="w-full border-none focus:ring-0 p-4 text-sm min-h-[100px] resize-none" placeholder="Write a professional reply..."></textarea>
+<div class="flex items-center justify-between p-3 bg-surface-container-low">
+<div class="flex space-x-3 text-secondary">
+<button class="material-symbols-outlined text-lg hover:text-primary transition-colors" data-icon="attachment">attachment</button>
+<button class="material-symbols-outlined text-lg hover:text-primary transition-colors" data-icon="image">image</button>
+<button class="material-symbols-outlined text-lg hover:text-primary transition-colors" data-icon="format_bold">format_bold</button>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider flex items-center space-x-2 shadow-lg transition-transform active:scale-95">
+<span>Send Reply</span>
+<span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom NavBar (Shared Component Logic) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#fcf9f2] dark:bg-[#1c1c18] opacity-95 backdrop-blur-md flex justify-around items-center px-4 z-50">
+<div class="flex flex-col items-center text-[#765a24] opacity-60">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</div>
+<div class="flex flex-col items-center text-[#765a24] opacity-60">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-[10px] font-medium">Inventory</span>
+</div>
+<div class="flex flex-col items-center text-[#9b4000] font-bold">
+<span class="material-symbols-outlined" data-icon="contact_support" style="font-variation-settings: 'FILL' 1;">contact_support</span>
+<span class="text-[10px] font-medium">Inquiry</span>
+</div>
+<div class="flex flex-col items-center text-[#765a24] opacity-60">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="text-[10px] font-medium">Chat</span>
+</div>
+<div class="flex flex-col items-center text-[#765a24] opacity-60">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</div>
+</nav>
+</body></html>

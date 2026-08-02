@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "surface": "#fcf9f2",
+                        "on-primary-fixed": "#341100",
+                        "surface-dim": "#dcdad3",
+                        "secondary": "#765a24",
+                        "on-tertiary-container": "#f6fff4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#574238",
+                        "on-tertiary-fixed": "#0e1f13",
+                        "on-secondary-fixed-variant": "#5c420e",
+                        "primary": "#9b4000",
+                        "surface-container": "#f0eee7",
+                        "primary-container": "#c25303",
+                        "surface-variant": "#e5e2db",
+                        "on-primary-fixed-variant": "#793000",
+                        "surface-bright": "#fcf9f2",
+                        "on-secondary-fixed": "#271900",
+                        "tertiary": "#4e6151",
+                        "surface-container-low": "#f6f3ec",
+                        "surface-container-high": "#ebe8e1",
+                        "inverse-primary": "#ffb692",
+                        "inverse-surface": "#31312c",
+                        "inverse-on-surface": "#f3f0ea",
+                        "tertiary-fixed": "#d3e8d4",
+                        "error-container": "#ffdad6",
+                        "outline": "#8b7266",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "tertiary-container": "#667969",
+                        "tertiary-fixed-dim": "#b7ccb8",
+                        "background": "#fcf9f2",
+                        "on-tertiary-fixed-variant": "#394b3c",
+                        "on-background": "#1c1c18",
+                        "surface-tint": "#9f4200",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#795c26",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb692",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1c1c18",
+                        "secondary-container": "#fed795",
+                        "secondary-fixed": "#ffdea8",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#e7c181",
+                        "outline-variant": "#dfc0b3",
+                        "surface-container-highest": "#e5e2db",
+                        "primary-fixed": "#ffdbcb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased">
+<!-- Top Navigation Bar -->
+<header class="bg-[#fcf9f2]/90 backdrop-blur-xl docked full-width top-0 sticky z-50 tonal-transition bg-[#fcf9f2] shadow-[0px_12px_32px_rgba(44,38,34,0.06)]">
+<nav class="flex justify-between items-center px-12 py-6 w-full max-w-screen-2xl mx-auto">
+<div class="text-2xl font-headline font-serif tracking-tighter text-[#1c1c18]">Vaer Kashmir</div>
+<div class="hidden md:flex items-center gap-10 font-label tracking-tight text-[#1c1c18]/70">
+<a class="text-[#9b4000] border-b border-[#9b4000]/40 pb-1 hover:opacity-80 transition-opacity duration-300" href="#">Collections</a>
+<a class="hover:text-[#1c1c18] hover:opacity-80 transition-opacity duration-300" href="#">Rugs</a>
+<a class="hover:text-[#1c1c18] hover:opacity-80 transition-opacity duration-300" href="#">The Artisans</a>
+<a class="hover:text-[#1c1c18] hover:opacity-80 transition-opacity duration-300" href="#">Journal</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="material-symbols-outlined text-on-surface hover:opacity-80 transition-opacity duration-300" data-icon="shopping_bag">shopping_bag</button>
+<button class="material-symbols-outlined text-on-surface hover:opacity-80 transition-opacity duration-300" data-icon="person">person</button>
+</div>
+</nav>
+</header>
+<main class="max-w-screen-2xl mx-auto px-6 md:px-12 py-12">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+<!-- Left: Gallery Section -->
+<div class="lg:col-span-7 flex flex-col md:flex-row-reverse gap-4">
+<div class="w-full flex-1">
+<img class="w-full aspect-[4/5] object-cover rounded-sm shadow-sm" data-alt="Exquisite handwoven Pashmina shawl with intricate paisley embroidery in warm earthy tones, hanging elegantly against an ivory stone wall." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdF2O8wTuIwlPYHqGfGD63ztk1CAoI4yzqAOxK5s-IsDZXJ3_B-kTYKbSSR402w7v0oztYCz710etWE2PvyHbjjEGTdceLY2adiS2V1HZY0DJH1mf7kzgatdLKr00Fj5LPXvUKlmfwXnb_HsksJ8Bn3siiiEn2TQSQrfePUG1mF-rW5aTNaVNTQHpHw5kOmIsMgT_TG2Zvpo5KWkouFlMUW-3SwKkCejSx5C3mkK2L0huDM-UfG-nqTfRuBc5mIJ-IOjLGV9inrRhc"/>
+</div>
+<div class="flex md:flex-col gap-4 overflow-x-auto md:overflow-visible w-full md:w-32 scrollbar-hide">
+<img class="w-24 md:w-full aspect-[4/5] object-cover rounded-sm border border-primary/20 opacity-100" data-alt="Macro close-up of fine cashmere threads showing the delicate hand-embroidery patterns in deep saffron and gold." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC716Z-6-XGrWJdhtLNMgT-ps4Uz4S5yqKsYq04NbdTrj3oe8G7A8InVEd8HxGt8Xdpge6IAb4UVBMiSvq1IL4RhXDP_ckcJgAmU19fEOEvSr2SrDBceYIq5muw6-pSl3qPjFpXWYuabk32zP_7kEc-EUtm0iCVxYavH0RqY3Se9PO2Bd7gue221Cm-6WFVt_iXb_ar1oLcGhorE-u8C2L2VzSUqxHzHbfkW8TTTo1zMsbZ-AMP3J1hh7e5Xx1ZIqVj2TZ_nxtKQciE"/>
+<img class="w-24 md:w-full aspect-[4/5] object-cover rounded-sm opacity-60 hover:opacity-100 transition-opacity" data-alt="Artisan hands carefully weaving on a traditional wooden loom in a sunlit Kashmiri atelier." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYKUs0dYSmalbqNjocTztmz3CP1e2ZB4KN_ubh3FQ1D-CgIiszQc730KBvZNo6-z3ZJZCKkHpFN7so93RN_CRKQLHst1psEJR-ODxiQ7VxTSMHUrTfjvcZDO6WY9HhNA0pslpXTu521ZiNUzCVMwesLbV6GV3MQONU1owjEpupi_yXuEWpioYBD4aT8je5zmR2klczhmAHnz0FcYjbTD1TcqHxxjZOxEpwmu3zAIidZ3gOprHA7ScnyldpHnd30xhqhwHSQM-CMhkN"/>
+<img class="w-24 md:w-full aspect-[4/5] object-cover rounded-sm opacity-60 hover:opacity-100 transition-opacity" data-alt="The shawl draped over a vintage wooden chair, showcasing the drape and softness of the premium wool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW3cHuuGY_NMu4kFUUuwrCFrvWFU2pYEFgeijGSH0A69ZqgBr5QGlMPUB376zxCFYouPWiTd3Qs3PK_E0rixUBQh3twqpKQx4C0lrH-aWTze7z3WmMSolOrSZtK0fQ1mmBc3euXzt0985aiSv-VIVw6PNL80oQX4bO3Bj5jaA0TzepJFN9Z6nr-DQAtVS7eqcMr_vRcgrqL5ZYWKeHdVhfnroKn4T5gJPjL00V87FtmjCEX45vmDXYDZ-rwx9DKqmaqwRdXKqWFqTw"/>
+<img class="w-24 md:w-full aspect-[4/5] object-cover rounded-sm opacity-60 hover:opacity-100 transition-opacity" data-alt="Detailed view of the authentic Vaer Kashmir label stitched onto the corner of the hand-spun fabric." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVuAPFm5N-ioYgBeH8K9UIoCPXciQaK6lQJlgMIl6FJfk2lo1cjgH88_zq6r7uNN0rt7azCkpkjXMxR6hngb4B4ma_2qRIUAxEMbXL_WJycGIO-CMDBhuHSYWz66wyNF8JoSQYtP_uACape_YcQZugf_b-NY6FXLkshxR3NJufjP_KTYaPiLHm80CFI4OVw2xiG1rrhiGmUff2hJsvIp-XLZHJqKOjEeePsZ_GYwF73Zi9bd_vHB_jJoBbKPcCB35r1hvgI1IlSUVb"/>
+</div>
+</div>
+<!-- Right: Product Details -->
+<div class="lg:col-span-5 flex flex-col space-y-8">
+<div class="space-y-4">
+<nav class="flex text-xs tracking-widest text-on-surface/40 uppercase mb-4">
+<span>Collections</span>
+<span class="mx-2">/</span>
+<span>Signature Wraps</span>
+</nav>
+<h1 class="text-4xl md:text-5xl font-headline font-bold text-on-surface leading-tight tracking-tight">The Heritage Saffron Pashmina</h1>
+<div class="flex items-center gap-4">
+<span class="text-2xl font-body text-secondary font-medium tracking-tight">₹1,250.00</span>
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined active-fill text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined active-fill text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined active-fill text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined active-fill text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+<span class="text-xs text-on-surface/60 ml-2 font-label">(24 reviews)</span>
+</div>
+</div>
+<p class="text-lg font-body leading-relaxed text-on-surface/80 italic border-l-2 border-primary/20 pl-6 py-2">
+                        "Born from the high-altitude whispers of the Himalayas, this piece carries the warmth of the sun and the soul of the weaver."
+                    </p>
+</div>
+<!-- Size Selector -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-sm font-label font-semibold text-on-surface">Select Dimensions</span>
+<button class="text-xs text-secondary underline underline-offset-4 hover:text-primary transition-colors">Size Guide</button>
+</div>
+<div class="flex flex-wrap gap-3">
+<button class="px-6 py-2.5 rounded-xl border border-primary bg-primary text-on-primary text-sm font-medium transition-all shadow-sm">100 x 200 cm</button>
+<button class="px-6 py-2.5 rounded-xl border border-outline-variant/40 hover:border-primary/40 text-on-surface/70 text-sm font-medium transition-all">140 x 140 cm</button>
+<button class="px-6 py-2.5 rounded-xl border border-outline-variant/40 hover:border-primary/40 text-on-surface/70 text-sm font-medium transition-all">45 x 180 cm</button>
+</div>
+</div>
+<!-- Accordions -->
+<div class="border-t border-outline-variant/20 pt-6 space-y-4">
+<details class="group" open="">
+<summary class="flex justify-between items-center cursor-pointer list-none py-2">
+<span class="font-headline font-semibold text-on-surface tracking-tight">Material &amp; Origin</span>
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="pt-2 pb-4 text-on-surface/70 text-sm leading-relaxed space-y-2">
+<p>Hand-spun from 100% Grade-A Changthangi Cashmere. Sourced from the nomad herders of the Ladakh plateau.</p>
+<p>Naturally dyed using organic saffron and walnut husks, ensuring a palette that is both timeless and environmentally gentle.</p>
+</div>
+</details>
+<div class="border-t border-outline-variant/10"></div>
+</div>
+<!-- CTAs -->
+<div class="space-y-4 pt-4">
+<button class="w-full bg-primary text-on-primary py-5 rounded-lg font-label font-bold text-lg tracking-wide hover:bg-primary-container transition-all duration-300 shadow-lg shadow-primary/10 flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">shopping_bag</span>
+                        Add to Bag
+                    </button>
+<button class="w-full border border-outline-variant/30 text-on-surface py-4 rounded-lg font-label font-medium hover:bg-surface-container-low transition-all duration-300 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">favorite</span>
+                        Save to Wishlist
+                    </button>
+</div>
+<div class="flex items-center gap-8 py-6 px-4 bg-surface-container-low/50 rounded-xl">
+<div class="flex flex-col items-center gap-1 text-center">
+<span class="material-symbols-outlined text-secondary">eco</span>
+<span class="text-[10px] font-label uppercase tracking-widest text-on-surface/60">Sustainably Made</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-center border-x border-outline-variant/20 px-8">
+<span class="material-symbols-outlined text-secondary">handyman</span>
+<span class="text-[10px] font-label uppercase tracking-widest text-on-surface/60">Hand Finished</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-center">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+<span class="text-[10px] font-label uppercase tracking-widest text-on-surface/60">GI Certified</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Information Tabs -->
+<section class="mt-32">
+<div class="flex border-b border-outline-variant/20 gap-12 overflow-x-auto scrollbar-hide">
+<button class="pb-6 border-b-2 border-primary text-on-surface font-headline font-bold tracking-tight whitespace-nowrap">Details</button>
+<button class="pb-6 border-b-2 border-transparent text-on-surface/40 hover:text-on-surface transition-colors font-headline font-bold tracking-tight whitespace-nowrap">Care Instructions</button>
+<button class="pb-6 border-b-2 border-transparent text-on-surface/40 hover:text-on-surface transition-colors font-headline font-bold tracking-tight whitespace-nowrap">Shipping &amp; Returns</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 py-12">
+<div class="space-y-6">
+<h3 class="text-2xl font-headline font-semibold text-on-surface">The Weaver's Mark</h3>
+<p class="text-on-surface/80 leading-relaxed">Each Heritage Saffron Pashmina requires approximately 180 hours of meticulous hand-weaving. The weaver's "mark"—a slight variation in the pattern tension—is a testament to the human hands that created it. This is not a flaw, but a fingerprint of authenticity.</p>
+<ul class="space-y-3">
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<span>Authentic Kani weave technique practiced for over 4 centuries.</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<span>Ultra-fine 12-14 micron cashmere fiber for unparalleled softness.</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<span>Ethically sourced through direct fair-trade partnerships.</span>
+</li>
+</ul>
+</div>
+<div class="bg-surface-container-high rounded-xl p-8 relative overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-700" data-alt="Atmospheric wide shot of the Himalayan landscape with sheep grazing in the distance, soft mountain light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDYkkMnSk_-lQ_TqB2OGQke9LiduiDs2xgReJduGQ5N5K6t-G8gRsHHHqd1_5pEwBnmYa3lytItOfPw7k3OB8K4q1EWHhR9U3Yb5cX85Yo4AU_15V9HVifnY6ihqvuuPFv6jyK7JyfVXbHXipSegvN9HwY66hOV9pA-QXfbNt5NgNVyZgqN-oeumxrbkf7tKu_PPPJeL_XLsyBaXQPu9VMheEngVJfZS_xMhfhSNEwGs7j-Dzw_k9GppXYANnGt9Kp2ze3wMLRSJTc"/>
+<div class="relative z-10 h-full flex flex-col justify-end">
+<div class="text-secondary font-headline italic text-xl mb-2">Heritage Guaranteed</div>
+<p class="text-sm text-on-surface/80">Every piece comes with a certificate of authenticity and a brief biography of the weaver who crafted your digital heirloom.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Related Products Section -->
+<section class="mt-32">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="text-3xl font-headline font-bold text-on-surface tracking-tight">You May Also Like</h2>
+<p class="text-on-surface/60 font-body mt-2">Curated selections from our Master Weaver collection.</p>
+</div>
+<div class="flex gap-2">
+<button class="w-12 h-12 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-12 h-12 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Related Card 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden rounded-sm bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Silk-blended Kashmiri shawl in deep charcoal with silver metallic thread accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFo4B0zqv23GJFGYDdTIarYtWzYn3PNwLYdRkVzn_2lGCHkj1pdY4gxe1JQp1a2rNAWvEcmDQzbcvK8aGfTR9h6-AbtYGhpA3w-9qfTFHwa_rMFs_ETXh00v-7b3-1jQQPHr55HsF3u6iZRcULsQJGwqIu71nJkXMj-DsLtOFygTdDB4_2IPSnnFESpCysbIn7ipYzLigZ8GyuCYsuu9848DZVUSJ3TYrxOKPISw79tiaaME4hrEB8PPm1bs_754s-DknL5QsUMYtH"/>
+</div>
+<h4 class="font-headline font-semibold text-on-surface group-hover:text-primary transition-colors">Charcoal Moon Silk Wrap</h4>
+<p class="text-secondary font-medium mt-1">₹890.00</p>
+</div>
+<!-- Related Card 2 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden rounded-sm bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Light ivory oversized cashmere scarf with hand-knotted fringe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJeWaJEcBNrRGSBDGVwiBpHCJQz3eeSetIsLCWBe8_qXewxk5YaI9W7Q3dJxb7fnsAa-n6BBHjaucvb_R4MyDMNxOlQqa2EmNbqHynyU0J2pS8wiL9jmfEFrm7xrDRwot97GxXF4H1tOPNDc-vRK96NwjDM9CXxai4ktbCWhya5Fh0HVdf2d64MVdakhoT0HODY4MqbXj_7NT6cOZZDGWyai2gEL1_-K-zoDRUM9eQ-I1WNvQJMCQGIDgS7bERYzaF5M-D9WwccWj9"/>
+</div>
+<h4 class="font-headline font-semibold text-on-surface group-hover:text-primary transition-colors">Ladakh Cloud Scarf</h4>
+<p class="text-secondary font-medium mt-1">₹540.00</p>
+</div>
+<!-- Related Card 3 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden rounded-sm bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Intricately patterned rug fragment showing floral motifs in indigo and madder root red." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaAWfJHEUaSJ97fut-GEfbmYWzxv9UAFZDhuz-P5iB2sho65Y_oOrhcyKlZEqiA-ccta_ItzOefpRf19YG6IaHLbKiNUdBhN-_yZ6TcwXwtpo3XTI-Kx4y6d48XXQgnISeQpsyG2YlBVUSXNCMP5XJYCpketZbYM8xURQJWAQX8sr1ht1ujzSm3y7C8mHRNL13K_3lvbNvz8syRFFSko1gfbF8wbAkAQ9VhaTNtRdMCSkTBKgH4MXd5-vC_HUYrbFXM_PDIpgWNLlV"/>
+</div>
+<h4 class="font-headline font-semibold text-on-surface group-hover:text-primary transition-colors">Indigo Floral Heirloom</h4>
+<p class="text-secondary font-medium mt-1">₹1,420.00</p>
+</div>
+<!-- Related Card 4 -->
+<div class="group cursor-pointer">
+<div class="aspect-[3/4] overflow-hidden rounded-sm bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Earthy brown wool shawl with classic border embroidery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMDmWmWHJ_IxBkb_VTg2ZAEgSMPUHbAoImcQQam9EE3g2oh_tjTX9WCZ3vbQ-Iog1Hi-MpxHiJmV9dtsFUsmZUgxlqVEo4K_sj0tqwSh0-pdLsKQIsiSXI8zif1IE-eGLDXkxfoXhS-_Bd6ohN_vjd0rfmhjVkqqT65MZh_GWWTvt8hG9z1ICDsiBvSRFHMJEcDY80X-nhlvInp-nRyq03ra8SQKDXxuW1qPDVx2SXZp27W1Zv4RtcGnDp-4fgiKSzjXnyCEvHvfds"/>
+</div>
+<h4 class="font-headline font-semibold text-on-surface group-hover:text-primary transition-colors">The Nomad's Walnut Wrap</h4>
+<p class="text-secondary font-medium mt-1">₹720.00</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#ebe8e1] dark:bg-[#1c1c18] w-full mt-24">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 w-full max-w-screen-2xl mx-auto">
+<div class="space-y-4">
+<div class="font-headline italic text-lg text-[#765a24]">Vaer Kashmir</div>
+<p class="text-sm text-on-surface/60 font-label leading-relaxed">Preserving the timeless art of hand-weaving through modern curation and ethical stewardship. Every thread tells a story.</p>
+</div>
+<div class="space-y-4">
+<h5 class="font-headline font-bold text-on-surface uppercase tracking-widest text-xs">The Brand</h5>
+<nav class="flex flex-col gap-3 font-label text-sm">
+<a class="text-[#1c1c18]/60 hover:text-[#9b4000] transition-colors" href="#">Provenance</a>
+<a class="text-[#1c1c18]/60 hover:text-[#9b4000] transition-colors" href="#">The Artisans</a>
+<a class="text-[#1c1c18]/60 hover:text-[#9b4000] transition-colors" href="#">Journal</a>
+<a class="text-[#1c1c18]/60 hover:text-[#9b4000] transition-colors" href="#">Sustainability</a>
+</nav>
+</div>
+<div class="space-y-4">
+<h5 class="font-headline font-bold text-on-surface uppercase tracking-widest text-xs">Assistance</h5>
+<nav class="flex flex-col gap-3 font-label text-sm">
+<a class="text-[#1c1c18]/60 hover:text-[#9b4000] transition-colors" href="#">Shipping</a>
+<a class="text-[#1c1c18]/60 hover:text-[#9b4000] transition-colors" href="#">Care Guide</a>
+<a class="text-[#1c1c18]/60 hover:text-[#9b4000] transition-colors" href="#">Returns</a>
+<a class="text-[#1c1c18]/60 hover:text-[#9b4000] transition-colors" href="#">Contact</a>
+</nav>
+</div>
+<div class="space-y-4">
+<h5 class="font-headline font-bold text-on-surface uppercase tracking-widest text-xs">Newsletter</h5>
+<p class="text-xs text-on-surface/60 font-label">Join our circle for seasonal launches and artisan stories.</p>
+<div class="flex border-b border-[#765a24]/20 pb-2">
+<input class="bg-transparent border-none focus:ring-0 text-sm font-label w-full" placeholder="Email Address" type="email"/>
+<button class="material-symbols-outlined text-[#765a24]">arrow_forward</button>
+</div>
+</div>
+</div>
+<div class="px-12 py-8 border-t border-outline-variant/10 max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-xs text-on-surface/60 font-label">© 2024 Vaer Kashmir. Handwoven in the Himalayas.</p>
+<div class="flex gap-6 text-xs text-on-surface/60 font-label">
+<a class="hover:text-[#9b4000] transition-colors" href="#">Privacy</a>
+<a class="hover:text-[#9b4000] transition-colors" href="#">Terms</a>
+<a class="hover:text-[#9b4000] transition-colors" href="#">Cookies</a>
+</div>
+</div>
+</footer>
+<!-- Side NavBar (Collector Drawer) -->
+<aside class="h-full w-80 fixed right-0 top-0 z-[100] bg-[#fcf9f2] dark:bg-[#1c1c18] flex flex-col h-full p-8 shadow-2xl shadow-[#1c1c18]/10 translate-x-full hidden" id="collector-drawer">
+<div class="flex justify-between items-center mb-12">
+<div>
+<h3 class="font-headline text-[#1c1c18] text-xl font-bold">The Collector</h3>
+<p class="text-xs font-label text-on-surface/60">Curating your digital heirloom</p>
+</div>
+<button class="material-symbols-outlined text-on-surface">close</button>
+</div>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-4 p-4 rounded-lg bg-[#ebe8e1] text-[#9b4000] font-medium transition-all" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+                Your Atelier
+            </a>
+<a class="flex items-center gap-4 p-4 rounded-lg text-[#1c1c18]/60 hover:bg-[#f6f3ec] transition-all" href="#">
+<span class="material-symbols-outlined">favorite</span>
+                Saved Pieces
+            </a>
+<a class="flex items-center gap-4 p-4 rounded-lg text-[#1c1c18]/60 hover:bg-[#f6f3ec] transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+                Order History
+            </a>
+<a class="flex items-center gap-4 p-4 rounded-lg text-[#1c1c18]/60 hover:bg-[#f6f3ec] transition-all" href="#">
+<span class="material-symbols-outlined">eco</span>
+                Sustainability
+            </a>
+</div>
+<div class="mt-auto pt-8 border-t border-outline-variant/10">
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-label font-bold tracking-wide">View Cart</button>
+</div>
+</aside>
+</body></html>

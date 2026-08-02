@@ -1,0 +1,138 @@
+/* ============================================================
+   DESIGN TOKENS — Harmukh Threads (Vaer Kashmir Design System)
+   Primary: Deep Saffron  |  Surface: Ivory  |  Text: Warm Charcoal
+   ============================================================ */
+
+:root {
+  /* Core Palette */
+  --primary:              #9b4000;
+  --primary-container:    #c25303;
+  --on-primary:           #ffffff;
+  --primary-fixed:        #ffdbcb;
+  --primary-fixed-dim:    #ffb692;
+
+  --secondary:            #765a24;
+  --secondary-container:  #fed795;
+  --on-secondary:         #ffffff;
+
+  --tertiary:             #4e6151;
+  --tertiary-container:   #667969;
+  --on-tertiary:          #ffffff;
+
+  /* Surfaces — Ivory stack */
+  --surface:              #fcf9f2;
+  --surface-bright:       #fcf9f2;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low:    #f6f3ec;
+  --surface-container:        #f0eee7;
+  --surface-container-high:   #ebe8e1;
+  --surface-container-highest:#e5e2db;
+  --surface-dim:          #dcdad3;
+
+  /* Text */
+  --on-surface:           #1c1c18;
+  --on-surface-variant:   #574238;
+  --on-background:        #1c1c18;
+  --background:           #fcf9f2;
+
+  /* Outlines */
+  --outline:              #8b7266;
+  --outline-variant:      #dfc0b3;
+
+  /* Semantic */
+  --error:                #ba1a1a;
+  --on-error:             #ffffff;
+  --error-container:      #ffdad6;
+
+  /* Saffron gradient for CTAs */
+  --saffron-gradient: linear-gradient(135deg, var(--primary), var(--primary-container));
+
+  /* Typography */
+  --font-serif:  'Noto Serif', Georgia, serif;
+  --font-sans:   'Inter', system-ui, sans-serif;
+
+  /* Spacing */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+
+  /* Radius */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  16px;
+  --radius-full: 9999px;
+
+  /* Shadow */
+  --shadow-ambient: 0 12px 32px rgba(44, 38, 34, 0.06);
+  --shadow-float:   0 20px 40px rgba(44, 38, 34, 0.10);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* Navbar height */
+  --navbar-height: 68px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--on-surface);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--primary-fixed);
+  color: var(--primary);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ============================================================
+   PAGE TRANSITION
+   ============================================================ */
+#page-root {
+  min-height: calc(100vh - var(--navbar-height));
+  padding-top: var(--navbar-height);
+}
+
+.page-enter {
+  animation: pageFadeIn 200ms ease forwards;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vaer Kashmir | Inventory Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Serif:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#f6fff4",
+                    "outline-variant": "#dfc0b3",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#fcf9f2",
+                    "on-primary-fixed-variant": "#793000",
+                    "surface": "#fcf9f2",
+                    "tertiary-fixed-dim": "#b7ccb8",
+                    "surface-dim": "#dcdad3",
+                    "inverse-surface": "#31312c",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#341100",
+                    "surface-variant": "#e5e2db",
+                    "primary-fixed": "#ffdbcb",
+                    "surface-container-low": "#f6f3ec",
+                    "surface-tint": "#9f4200",
+                    "surface-container": "#f0eee7",
+                    "primary-container": "#c25303",
+                    "on-primary-container": "#fffbff",
+                    "on-tertiary-fixed": "#0e1f13",
+                    "on-secondary-fixed-variant": "#5c420e",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#ffb692",
+                    "tertiary-container": "#667969",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#4e6151",
+                    "surface-container-highest": "#e5e2db",
+                    "surface-container-high": "#ebe8e1",
+                    "primary": "#9b4000",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#574238",
+                    "on-secondary-container": "#795c26",
+                    "background": "#fcf9f2",
+                    "on-secondary-fixed": "#271900",
+                    "on-tertiary-fixed-variant": "#394b3c",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#1c1c18",
+                    "tertiary-fixed": "#d3e8d4",
+                    "outline": "#8b7266",
+                    "inverse-on-surface": "#f3f0ea",
+                    "on-surface": "#1c1c18",
+                    "secondary-fixed": "#ffdea8",
+                    "secondary-container": "#fed795",
+                    "inverse-primary": "#ffb692",
+                    "secondary-fixed-dim": "#e7c181",
+                    "secondary": "#765a24"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 12px 32px rgba(44, 38, 34, 0.06);
+        }
+        body {
+            background-color: #fcf9f2;
+            color: #1c1c18;
+        }
+    </style>
+</head>
+<body class="font-body antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="h-screen w-72 fixed left-0 top-0 border-r-0 bg-[#fcf9f2] dark:bg-[#1c1c18] flex flex-col py-8 px-4 space-y-2 z-40">
+<div class="mb-10 px-4">
+<h2 class="font-['Noto_Serif'] font-bold text-lg text-[#1c1c18] dark:text-[#fcf9f2]">Vaer Curator</h2>
+<p class="text-[#765a24] opacity-60 text-xs font-medium tracking-widest uppercase">Master Admin</p>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#765a24] opacity-60 hover:bg-[#ebe8e1] transition-all ease-in-out duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#9b4000] dark:text-[#c25303] bg-[#f6f3ec] dark:bg-[#2c2c26] border-r-4 border-[#9b4000] transition-all ease-in-out duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#765a24] opacity-60 hover:bg-[#ebe8e1] transition-all ease-in-out duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#765a24] opacity-60 hover:bg-[#ebe8e1] transition-all ease-in-out duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Enquiries</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#765a24] opacity-60 hover:bg-[#ebe8e1] transition-all ease-in-out duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="font-['Inter'] font-medium text-sm tracking-wide">Contact Messages</span>
+</a>
+</nav>
+<div class="mt-auto px-4 pb-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-medium text-sm transition-transform active:scale-95 shadow-sm">
+                Create Listing
+            </button>
+</div>
+</aside>
+<!-- TopNavBar (Authority: JSON) -->
+<header class="fixed top-0 left-72 right-0 z-30 flex justify-between items-center px-8 h-20 bg-[#fcf9f2] dark:bg-[#1c1c18] opacity-90 backdrop-blur-md editorial-shadow">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-sm w-64 focus:ring-1 focus:ring-primary" placeholder="Search resources..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer text-[#765a24] opacity-70 hover:text-[#9b4000] transition-colors duration-300" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer text-[#765a24] opacity-70 hover:text-[#9b4000] transition-colors duration-300" data-icon="settings">settings</span>
+</div>
+<div class="h-10 w-10 rounded-full overflow-hidden border border-outline-variant/20">
+<img alt="Administrator profile" data-alt="Close up portrait of a middle-aged professional man with a refined expression in soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-tnBoxfw6wGoFdkpYAW8mIkQeqcG6L-j2yHYb4i2unNUyAQy8dMrc7GO6CFv7bUpIB1Sx36GqVZ0k4fb7C0DDzDLw2Vuh7eR_MI0koG4ffZWrm9iWOP8XRSMQdX977-NUPKz_yaB-kvCHUbwP6getbFboqBqOdWZVma86TcoTHyT62GA4Y9WdGVvL46OpK89PUMkoK5vqaapi4bc1SaLF4E-9Xw1xNoX9_lZ8ZS1-fH8NerN_yQgGaPMumvUuZEW5uxbxYCJvZ_hL"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-72 pt-28 px-10 pb-20">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-10">
+<div>
+<h1 class="font-headline text-4xl font-bold tracking-tight text-on-surface">Inventory Management</h1>
+<p class="text-secondary mt-2 max-w-md">Oversee the curated collection of artisanal Kashmiri treasures, from Pashmina to Hand-knotted rugs.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg font-medium transition-all hover:bg-primary-container shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-xl" data-icon="add">add</span>
+                Add New Product
+            </button>
+</div>
+<!-- Summary Cards (Editorial Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="bg-surface-container-lowest p-6 rounded-xl editorial-shadow border-l-4 border-primary">
+<div class="flex justify-between items-start mb-4">
+<span class="text-secondary opacity-70 font-medium text-xs tracking-widest uppercase">Total Items</span>
+<span class="material-symbols-outlined text-secondary" data-icon="inventory">inventory</span>
+</div>
+<div class="text-3xl font-headline font-bold text-on-surface">1,284</div>
+<div class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+                    +12% from last month
+                </div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl editorial-shadow border-l-4 border-error">
+<div class="flex justify-between items-start mb-4">
+<span class="text-secondary opacity-70 font-medium text-xs tracking-widest uppercase">Low Stock</span>
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+<div class="text-3xl font-headline font-bold text-on-surface">24</div>
+<div class="text-xs text-error mt-2 font-medium">Requires immediate attention</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl editorial-shadow border-l-4 border-secondary">
+<div class="flex justify-between items-start mb-4">
+<span class="text-secondary opacity-70 font-medium text-xs tracking-widest uppercase">Stock Value</span>
+<span class="material-symbols-outlined text-secondary" data-icon="payments">payments</span>
+</div>
+<div class="text-3xl font-headline font-bold text-on-surface">₹4.2M</div>
+<div class="text-xs text-secondary opacity-60 mt-2 font-medium">Estimated inventory worth</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl editorial-shadow border-l-4 border-[#4e6151]">
+<div class="flex justify-between items-start mb-4">
+<span class="text-secondary opacity-70 font-medium text-xs tracking-widest uppercase">New Arrivals</span>
+<span class="material-symbols-outlined text-tertiary" data-icon="new_releases">new_releases</span>
+</div>
+<div class="text-3xl font-headline font-bold text-on-surface">18</div>
+<div class="text-xs text-tertiary mt-2 font-medium">Added in the last 7 days</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-surface-container-low rounded-xl p-4 mb-8 flex flex-wrap items-center gap-4 border border-outline-variant/10">
+<div class="flex-grow min-w-[300px] relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-secondary" data-icon="search">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-lowest border-none rounded-lg text-sm focus:ring-1 focus:ring-primary shadow-sm" placeholder="Search by SKU, Product Name or Material..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<select class="bg-surface-container-lowest border-none rounded-lg text-sm px-4 py-3 shadow-sm focus:ring-1 focus:ring-primary cursor-pointer text-on-surface">
+<option>All Categories</option>
+<option>Pashmina Shawls</option>
+<option>Silk Rugs</option>
+<option>Papier-Mâché</option>
+<option>Walnut Wood</option>
+</select>
+<select class="bg-surface-container-lowest border-none rounded-lg text-sm px-4 py-3 shadow-sm focus:ring-1 focus:ring-primary cursor-pointer text-on-surface">
+<option>Stock Status</option>
+<option>In Stock</option>
+<option>Low Stock</option>
+<option>Out of Stock</option>
+</select>
+<button class="bg-surface-container-highest text-on-surface px-4 py-3 rounded-lg text-sm font-medium hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                    Advanced Filters
+                </button>
+</div>
+</div>
+<!-- Inventory Table (High-End Editorial Grid) -->
+<div class="bg-surface-container-lowest rounded-xl editorial-shadow overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50">
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-secondary opacity-70">Product</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-secondary opacity-70">SKU</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-secondary opacity-70">Category</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-secondary opacity-70 text-center">Stock Level</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-secondary opacity-70">Price</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-widest text-secondary opacity-70 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded bg-surface-container-high overflow-hidden">
+<img alt="Silk Rug" class="w-full h-full object-cover" data-alt="Exquisite hand-knotted silk Kashmiri rug with intricate floral patterns in deep crimson and antique gold on a neutral floor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlUV8jP7-2FhTEpxSBtNyeH4vndCxGTAkRgvp1bc8sJM2n8Sirx-5yFVnjbCpp-nU0FdN1l8RcXjAQpyJ1ce7Y9owJFZ5TIWVbT-sdGmH97l0gIVsHUmuWo5z-vd12K17UKy0vgRKSTN1y5jNekrcJ5k3EozVx67qxPW6G8nbwPn5kvAVRhXECEchfaTyWj3j3L4Hdsm5wftToC7ti01F_MIS5_OnjlBnfP3fXW0SGLUa5aHYv_Cf757Cm9dD_qjj10wFwdxvVDlMS"/>
+</div>
+<div>
+<div class="font-headline font-bold text-on-surface">Royal Tabriz Silk Rug</div>
+<div class="text-xs text-secondary opacity-60">6x4 Feet, Hand-knotted</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 font-mono text-xs text-on-surface-variant">VK-RUG-TBZ-001</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-surface-container text-secondary text-[10px] font-bold uppercase tracking-tighter">Silk Rugs</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col items-center">
+<div class="w-full max-w-[80px] h-1.5 bg-surface-container rounded-full overflow-hidden mb-2">
+<div class="h-full bg-green-600 rounded-full" style="width: 85%"></div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-green-50 text-green-700">In Stock (12)</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-on-surface">₹1,24,000</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-secondary hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded bg-surface-container-high overflow-hidden">
+<img alt="Pashmina Shawl" class="w-full h-full object-cover" data-alt="Soft hand-woven pashmina shawl in a natural cream color with delicate hand embroidery draped over a wooden chair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcnnZK-ZrZgVpH-3KaKaDOwpWSmNKrTgG6BpkXyhnuNDSZpalnWzynxofNEDO4wEodj9HCSrX5QIyEpRnY2xzuTcO-fm-87P9boF7MK9CHxX_AHHsLudyVtzWCGlpTTlNX5FKN-1kxtDFYNwAhXgWd3Ml839PYKpSrH-kXcWJe-q8OBT2sDO4yMtPhMWvRTwz16BITFnF_BDo-qlp_75ABOVVUo9Hgdan1dio-OjQiMgwV8EEnH_ZnTaZD1PyPYpJFUFe0uWd_Ot2z"/>
+</div>
+<div>
+<div class="font-headline font-bold text-on-surface">Heritage Kani Pashmina</div>
+<div class="text-xs text-secondary opacity-60">Pure Ladakhi Wool, Floral</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 font-mono text-xs text-on-surface-variant">VK-SWL-KNI-042</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-surface-container text-secondary text-[10px] font-bold uppercase tracking-tighter">Shawls</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col items-center">
+<div class="w-full max-w-[80px] h-1.5 bg-surface-container rounded-full overflow-hidden mb-2">
+<div class="h-full bg-primary rounded-full" style="width: 20%"></div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-orange-50 text-primary">Low Stock (3)</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-on-surface">₹45,500</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-secondary hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded bg-surface-container-high overflow-hidden">
+<img alt="Walnut Wood Carving" class="w-full h-full object-cover" data-alt="Traditional Kashmiri walnut wood carved bowl with intricate leaf patterns, deep brown wood grain in soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDykqMAeGBR4oAK08OAMThL_ZwaElVUzYO0bh878ASFku_EEBT_yf245bYquTqHe19GVdhzWpy5GEHatk0GnekX4L8R0OPZErxovmmgVFWa4gg3UijtN5mXS3wHkKwbyhaBvoSUO4xcNEwThGU1PinBRZaNrRykC_-7nZd8rZtFskzWuxtGzmLqJDqA-4Tr7z9B7IHsh3NwVJRpznI5YoSSpccDCwzSl0sfASa3q8LeQzcp3fDMNYJWR9DmlxXffmhoZX8e7TpBt7GC"/>
+</div>
+<div>
+<div class="font-headline font-bold text-on-surface">Chinar Leaf Walnut Bowl</div>
+<div class="text-xs text-secondary opacity-60">Single Piece, Hand-carved</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 font-mono text-xs text-on-surface-variant">VK-WWD-BWL-089</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-surface-container text-secondary text-[10px] font-bold uppercase tracking-tighter">Walnut Wood</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col items-center">
+<div class="w-full max-w-[80px] h-1.5 bg-surface-container rounded-full overflow-hidden mb-2">
+<div class="h-full bg-green-600 rounded-full" style="width: 60%"></div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-green-50 text-green-700">In Stock (8)</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-on-surface">₹8,900</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-secondary hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="h-12 w-12 rounded bg-surface-container-high overflow-hidden">
+<img alt="Papier-mache" class="w-full h-full object-cover" data-alt="Vibrantly painted Kashmiri papier-mache decorative box with bird and flower motifs in bright blues and golds on a black base" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2ZaUZ3O1G8h1jVeYjhkPWgUkPPldjQfXEwLabhS8LPUMExGwKHE_UEPXDfCqMILae3Jn9GPlUWEVYiu0paQzks0BHODX5dxzdmpRaox92DYF0LFvTybpIdkZSNIaaLd2mUJexnBVjlJhVJWSvqwSRYuLcb5LwHeuNtASXdnfH72t3GI4gsN6IXUCVgxNR2dpp8TFH0rOa-mY85TPzHYZR3mgmrQMAANKupLvvHJLBcZmhHE5J_6CUuh-F3jiXl6Rm9C_Nx-jAj6wl"/>
+</div>
+<div>
+<div class="font-headline font-bold text-on-surface">Gul-e-Wilayat Jewelry Box</div>
+<div class="text-xs text-secondary opacity-60">Papier-mâché, Gold Leaf</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 font-mono text-xs text-on-surface-variant">VK-PPM-BOX-022</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-surface-container text-secondary text-[10px] font-bold uppercase tracking-tighter">Papier-Mâché</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col items-center">
+<div class="w-full max-w-[80px] h-1.5 bg-surface-container rounded-full overflow-hidden mb-2">
+<div class="h-full bg-error rounded-full" style="width: 5%"></div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-red-50 text-error">Out of Stock (0)</span>
+</div>
+</td>
+<td class="px-6 py-5 font-bold text-on-surface">₹4,200</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-secondary hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-low/50 flex justify-between items-center border-t border-outline-variant/10">
+<span class="text-xs text-secondary opacity-60">Showing 1-4 of 1,284 products</span>
+<div class="flex items-center gap-2">
+<button class="p-1 rounded hover:bg-surface-container text-secondary disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<div class="flex gap-1">
+<button class="w-8 h-8 rounded bg-primary text-on-primary text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded hover:bg-surface-container text-on-surface text-xs font-bold">2</button>
+<button class="w-8 h-8 rounded hover:bg-surface-container text-on-surface text-xs font-bold">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-secondary">...</span>
+<button class="w-8 h-8 rounded hover:bg-surface-container text-on-surface text-xs font-bold">128</button>
+</div>
+<button class="p-1 rounded hover:bg-surface-container text-secondary">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual Toast Notification (Soft Elegant Design) -->
+<div class="fixed bottom-8 right-8 bg-on-surface text-surface py-3 px-5 rounded-lg editorial-shadow flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300">
+<span class="material-symbols-outlined text-tertiary-fixed" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-sm font-medium">Inventory list refreshed successfully.</span>
+<button class="ml-4 text-xs opacity-60 uppercase font-bold tracking-widest hover:opacity-100 transition-opacity">Dismiss</button>
+</div>
+</body></html>

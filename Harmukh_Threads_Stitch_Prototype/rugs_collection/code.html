@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vaer Kashmir | Handwoven Rug Collections</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "surface": "#fcf9f2",
+                        "on-primary-fixed": "#341100",
+                        "surface-dim": "#dcdad3",
+                        "secondary": "#765a24",
+                        "on-tertiary-container": "#f6fff4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#574238",
+                        "on-tertiary-fixed": "#0e1f13",
+                        "on-secondary-fixed-variant": "#5c420e",
+                        "primary": "#9b4000",
+                        "surface-container": "#f0eee7",
+                        "primary-container": "#c25303",
+                        "surface-variant": "#e5e2db",
+                        "on-primary-fixed-variant": "#793000",
+                        "surface-bright": "#fcf9f2",
+                        "on-secondary-fixed": "#271900",
+                        "tertiary": "#4e6151",
+                        "surface-container-low": "#f6f3ec",
+                        "surface-container-high": "#ebe8e1",
+                        "inverse-primary": "#ffb692",
+                        "inverse-surface": "#31312c",
+                        "inverse-on-surface": "#f3f0ea",
+                        "tertiary-fixed": "#d3e8d4",
+                        "error-container": "#ffdad6",
+                        "outline": "#8b7266",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "tertiary-container": "#667969",
+                        "tertiary-fixed-dim": "#b7ccb8",
+                        "background": "#fcf9f2",
+                        "on-tertiary-fixed-variant": "#394b3c",
+                        "on-background": "#1c1c18",
+                        "surface-tint": "#9f4200",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#795c26",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb692",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1c1c18",
+                        "secondary-container": "#fed795",
+                        "secondary-fixed": "#ffdea8",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#e7c181",
+                        "outline-variant": "#dfc0b3",
+                        "surface-container-highest": "#e5e2db",
+                        "primary-fixed": "#ffdbcb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            align-items: start;
+        }
+        /* Custom scrollbar for horizontal chips */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation Bar -->
+<nav class="bg-[#fcf9f2]/90 dark:bg-[#1c1c18]/90 backdrop-blur-xl shadow-[0px_12px_32px_rgba(44,38,34,0.06)] docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center px-12 py-6 w-full max-w-screen-2xl mx-auto">
+<a class="text-2xl font-serif tracking-tighter text-[#1c1c18] dark:text-[#fcf9f2]" href="#">Vaer Kashmir</a>
+<div class="hidden md:flex items-center gap-10 font-['Noto_Serif'] tracking-tight text-[#1c1c18] dark:text-[#fcf9f2]">
+<a class="text-[#1c1c18]/70 dark:text-[#fcf9f2]/70 hover:text-[#1c1c18] hover:opacity-80 transition-opacity duration-300" href="#">Collections</a>
+<a class="text-[#9b4000] border-b border-[#9b4000]/40 pb-1 hover:opacity-80 transition-opacity duration-300" href="#">Rugs</a>
+<a class="text-[#1c1c18]/70 dark:text-[#fcf9f2]/70 hover:text-[#1c1c18] hover:opacity-80 transition-opacity duration-300" href="#">The Artisans</a>
+<a class="text-[#1c1c18]/70 dark:text-[#fcf9f2]/70 hover:text-[#1c1c18] hover:opacity-80 transition-opacity duration-300" href="#">Journal</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="hover:opacity-80 transition-opacity duration-300 text-[#1c1c18]">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="hover:opacity-80 transition-opacity duration-300 text-[#1c1c18]">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Header Section -->
+<header class="px-12 py-20 max-w-screen-2xl mx-auto">
+<div class="max-w-2xl">
+<p class="text-secondary font-label tracking-[0.2em] text-[0.65rem] uppercase mb-4">Timeless Weaving</p>
+<h1 class="font-headline text-5xl md:text-6xl text-on-surface tracking-tight leading-[1.1] mb-8">Kashmiri Silk &amp; Wool Rugs</h1>
+<p class="text-on-surface-variant font-body text-lg leading-relaxed opacity-80">Each piece is a digital heirloom, hand-knotted over months by master artisans using traditional motifs passed through generations. Experience the warmth of the Himalayas underfoot.</p>
+</div>
+</header>
+<!-- Sticky Filter Bar -->
+<div class="sticky top-[84px] z-40 bg-surface-container-low/95 backdrop-blur-md">
+<div class="max-w-screen-2xl mx-auto px-12 py-4 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex items-center gap-3 overflow-x-auto no-scrollbar">
+<span class="text-on-surface-variant text-xs font-medium uppercase tracking-wider pr-2">Filter:</span>
+<button class="px-5 py-2 rounded-full border border-outline-variant/20 bg-surface-container-lowest text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors whitespace-nowrap">Size</button>
+<button class="px-5 py-2 rounded-full border border-outline-variant/20 bg-surface-container-lowest text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors whitespace-nowrap">Material</button>
+<button class="px-5 py-2 rounded-full border border-outline-variant/20 bg-surface-container-lowest text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors whitespace-nowrap">Color</button>
+<button class="px-5 py-2 rounded-full border border-outline-variant/20 bg-surface-container-lowest text-xs font-medium text-on-surface hover:bg-surface-container-high transition-colors whitespace-nowrap">Price</button>
+</div>
+<div class="flex items-center gap-4">
+<label class="text-on-surface-variant text-xs font-medium uppercase tracking-wider" for="sort">Sort by:</label>
+<select class="bg-transparent border-none text-sm font-medium text-on-surface focus:ring-0 cursor-pointer py-0 pl-0 pr-8 appearance-none" id="sort">
+<option>Curated Collection</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Newest Arrivals</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Masonry-style Grid -->
+<main class="max-w-screen-2xl mx-auto px-12 py-16">
+<div class="masonry-grid">
+<!-- Product Card 1 (Large) -->
+<div class="group flex flex-col gap-6">
+<div class="relative overflow-hidden aspect-[3/4] bg-surface-container-low">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Intricate hand-knotted Kashmiri silk rug with traditional floral medallions in deep ruby and antique gold tones on a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbjCifbBjbns1bjrkoPRl1ltlHrBnlP4CBJnvtnW0X1dGQ7UKYiOS7ZksRDDonPZj7Z78yahYuUDLsuQCFgjYcdD2h_6aMiwmDxopqTsgNFcXVaBqe0xJiQMAeR8bNfQDuVGXKy5RKxgRTnheId-l9C4t89R75CBQtqbZoXa865yNRdbvqVE6QtRaU3c0yY2zQRkewiiI_cSVUaktb26YUcevDUaICCxlw4kDZ80z-5hYGCzf99fUV8eG5AEb03JASS9ALJn1E6XYn"/>
+<button class="absolute top-6 right-6 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-baseline">
+<h3 class="font-headline text-xl text-on-surface">The Gulmarg Medallion</h3>
+<span class="font-body font-medium text-primary">₹4,850</span>
+</div>
+<p class="text-on-surface-variant text-sm font-light leading-relaxed">9' x 12' • Pure Mulberry Silk</p>
+</div>
+</div>
+<!-- Product Card 2 (Medium) -->
+<div class="group flex flex-col gap-6 mt-12">
+<div class="relative overflow-hidden aspect-[1/1] bg-surface-container-low">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Modern interpretation of a traditional Kashmiri rug featuring abstract geometric patterns in saffron, charcoal, and ivory wool" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADKAnZvts88kd2cC02OYbA_DFTEkcgKK6RvQuOzLssjb-y7UpKHtZBpUMDKgQIvg7fTo_yvf7RJ8Kk8YlH86S2ISGttul3MVKX3zshPGheXuit8sVIcaZ-JIJenSfPyQgp15YwLE-bGmNJYSDaE94kPOEqcD5TXsbWOhBGPiSUtxk-HaEgW1a1eoOQqLJKXEoYdshmeKZLOx2NaZm2AQoCXO2CpNQVC8knqGCYLAmmRG344sjLw67CBBmALGrwtl2jtBWvVHaTH8wQ"/>
+<button class="absolute top-6 right-6 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-baseline">
+<h3 class="font-headline text-xl text-on-surface">Saffron Geometric</h3>
+<span class="font-body font-medium text-primary">₹2,400</span>
+</div>
+<p class="text-on-surface-variant text-sm font-light leading-relaxed">6' x 9' • Organic Highland Wool</p>
+</div>
+</div>
+<!-- Product Card 3 (Tall) -->
+<div class="group flex flex-col gap-6">
+<div class="relative overflow-hidden aspect-[4/5] bg-surface-container-low">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close-up texture of a high-pile Kashmiri wool rug with cream and beige organic flowing lines, studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuma0Tl6XECRIyrguvBReP0hdobgbHOe7EgVmAbm6qZ6TD9H2CE0o9_hMaG-6ZPphWvTdgVTs__BnXIyOSBNHo2xIsBlKCgpwa-Z5o9v0nKP6Ic8akYd4clwuC3hHlFHT6R35XuGqtuhEQTnKOMghRPth5HhhqLeEBkjBAf3VrAu3x4K-gL17AKg_4hZtNG0vJkJhtFn30eEg4bktlC3sMXOfCdxmLiYqTI0T6_h0XSOLPaLzYdA22JTvD3LAFTjFdmnjogbedHD3c"/>
+<button class="absolute top-6 right-6 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="favorite">favorite</span>
+</button>
+<div class="absolute bottom-6 left-6 px-3 py-1 bg-primary text-on-primary text-[0.6rem] uppercase tracking-widest font-bold">Limited Edition</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-baseline">
+<h3 class="font-headline text-xl text-on-surface">Cloud over Dal Lake</h3>
+<span class="font-body font-medium text-primary">₹3,200</span>
+</div>
+<p class="text-on-surface-variant text-sm font-light leading-relaxed">8' x 10' • Pashmina Blend</p>
+</div>
+</div>
+<!-- Product Card 4 (Standard) -->
+<div class="group flex flex-col gap-6">
+<div class="relative overflow-hidden aspect-square bg-surface-container-low">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Antique finish Kashmiri rug with faded emerald and terracotta motifs, showcasing intentional vintage distressing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN3JY2QYAQvFertmdgLgWxQeLwpgGJFhauIBih3VazZ1sRCQLPPq42UF-Er0RVvYVz18bRYuO5vJnSXmsey1UzliFWs0eefPMpKW5bymv0bffExEVKnVWHgh_ED79qcQaMm00TpvzwEuKa39xRQDEphxvuJ6P_zEtfvyL4ixPWgkFL9h_ztMgKS6rvNBUCa6u8F_zV3940xzvgb-sQmzX61f0Ai0_GP_uUgaXN6GaENJW6CrCTsKGt4GKm2TWEl42AcmFc-M1_CO1r"/>
+<button class="absolute top-6 right-6 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-baseline">
+<h3 class="font-headline text-xl text-on-surface">Vintage Shikara</h3>
+<span class="font-body font-medium text-primary">₹5,100</span>
+</div>
+<p class="text-on-surface-variant text-sm font-light leading-relaxed">10' x 14' • Aged Persian Wool</p>
+</div>
+</div>
+<!-- Product Card 5 (Tall) -->
+<div class="group flex flex-col gap-6 -mt-16">
+<div class="relative overflow-hidden aspect-[3/4] bg-surface-container-low">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A minimalist rug with subtle tone-on-tone relief carving in ivory silk, sophisticated luxury aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX43Ez_3xHk1snyo0sqUZVi0ccpWY2gQA08j7P6Q-2A9_bfX4s2gES-eiQaoWvf0AbYTbxhJd-k64ebecf2NlVUryCqH7VRMK_NQLoYa06a2gSs4bsLWuSJ-lL15SwMtG0NVh0Q9FhwG5KuMiqbGI4LKaSVDLDlInRPwSW1hsoVVdeCdVKtDAdZx4xA-iuMsnJCG4HDmpLFh3a0ls7zf-e0vAC4yH8hofYb071rAQVrFWWmtCahIEexWaJFDzVUOkNXb0HJjH1k_Hj"/>
+<button class="absolute top-6 right-6 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-baseline">
+<h3 class="font-headline text-xl text-on-surface">Ivory Whisper</h3>
+<span class="font-body font-medium text-primary">₹1,950</span>
+</div>
+<p class="text-on-surface-variant text-sm font-light leading-relaxed">5' x 7' • Sculpted Silk</p>
+</div>
+</div>
+<!-- Product Card 6 (Standard) -->
+<div class="group flex flex-col gap-6">
+<div class="relative overflow-hidden aspect-[4/3] bg-surface-container-low">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Earthy brown and russet toned rug with dense traditional patterns, artisanal craftsmanship details visible" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3IHkIZxIZ3sLpQBW56UiDnZWhJok29iSgPBCTdy2pZ-h3zWb7uyQO6LljACdBLutaX5bUPnug9K_gKsIY1QtMGjzXkf2WdEcXFOqf9yJZXa17VIWVqCezT2_ofGKUpmO0-AGPOacJOwoI-eQPB9QFOetfWYHX3owzLbSZnfpmvJa1Q5SCWyMgxuRm0P3qzIlK0jsXYYfNq68bV3hgQW-y-uRREZiw4LTMb3LASSlAWEJAb55vMfGvWl1bLvDXJ0uXQmLqflR7YT56"/>
+<button class="absolute top-6 right-6 w-10 h-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-baseline">
+<h3 class="font-headline text-xl text-on-surface">Kashmiri Earth</h3>
+<span class="font-body font-medium text-primary">₹3,750</span>
+</div>
+<p class="text-on-surface-variant text-sm font-light leading-relaxed">9' x 12' • Hand-Spun Wool</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Curator Insight Section (Asymmetric Editorial Layout) -->
+<section class="py-32 px-12 max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-16 items-center border-t border-outline-variant/10">
+<div class="md:col-span-5 flex flex-col gap-8 order-2 md:order-1">
+<h2 class="font-headline text-4xl leading-tight">The Art of the <br/>Kashmiri Knot</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed">A single Vaer Kashmir rug contains over one million individual hand-tied knots. This ancient technique, known as 'Kal-Bafi', allows for an incredible level of detail and a durability that spans decades, turning a simple floor covering into a family heirloom.</p>
+<div>
+<a class="inline-flex items-center gap-2 font-medium text-primary group" href="#">
+                    Explore the provenance
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="md:col-span-7 relative order-1 md:order-2">
+<div class="aspect-[16/9] overflow-hidden rounded-lg shadow-xl translate-x-4">
+<img class="w-full h-full object-cover" data-alt="Artisan hands carefully working on a large vertical loom weaving a complex colorful rug in a bright workshop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTcP_AZq3f5ld5mJywUrogCb8BRfvxIVvHgmG0WqSSjCm4NZCoyYhDrMW_O6tDbL7WJnfHR7Og4nTgccZnjFEaGP1GEsALwzounznKYqnIRRE_5l1uyLUg_T81C1OjhjXDwrQKmIXtKjT5fmxnM1cc2t268ceYB_10KTQCxRfGCWmxrnVGhsB_jEpr5sUuqfIOdm6tXLRMbAFGx52mmwx00xrM8zjfaiHK6Zp1RrGhrYcvvdPm_qJ7WrnDn8aZ4dLwmNLL09AVMKWN"/>
+</div>
+<div class="absolute -bottom-10 -left-10 w-48 h-48 bg-surface-container-high/80 backdrop-blur-xl p-6 hidden md:flex flex-col justify-end">
+<span class="text-primary font-headline text-4xl">450+</span>
+<span class="text-on-surface-variant text-[0.65rem] uppercase tracking-widest leading-tight">Hours per piece</span>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-[#ebe8e1] dark:bg-[#1c1c18] w-full mt-24">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 w-full max-w-screen-2xl mx-auto">
+<div class="flex flex-col gap-6">
+<span class="font-serif italic text-lg text-[#1c1c18]">Vaer Kashmir</span>
+<p class="text-[#1c1c18]/60 font-['Inter'] text-sm leading-relaxed">Preserving the soul of Himalayan craftsmanship through modern curation and ethical artisan partnerships.</p>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-[#765a24] font-['Inter'] text-xs uppercase tracking-[0.2em] font-bold">The Studio</h4>
+<nav class="flex flex-col gap-3">
+<a class="text-[#1c1c18]/60 dark:text-[#fcf9f2]/60 hover:text-[#9b4000] transition-colors font-['Inter'] text-sm tracking-wide" href="#">Provenance</a>
+<a class="text-[#1c1c18]/60 dark:text-[#fcf9f2]/60 hover:text-[#9b4000] transition-colors font-['Inter'] text-sm tracking-wide" href="#">Care Guide</a>
+<a class="text-[#1c1c18]/60 dark:text-[#fcf9f2]/60 hover:text-[#9b4000] transition-colors font-['Inter'] text-sm tracking-wide" href="#">Journal</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-[#765a24] font-['Inter'] text-xs uppercase tracking-[0.2em] font-bold">Client Care</h4>
+<nav class="flex flex-col gap-3">
+<a class="text-[#1c1c18]/60 dark:text-[#fcf9f2]/60 hover:text-[#9b4000] transition-colors font-['Inter'] text-sm tracking-wide" href="#">Shipping</a>
+<a class="text-[#1c1c18]/60 dark:text-[#fcf9f2]/60 hover:text-[#9b4000] transition-colors font-['Inter'] text-sm tracking-wide" href="#">Returns</a>
+<a class="text-[#1c1c18]/60 dark:text-[#fcf9f2]/60 hover:text-[#9b4000] transition-colors font-['Inter'] text-sm tracking-wide" href="#">Bespoke Orders</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-[#765a24] font-['Inter'] text-xs uppercase tracking-[0.2em] font-bold">Subscribe</h4>
+<p class="text-[#1c1c18]/60 font-['Inter'] text-sm tracking-wide">Receive updates on new collection drops and artisan stories.</p>
+<div class="flex border-b border-[#1c1c18]/20 pb-2">
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full p-0" placeholder="Email address" type="email"/>
+<button class="text-primary font-medium text-sm">Join</button>
+</div>
+</div>
+</div>
+<div class="px-12 py-8 border-t border-[#1c1c18]/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-[#1c1c18]/60 font-['Inter'] text-[0.65rem] tracking-wide">© 2024 Vaer Kashmir. Handwoven in the Himalayas.</p>
+<div class="flex gap-8">
+<a class="text-[#1c1c18]/60 font-['Inter'] text-[0.65rem] tracking-wide hover:text-[#9b4000]" href="#">Privacy</a>
+<a class="text-[#1c1c18]/60 font-['Inter'] text-[0.65rem] tracking-wide hover:text-[#9b4000]" href="#">Terms</a>
+</div>
+</div>
+</footer>
+</body></html>

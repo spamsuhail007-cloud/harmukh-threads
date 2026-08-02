@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#f6fff4",
+                    "outline-variant": "#dfc0b3",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#fcf9f2",
+                    "on-primary-fixed-variant": "#793000",
+                    "surface": "#fcf9f2",
+                    "tertiary-fixed-dim": "#b7ccb8",
+                    "surface-dim": "#dcdad3",
+                    "inverse-surface": "#31312c",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#341100",
+                    "surface-variant": "#e5e2db",
+                    "primary-fixed": "#ffdbcb",
+                    "surface-container-low": "#f6f3ec",
+                    "surface-tint": "#9f4200",
+                    "surface-container": "#f0eee7",
+                    "primary-container": "#c25303",
+                    "on-primary-container": "#fffbff",
+                    "on-tertiary-fixed": "#0e1f13",
+                    "on-secondary-fixed-variant": "#5c420e",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#ffb692",
+                    "tertiary-container": "#667969",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#4e6151",
+                    "surface-container-highest": "#e5e2db",
+                    "surface-container-high": "#ebe8e1",
+                    "primary": "#9b4000",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#574238",
+                    "on-secondary-container": "#795c26",
+                    "background": "#fcf9f2",
+                    "on-secondary-fixed": "#271900",
+                    "on-tertiary-fixed-variant": "#394b3c",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#1c1c18",
+                    "tertiary-fixed": "#d3e8d4",
+                    "outline": "#8b7266",
+                    "inverse-on-surface": "#f3f0ea",
+                    "on-surface": "#1c1c18",
+                    "secondary-fixed": "#ffdea8",
+                    "secondary-container": "#fed795",
+                    "inverse-primary": "#ffb692",
+                    "secondary-fixed-dim": "#e7c181",
+                    "secondary": "#765a24"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcf9f2;
+            color: #1c1c18;
+        }
+        .editorial-shadow {
+            box-shadow: 0px 12px 32px rgba(44, 38, 34, 0.06);
+        }
+        .ghost-border {
+            border: 1px solid rgba(223, 192, 179, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased overflow-x-hidden">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="h-screen w-72 fixed left-0 top-0 bg-[#fcf9f2] dark:bg-[#1c1c18] flex flex-col py-8 px-4 space-y-2 z-50">
+<div class="px-4 mb-10">
+<h1 class="font-['Noto_Serif'] font-bold text-lg text-[#1c1c18] dark:text-[#fcf9f2]">Vaer Curator</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-[#765a24] opacity-60">Master Admin</p>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#765a24] dark:text-[#ebe8e1] opacity-60 cursor-pointer hover:bg-[#ebe8e1] dark:hover:bg-[#2c2c26] hover:text-[#9b4000] transition-all ease-in-out duration-200">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium text-sm tracking-wide">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#765a24] dark:text-[#ebe8e1] opacity-60 cursor-pointer hover:bg-[#ebe8e1] dark:hover:bg-[#2c2c26] hover:text-[#9b4000] transition-all ease-in-out duration-200">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-medium text-sm tracking-wide">Inventory</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#765a24] dark:text-[#ebe8e1] opacity-60 cursor-pointer hover:bg-[#ebe8e1] dark:hover:bg-[#2c2c26] hover:text-[#9b4000] transition-all ease-in-out duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="font-medium text-sm tracking-wide">Orders</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#765a24] dark:text-[#ebe8e1] opacity-60 cursor-pointer hover:bg-[#ebe8e1] dark:hover:bg-[#2c2c26] hover:text-[#9b4000] transition-all ease-in-out duration-200">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-medium text-sm tracking-wide">Enquiries</span>
+</div>
+<!-- Active State Logic: Contact Messages -->
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#9b4000] dark:text-[#c25303] bg-[#f6f3ec] dark:bg-[#2c2c26] border-r-4 border-[#9b4000] cursor-pointer transition-all ease-in-out duration-200">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="font-medium text-sm tracking-wide">Contact Messages</span>
+</div>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-medium tracking-wide text-sm hover:bg-primary-container transition-colors duration-300">
+                Create Listing
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 min-h-screen p-12">
+<!-- Header Section -->
+<header class="flex justify-between items-end mb-12">
+<div>
+<h2 class="font-headline text-4xl font-bold tracking-tight text-on-surface mb-2">Customer Messages</h2>
+<p class="font-body text-secondary text-lg">Managing communication and heritage inquiries.</p>
+</div>
+<div class="flex gap-4 items-center">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none focus:ring-1 focus:ring-primary rounded-lg text-sm w-64 placeholder:text-outline-variant" placeholder="Search by sender..." type="text"/>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden editorial-shadow">
+<img alt="Curator Profile" data-alt="Close-up professional portrait of a curator in a well-lit gallery environment with soft background textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAM9Qv580joWLYiAXrwh5Ld0z4OI-0Y0vb9pbwPfgGUk5Ir3uckBus3Cn2u9S2gNga3nMzBkJAee81NmQsAGDcvku57biAbMTZ1VX_vP3phV7TW4DFxC0xk-GIzN6hBBC0rYnjBqFgPjT1xLlN3icYimqnM6r7RGd0FlLXN5dUuMj-d6Py6JIZTTyvTifBfX1E3Wf_IIkYZAJPhOA8G4igPSOEMAK7jrApM8sixRmdZeiNE2rHqVyl734VcVxCTZwNOLXWNcvoVOBAS"/>
+</div>
+</div>
+</header>
+<!-- Bento Filter Grid -->
+<section class="grid grid-cols-4 gap-6 mb-12">
+<div class="col-span-1 p-6 bg-surface-container-lowest editorial-shadow rounded-xl flex flex-col justify-between">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="inbox">inbox</span>
+<div>
+<p class="text-3xl font-headline font-bold text-on-surface">24</p>
+<p class="text-xs font-label uppercase tracking-widest text-secondary opacity-70">Unread Messages</p>
+</div>
+</div>
+<div class="col-span-3 p-6 bg-surface-container-low rounded-xl">
+<h3 class="text-xs font-label uppercase tracking-widest text-secondary mb-6">Filter By Subject</h3>
+<div class="flex flex-wrap gap-3">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary text-sm font-medium transition-all shadow-sm">All Messages</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface-variant text-sm font-medium hover:bg-surface-container-highest transition-all">General</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface-variant text-sm font-medium hover:bg-surface-container-highest transition-all">Shipping</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface-variant text-sm font-medium hover:bg-surface-container-highest transition-all">Press</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface-variant text-sm font-medium hover:bg-surface-container-highest transition-all">Returns</button>
+</div>
+</div>
+</section>
+<!-- Message Inbox View -->
+<section class="bg-surface-container-lowest editorial-shadow rounded-2xl overflow-hidden">
+<div class="grid grid-cols-12 px-8 py-4 bg-surface-container-high border-b border-outline-variant/10">
+<div class="col-span-3 text-[10px] font-label uppercase tracking-widest text-secondary font-bold">Sender</div>
+<div class="col-span-5 text-[10px] font-label uppercase tracking-widest text-secondary font-bold">Subject &amp; Excerpt</div>
+<div class="col-span-2 text-[10px] font-label uppercase tracking-widest text-secondary font-bold">Date</div>
+<div class="col-span-2 text-right text-[10px] font-label uppercase tracking-widest text-secondary font-bold">Actions</div>
+</div>
+<!-- Message Item 1 -->
+<div class="grid grid-cols-12 px-8 py-6 items-center hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant/10">
+<div class="col-span-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container text-xs font-bold">AJ</div>
+<span class="font-body text-sm font-semibold text-on-surface">Amara Javid</span>
+</div>
+<div class="col-span-5">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded uppercase">Shipping</span>
+<h4 class="font-body text-sm font-bold text-on-surface">Inquiry about Pashmina tracking</h4>
+</div>
+<p class="text-sm text-secondary line-clamp-1 opacity-80">Hello, I haven't received the tracking number for my order #VK-9283...</p>
+</div>
+<div class="col-span-2 text-sm text-outline font-medium">Oct 24, 10:45 AM</div>
+<div class="col-span-2 flex justify-end items-center gap-4">
+<div class="flex items-center gap-2 group/toggle">
+<span class="text-[10px] font-label uppercase tracking-tighter text-outline opacity-0 group-hover:opacity-100 transition-opacity">Mark Read</span>
+<button class="w-10 h-5 bg-outline-variant/30 rounded-full relative transition-colors">
+<div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+</button>
+</div>
+<span class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="more_vert">more_vert</span>
+</div>
+</div>
+<!-- Message Item 2 -->
+<div class="grid grid-cols-12 px-8 py-6 items-center hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant/10">
+<div class="col-span-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-xs font-bold">RL</div>
+<span class="font-body text-sm font-semibold text-on-surface">Robert Langdon</span>
+</div>
+<div class="col-span-5">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold rounded uppercase">General</span>
+<h4 class="font-body text-sm font-bold text-on-surface">Wholesale for London Gallery</h4>
+</div>
+<p class="text-sm text-secondary line-clamp-1 opacity-80">We are interested in featuring your hand-carved walnut collection in our...</p>
+</div>
+<div class="col-span-2 text-sm text-outline font-medium">Oct 23, 04:12 PM</div>
+<div class="col-span-2 flex justify-end items-center gap-4">
+<div class="flex items-center gap-2 group/toggle">
+<button class="w-10 h-5 bg-primary/20 rounded-full relative transition-colors">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-primary rounded-full shadow-sm"></div>
+</button>
+</div>
+<span class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="more_vert">more_vert</span>
+</div>
+</div>
+<!-- Message Item 3 -->
+<div class="grid grid-cols-12 px-8 py-6 items-center hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant/10">
+<div class="col-span-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant text-xs font-bold">EM</div>
+<span class="font-body text-sm font-semibold text-on-surface">Elena Mistral</span>
+</div>
+<div class="col-span-5">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded uppercase">Press</span>
+<h4 class="font-body text-sm font-bold text-on-surface">Vogue Interview Request</h4>
+</div>
+<p class="text-sm text-secondary line-clamp-1 opacity-80">I'm a senior editor at Vogue and would love to discuss a feature on...</p>
+</div>
+<div class="col-span-2 text-sm text-outline font-medium">Oct 22, 09:30 AM</div>
+<div class="col-span-2 flex justify-end items-center gap-4">
+<div class="flex items-center gap-2 group/toggle">
+<button class="w-10 h-5 bg-outline-variant/30 rounded-full relative transition-colors">
+<div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+</button>
+</div>
+<span class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="more_vert">more_vert</span>
+</div>
+</div>
+<!-- Message Item 4 -->
+<div class="grid grid-cols-12 px-8 py-6 items-center hover:bg-surface-container-low transition-colors group cursor-pointer border-b border-outline-variant/10">
+<div class="col-span-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-error-container flex items-center justify-center text-on-error-container text-xs font-bold">SK</div>
+<span class="font-body text-sm font-semibold text-on-surface">Samir Khan</span>
+</div>
+<div class="col-span-5">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded uppercase">Returns</span>
+<h4 class="font-body text-sm font-bold text-on-surface">Damaged Silk Scarf</h4>
+</div>
+<p class="text-sm text-secondary line-clamp-1 opacity-80">The parcel arrived today but the silk scarf has a visible pull in the fabric...</p>
+</div>
+<div class="col-span-2 text-sm text-outline font-medium">Oct 21, 11:20 PM</div>
+<div class="col-span-2 flex justify-end items-center gap-4">
+<div class="flex items-center gap-2 group/toggle">
+<button class="w-10 h-5 bg-outline-variant/30 rounded-full relative transition-colors">
+<div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+</button>
+</div>
+<span class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="more_vert">more_vert</span>
+</div>
+</div>
+</section>
+<!-- Pagination / Footer Utility -->
+<footer class="mt-8 flex justify-between items-center px-4">
+<p class="text-xs font-label text-secondary opacity-60">Showing 4 of 128 messages</p>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary text-on-primary text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center border border-outline-variant/20 hover:bg-surface-container-high transition-colors text-xs font-bold">2</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center border border-outline-variant/20 hover:bg-surface-container-high transition-colors text-xs font-bold">3</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center border border-outline-variant/20 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</footer>
+</main>
+<!-- Detail Overlay (Visual Soul Component) -->
+<div class="fixed bottom-12 right-12 w-96 p-6 bg-surface-container-lowest editorial-shadow rounded-2xl border border-outline-variant/10 z-40 hidden md:block">
+<div class="flex items-start justify-between mb-4">
+<h5 class="font-headline font-bold text-on-surface">Customer Insight</h5>
+<span class="material-symbols-outlined text-secondary opacity-40 cursor-pointer" data-icon="close">close</span>
+</div>
+<div class="aspect-[4/3] rounded-lg overflow-hidden mb-4">
+<img class="w-full h-full object-cover" data-alt="Exquisite close-up of hand-embroidered Kashmiri Pashmina shawl showing intricate floral patterns and fine craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPhmTXa-4fu7T7gkjQqT12jBXStrKJRnRl-wqSApY_w_PU5Ss6BLknKgIH5i2-m_sIse1hVoK_BMc8lNjSerAx5w5YLf6Gd8ZFzkX-shzVPRJVB7zq9LwfBqFawTYKwuZ7YjhqiT0jURdU38VFoOv6byWkOeeg4PsbpFdnYjKWbVblArj8YWmZxy4pkRnJfNlcChDIRwMhMQKy-Wn6COsw5kPa35kATb1tT15JqbBJmmhO_aljxX4y8SYMxiqmJKtjqRu6M3rkLyaz"/>
+</div>
+<p class="text-sm text-on-surface font-body italic leading-relaxed mb-4">"Heritage is not what we leave behind, but what we carry forward. Every message from a customer is a thread in our growing tapestry."</p>
+<div class="flex items-center gap-2">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-surface overflow-hidden"><img data-alt="Portrait of a young woman smiling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZU_DoAVSZVyE2UsxHGNjX9qJPJNG90Jq5Veu4Rll1mjFjHHsvBvLz5VxhrE3wkXGzon9Zx3KToDy268kcm3_x5lAEkgpCYS0tq2pbhnpJtN7VnmA2ozRIgKNx46zLbUSt065QBrYcL2FNib-XQh0-vwe3daUqFFOv7d6AWxz1_ncI7hypHdhsmHrurP8MzFSRwmXXzgb5HgobfhA8JI9OpUystSTP4NbvISfQZHyXoVdYvM7l1gIbxgxo5LynT84vfAIpoxaSU9mL"/></div>
+<div class="w-6 h-6 rounded-full border-2 border-surface overflow-hidden"><img data-alt="Portrait of a professional man." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfYoX0yzhQjV6gEZepyKipztFqguDdnqKPOXARjT3J0SD2FXQTm92PIRDmuxSrgvCuBKwinvTJioWCtXUtKviN5c0EIYtxjA5vcMZ4dUDI9fuOJL8soHECsFZzbPHYoHaeb8R7ySNUITwYXxrjy3Vo8lr0RfyGNz-Ec7Hru3Bf0aKbWu7iE4sKbuBWqetqUonzBtbNt6oNKByit0bMxbYqmXejICkKT67Evz_byWyvIulWqNPdGAJan9yaiz6zE7-ujcb8cBQ_Uuh-"/></div>
+</div>
+<span class="text-[10px] font-label text-outline">+12 curators online</span>
+</div>
+</div>
+</body></html>
