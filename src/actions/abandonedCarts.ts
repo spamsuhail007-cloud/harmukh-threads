@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 export type AbandonedCartInput = {
+  sessionId?: string;
   firstName: string;
   lastName?: string;
   email?: string;
@@ -22,16 +23,21 @@ export type AbandonedCartInput = {
 
 export async function saveAbandonedCart(data: AbandonedCartInput) {
   try {
-    const { firstName, lastName = '', email = '', phone = '', address = '', city = '', pincode = '', items, total } = data;
+    const { sessionId, firstName, lastName = '', email = '', phone = '', address = '', city = '', pincode = '', items, total } = data;
 
     if (!firstName && !phone && !email) {
       return { success: false, error: 'Name, phone, or email is required' };
     }
 
-    // Check if an abandoned cart lead already exists for this email or phone within last 24h to avoid duplicate spam
-    const identifier = email || phone;
+    // Deduplication check: match by sessionId, email, or phone
     let existing = null;
-    if (identifier) {
+    if (sessionId) {
+      existing = await db.abandonedCart.findUnique({
+        where: { id: sessionId },
+      });
+    }
+
+    if (!existing && (email || phone)) {
       existing = await db.abandonedCart.findFirst({
         where: {
           OR: [
@@ -45,27 +51,29 @@ export async function saveAbandonedCart(data: AbandonedCartInput) {
     }
 
     if (existing) {
-      await db.abandonedCart.update({
+      const updated = await db.abandonedCart.update({
         where: { id: existing.id },
         data: {
-          firstName,
-          lastName,
-          email,
-          phone,
-          address,
-          city,
-          pincode,
+          firstName: firstName || existing.firstName,
+          lastName: lastName || existing.lastName,
+          email: email || existing.email,
+          phone: phone || existing.phone,
+          address: address || existing.address,
+          city: city || existing.city,
+          pincode: pincode || existing.pincode,
           items: items as any,
           total,
           updatedAt: new Date(),
         },
       });
-      return { success: true, id: existing.id };
+      return { success: true, id: updated.id };
     }
 
+    // Create new lead if no match found
     const created = await db.abandonedCart.create({
       data: {
-        firstName,
+        ...(sessionId ? { id: sessionId } : {}),
+        firstName: firstName || 'Prospect',
         lastName,
         email,
         phone,

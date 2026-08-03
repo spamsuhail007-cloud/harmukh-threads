@@ -38,9 +38,18 @@ export default function CheckoutPage() {
     const city      = (fd.get('city') as string || '').trim();
     const pincode   = (fd.get('pincode') as string || '').trim();
 
-    if (!firstName && !phone && !email) return;
+    // Only save when customer has entered at least a phone number or email address
+    if (!phone && !email) return;
+
+    // Retrieve or create a single session ID for this browser checkout
+    let sessionId = typeof window !== 'undefined' ? sessionStorage.getItem('ht_checkout_session') : null;
+    if (!sessionId && typeof window !== 'undefined') {
+      sessionId = `ac_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+      sessionStorage.setItem('ht_checkout_session', sessionId);
+    }
 
     saveAbandonedCart({
+      sessionId: sessionId || undefined,
       firstName: firstName || 'Prospect',
       lastName,
       email,
