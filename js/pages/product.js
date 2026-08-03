@@ -4,6 +4,19 @@
 
 Router.register('product', ({ id }) => {
   const product = getProduct(id) || PRODUCTS[0];
+
+  // Meta Pixel: Track ViewContent when a product page is viewed
+  if (typeof fbq === 'function') {
+    fbq('track', 'ViewContent', {
+      content_ids: [product.id],
+      content_name: product.name,
+      content_category: product.category,
+      content_type: 'product',
+      value: product.price,
+      currency: 'INR'
+    });
+  }
+
   const page = document.createElement('div');
   page.style.cssText = 'padding:var(--space-2xl) 0;';
 

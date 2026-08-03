@@ -9,15 +9,28 @@ const Cart = (() => {
 
   function add(productId, qty = 1) {
     const existing = items.find(i => i.id === productId);
+    const product = getProduct(productId);
+    if (!product) return;
+
     if (existing) {
       existing.qty += qty;
     } else {
-      const product = getProduct(productId);
-      if (!product) return;
       items.push({ id: productId, qty, product });
     }
     updateUI();
     openDrawer();
+
+    // Meta Pixel: Track AddToCart event
+    if (typeof fbq === 'function') {
+      fbq('track', 'AddToCart', {
+        content_ids: [product.id],
+        content_name: product.name,
+        content_category: product.category,
+        content_type: 'product',
+        value: product.price * qty,
+        currency: 'INR'
+      });
+    }
   }
 
   function remove(productId) {
@@ -128,6 +141,18 @@ const Cart = (() => {
 
     document.getElementById('checkout-btn').addEventListener('click', () => {
       closeDrawer();
+
+      // Meta Pixel: Track InitiateCheckout event
+      if (typeof fbq === 'function') {
+        fbq('track', 'InitiateCheckout', {
+          content_ids: items.map(i => i.id),
+          content_type: 'product',
+          num_items: count(),
+          value: total(),
+          currency: 'INR'
+        });
+      }
+
       setTimeout(() => Router.navigate('checkout'), 100);
     });
 

@@ -63,6 +63,11 @@ const Router = (() => {
     }
     root.scrollTop = 0;
     window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Meta Pixel: Track PageView on SPA navigation
+    if (typeof fbq === 'function') {
+      fbq('track', 'PageView');
+    }
   }
 
   function init() {

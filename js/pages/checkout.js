@@ -182,15 +182,94 @@ Router.register('checkout', () => {
       });
     }
 
+    // ── Abandoned Cart Auto-Save ─────────────────────────────
+    // Saves form details + cart to localStorage whenever the
+    // customer fills in any field. Cleared on successful order.
+    const ABANDON_KEY = 'ht_abandoned_carts';
+
+    function saveAbandonedCart() {
+      const firstName = (document.getElementById('first-name')?.value || '').trim();
+      const lastName  = (document.getElementById('last-name')?.value  || '').trim();
+      const email     = (document.getElementById('email')?.value      || '').trim();
+      const phone     = (document.getElementById('phone')?.value      || '').trim();
+      const address   = (document.getElementById('address')?.value    || '').trim();
+      const city      = (document.getElementById('city')?.value       || '').trim();
+      const pincode   = (document.getElementById('pincode')?.value    || '').trim();
+
+      // Only save once at least name or phone is filled
+      if (!firstName && !phone && !email) return;
+
+      const items = Cart.getItems().map(i => ({
+        name:  i.product?.name || 'Item',
+        price: i.product?.price || 0,
+        qty:   i.qty || 1,
+        image: i.product?.images?.[0] || ''
+      }));
+
+      const entry = {
+        id:        `AC-${Date.now()}`,
+        savedAt:   new Date().toISOString(),
+        customer: {
+          name:    [firstName, lastName].filter(Boolean).join(' '),
+          email,
+          phone,
+          address: [address, city, pincode].filter(Boolean).join(', ')
+        },
+        items,
+        total:     Cart.total(),
+        status:    'Abandoned'
+      };
+
+      // Store keyed by phone+email so the same person doesn't duplicate
+      const dedupKey = (email || phone || firstName).toLowerCase();
+      const existing = JSON.parse(localStorage.getItem(ABANDON_KEY) || '{}');
+      existing[dedupKey] = entry;
+      localStorage.setItem(ABANDON_KEY, JSON.stringify(existing));
+    }
+
+    // Listen on every checkout field
+    ['first-name','last-name','email','phone','address','city','pincode'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('blur',  saveAbandonedCart);
+        el.addEventListener('input', saveAbandonedCart);
+      }
+    });
+
     // Place order
     const placeBtn = document.getElementById('place-order-btn');
     if (placeBtn) {
       placeBtn.addEventListener('click', () => {
         placeBtn.textContent = 'Processing...';
         placeBtn.disabled = true;
+
         setTimeout(() => {
+          // Snapshot order data before clearing cart
+          const orderNum   = 'HT-2026-' + String(Math.floor(Math.random() * 9000) + 1000);
+          const orderItems = Cart.getItems();
+          const orderTotal = Cart.total();
+
+          // Collect customer info from form
+          const firstName = (document.getElementById('first-name')?.value || '').trim();
+          const lastName  = (document.getElementById('last-name')?.value  || '').trim();
+          const email     = (document.getElementById('email')?.value      || '').trim();
+          const phone     = (document.getElementById('phone')?.value      || '').trim();
+          const customer  = {
+            name:  [firstName, lastName].filter(Boolean).join(' ') || 'Valued Customer',
+            phone,
+            email
+          };
+
+          // ✅ Remove from abandoned carts — order completed
+          const dedupKey = (email || phone || firstName).toLowerCase();
+          if (dedupKey) {
+            const existing = JSON.parse(localStorage.getItem(ABANDON_KEY) || '{}');
+            delete existing[dedupKey];
+            localStorage.setItem(ABANDON_KEY, JSON.stringify(existing));
+          }
+
           Cart.clear();
-          Router.navigate('success');
+          Router.navigate('success', { orderNum, orderItems, orderTotal, customer });
         }, 1200);
       });
     }
