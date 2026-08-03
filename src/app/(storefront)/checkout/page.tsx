@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/components/providers/CartProvider';
 import { formatPrice } from '@/lib/utils';
 import { createOrder } from '@/actions/orders';
+import { saveAbandonedCart } from '@/actions/abandonedCarts';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export default function CheckoutPage() {
@@ -24,6 +25,38 @@ export default function CheckoutPage() {
       });
     }
   }, []);
+
+  const handleAutoSave = () => {
+    const formEl = document.getElementById('checkout-form') as HTMLFormElement | null;
+    if (!formEl) return;
+    const fd = new FormData(formEl);
+    const firstName = (fd.get('firstName') as string || '').trim();
+    const lastName  = (fd.get('lastName') as string || '').trim();
+    const email     = (fd.get('email') as string || '').trim();
+    const phone     = (fd.get('phone') as string || '').trim();
+    const address   = (fd.get('address') as string || '').trim();
+    const city      = (fd.get('city') as string || '').trim();
+    const pincode   = (fd.get('pincode') as string || '').trim();
+
+    if (!firstName && !phone && !email) return;
+
+    saveAbandonedCart({
+      firstName: firstName || 'Prospect',
+      lastName,
+      email,
+      phone,
+      address,
+      city,
+      pincode,
+      items: items.map(i => ({
+        name: i.product.name,
+        image: i.product.images[0],
+        price: i.product.price,
+        qty: i.qty,
+      })),
+      total,
+    }).catch(err => console.error('Failed to auto-save abandoned cart lead:', err));
+  };
 
   if (items.length === 0) {
     return (
@@ -107,44 +140,44 @@ export default function CheckoutPage() {
         
         <div className="grid-checkout-layout">
           
-          <form onSubmit={handleSubmit} id="checkout-form">
+          <form onSubmit={handleSubmit} id="checkout-form" onChange={handleAutoSave}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-lg)' }}>Shipping Information</h2>
             
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="firstName">First Name</label>
-                <input required type="text" id="firstName" name="firstName" className="form-input" />
+                <input required type="text" id="firstName" name="firstName" className="form-input" onBlur={handleAutoSave} />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="lastName">Last Name</label>
-                <input required type="text" id="lastName" name="lastName" className="form-input" />
+                <input required type="text" id="lastName" name="lastName" className="form-input" onBlur={handleAutoSave} />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="email">Email</label>
-                <input required type="email" id="email" name="email" className="form-input" />
+                <input required type="email" id="email" name="email" className="form-input" onBlur={handleAutoSave} />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="phone">Phone</label>
-                <input required type="tel" id="phone" name="phone" className="form-input" />
+                <input required type="tel" id="phone" name="phone" className="form-input" onBlur={handleAutoSave} />
               </div>
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="address">Address</label>
-              <input required type="text" id="address" name="address" className="form-input" />
+              <input required type="text" id="address" name="address" className="form-input" onBlur={handleAutoSave} />
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="city">City</label>
-                <input required type="text" id="city" name="city" className="form-input" />
+                <input required type="text" id="city" name="city" className="form-input" onBlur={handleAutoSave} />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="pincode">Pincode</label>
-                <input required type="text" id="pincode" name="pincode" className="form-input" />
+                <input required type="text" id="pincode" name="pincode" className="form-input" onBlur={handleAutoSave} />
               </div>
             </div>
 

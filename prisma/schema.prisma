@@ -99,6 +99,27 @@ model OrderItem {
   qty       Int
 }
 
+model AbandonedCart {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String   @default("")
+  email       String   @default("")
+  phone       String   @default("")
+  address     String   @default("")
+  city        String   @default("")
+  pincode     String   @default("")
+  items       Json     // [{ name, price, qty, image }]
+  total       Int      @default(0)
+  status      String   @default("ABANDONED") // ABANDONED | CONTACTED | RECOVERED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([email])
+  @@index([phone])
+  @@index([status])
+  @@index([createdAt])
+}
+
 model ContactMessage {
   id        String        @id @default(cuid())
   name      String

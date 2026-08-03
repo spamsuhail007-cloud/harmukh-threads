@@ -41,6 +41,14 @@ export function AdminSidebar({ email, signOutAction }: AdminSidebarProps) {
         )}
       </Link>
 
+      {/* Abandoned Carts */}
+      <Link
+        href="/admin/abandoned"
+        className={`admin-tab${isActive('/admin/abandoned') ? ' active' : ''}`}
+      >
+        🛒 Abandoned Carts
+      </Link>
+
       {/* Messages — with live notification badge */}
       <Link
         href="/admin/messages"

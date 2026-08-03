@@ -75,18 +75,15 @@ export async function createOrder(data: unknown) {
       paymentStatus: 'PENDING' 
     };
     
-    // Attempt sending notifications, but log if they fail so they don't block order completion
+    // Customer gets order confirmation email immediately (contains UPI payment instructions)
     try {
       await sendOrderConfirmationEmail(emailPayload);
     } catch (e) {
       console.error('Failed to send customer order confirmation email:', e);
     }
 
-    try {
-      await sendAdminOrderNotification(emailPayload);
-    } catch (e) {
-      console.error('Failed to send admin order notification email:', e);
-    }
+    // Admin email intentionally NOT sent here.
+    // Fires only after customer clicks "I've Paid" — see sendPaymentConfirmedAlert.
 
     // Telegram alert intentionally NOT sent here.
     // It fires only after the customer confirms payment by clicking
@@ -103,7 +100,6 @@ export async function createOrder(data: unknown) {
 // Called from /orders/pay when customer clicks "I've Paid — Notify via WhatsApp"
 export async function sendPaymentConfirmedAlert(orderNumber: string, amount: number) {
   try {
-    // Fetch order details from DB to include customer name + items
     const order = await db.order.findUnique({
       where: { orderNumber },
       include: { items: true },
@@ -114,6 +110,7 @@ export async function sendPaymentConfirmedAlert(orderNumber: string, amount: num
     const itemSummary = order?.items.map(i => `  • ${i.name} ×${i.qty}`).join('\n') || '';
     const total = amount || order?.total || 0;
 
+    // 1. Telegram alert
     await sendTelegramAlert(
       `💰 <b>PAYMENT CONFIRMED</b> #${orderNumber}\n` +
       `👤 ${name}\n` +
@@ -123,9 +120,36 @@ export async function sendPaymentConfirmedAlert(orderNumber: string, amount: num
       `✅ Customer clicked "I've Paid" — verify UPI and confirm order.\n` +
       `🔗 <a href="https://harmukhthreads.com/admin/orders">View in Admin</a>`
     );
+
+    // 2. Admin email alert
+    if (order) {
+      const emailPayload = {
+        orderNumber: order.orderNumber,
+        firstName: order.firstName,
+        lastName: order.lastName,
+        email: order.email,
+        phone: order.phone,
+        address: order.address,
+        city: order.city,
+        pincode: order.pincode,
+        country: order.country,
+        total: order.total,
+        subtotal: order.subtotal,
+        shipping: order.shipping,
+        paymentMethod: order.paymentMethod,
+        paymentStatus: order.paymentStatus,
+        items: order.items.map(i => ({ name: i.name, image: i.image, price: i.price, qty: i.qty })),
+      };
+      try {
+        await sendAdminOrderNotification(emailPayload);
+      } catch (e) {
+        console.error('Failed to send admin order notification email:', e);
+      }
+    }
+
     return { ok: true };
   } catch (e) {
-    console.error('Failed to send payment confirmed Telegram alert:', e);
+    console.error('Failed to send payment confirmed alert:', e);
     return { ok: false };
   }
 }
