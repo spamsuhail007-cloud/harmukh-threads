@@ -75,19 +75,10 @@ export async function createOrder(data: unknown) {
       paymentStatus: 'PENDING' 
     };
     
-    // Customer gets order confirmation email immediately (contains UPI payment instructions)
-    try {
-      await sendOrderConfirmationEmail(emailPayload);
-    } catch (e) {
-      console.error('Failed to send customer order confirmation email:', e);
-    }
-
-    // Admin email intentionally NOT sent here.
-    // Fires only after customer clicks "I've Paid" — see sendPaymentConfirmedAlert.
-
-    // Telegram alert intentionally NOT sent here.
-    // It fires only after the customer confirms payment by clicking
-    // "I've Paid" on the /orders/pay page — see pay/page.tsx.
+    // Zero emails or alerts sent on order creation.
+    // Order creation is super fast (~200ms).
+    // All notifications (Customer email, Admin email, Telegram) fire only when
+    // customer clicks "I've Paid" on the payment page — see sendPaymentConfirmedAlert.
 
     revalidatePath('/admin/orders');
     return { success: true, orderNumber: order.orderNumber, orderId: order.id };
@@ -137,14 +128,15 @@ export async function sendPaymentConfirmedAlert(orderNumber: string, amount: num
         subtotal: order.subtotal,
         shipping: order.shipping,
         paymentMethod: order.paymentMethod,
-        paymentStatus: order.paymentStatus,
+        paymentStatus: 'CONFIRMED',
         items: order.items.map(i => ({ name: i.name, image: i.image, price: i.price, qty: i.qty })),
       };
-      try {
-        await sendAdminOrderNotification(emailPayload);
-      } catch (e) {
-        console.error('Failed to send admin order notification email:', e);
-      }
+
+      // Send both Customer email and Admin notification concurrently
+      await Promise.allSettled([
+        sendOrderConfirmationEmail(emailPayload),
+        sendAdminOrderNotification(emailPayload),
+      ]);
     }
 
     return { ok: true };
