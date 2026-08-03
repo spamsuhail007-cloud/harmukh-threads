@@ -1,0 +1,9 @@
+{
+  "name": "harmukh-threads-prototype",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "vercel-build": "echo 'No build step required'"
+  }
+}
