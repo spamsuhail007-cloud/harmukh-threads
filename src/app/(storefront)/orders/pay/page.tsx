@@ -40,22 +40,16 @@ function PayContent() {
   const waUrl = buildWhatsAppUrl(orderNumber, amount);
 
   const handleIPaid = useCallback(async () => {
-    if (notified) {
-      // Already notified — just open WhatsApp again
-      window.open(waUrl, '_blank', 'noopener');
-      return;
-    }
     setNotifying(true);
-    try {
-      await sendPaymentConfirmedAlert(orderNumber, amount);
-    } catch (_) {
-      // Non-blocking — still open WhatsApp even if Telegram fails
-    } finally {
-      setNotified(true);
-      setNotifying(false);
-      window.open(waUrl, '_blank', 'noopener');
-    }
-  }, [orderNumber, amount, waUrl, notified]);
+    // 1. Open WhatsApp in new tab
+    window.open(waUrl, '_blank', 'noopener');
+    
+    // 2. Fire Telegram & Email notifications in background
+    sendPaymentConfirmedAlert(orderNumber, amount).catch(err => console.error('Notify error:', err));
+
+    // 3. Immediately navigate to Thank You page
+    router.push(`/orders/success?order=${orderNumber}&amount=${amount}`);
+  }, [orderNumber, amount, waUrl, router]);
 
   const steps = [
     { n: 1, text: 'Open any UPI app on your phone', icon: '📱' },
