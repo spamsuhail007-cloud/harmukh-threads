@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { formatPrice } from '@/lib/utils';
+import { PurchasePixelTrack } from '@/components/ui/PurchasePixelTrack';
 
 export default async function SuccessPage({
   searchParams
@@ -17,6 +18,9 @@ export default async function SuccessPage({
       padding: 'calc(var(--navbar-height) + var(--space-2xl)) var(--space-md) var(--space-3xl)',
       display: 'flex', alignItems: 'flex-start', justifyContent: 'center'
     }}>
+      {/* Meta Pixel: Track Purchase on Thank You Page */}
+      <PurchasePixelTrack orderNumber={orderNumber} amount={amount} />
+
       <div style={{ width: '100%', maxWidth: '580px' }}>
 
         {/* Card Container */}

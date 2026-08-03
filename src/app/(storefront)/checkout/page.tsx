@@ -118,17 +118,8 @@ export default function CheckoutPage() {
       const res = await createOrder(data);
 
       if (res.success && res.orderNumber) {
-        // Meta Pixel: Track Purchase
-        if (typeof window !== 'undefined' && (window as any).fbq) {
-          (window as any).fbq('track', 'Purchase', {
-            content_ids: items.map(i => i.product.id),
-            content_type: 'product',
-            value: total,
-            currency: 'INR'
-          });
-        }
         clear();
-        // Redirect to UPI payment page instead of success
+        // Redirect to UPI payment page
         router.push(`/orders/pay?order=${res.orderNumber}&amount=${total}`);
       } else {
         setError(res.error || 'Failed to place order.');
