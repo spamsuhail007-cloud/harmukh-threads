@@ -52,6 +52,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [...prev, { product, qty: initialQty }];
     });
     setIsOpen(true);
+
+    // Meta Pixel: Track AddToCart
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'AddToCart', {
+        content_ids: [product.id],
+        content_name: product.name,
+        content_category: product.category,
+        content_type: 'product',
+        value: product.price,
+        currency: 'INR'
+      });
+    }
   }, []);
 
   const remove = useCallback((productId: string) => {

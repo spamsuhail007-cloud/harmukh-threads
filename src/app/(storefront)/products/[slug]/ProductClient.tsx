@@ -146,6 +146,19 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
   const { add } = useCart();
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'ViewContent', {
+        content_ids: [product.id],
+        content_name: product.name,
+        content_category: product.category,
+        content_type: 'product',
+        value: product.price,
+        currency: 'INR'
+      });
+    }
+  }, [product]);
+
   const totalImages = product.images.length;
 
   const avgRating = product.reviews.length

@@ -1,5 +1,5 @@
 'use client';
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/components/providers/CartProvider';
 import { formatPrice } from '@/lib/utils';
@@ -12,6 +12,18 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).fbq && items.length > 0) {
+      (window as any).fbq('track', 'InitiateCheckout', {
+        content_ids: items.map(i => i.product.id),
+        content_type: 'product',
+        num_items: items.reduce((s, i) => s + i.qty, 0),
+        value: total,
+        currency: 'INR'
+      });
+    }
+  }, []);
 
   if (items.length === 0) {
     return (
@@ -66,6 +78,15 @@ export default function CheckoutPage() {
       const res = await createOrder(data);
 
       if (res.success && res.orderNumber) {
+        // Meta Pixel: Track Purchase
+        if (typeof window !== 'undefined' && (window as any).fbq) {
+          (window as any).fbq('track', 'Purchase', {
+            content_ids: items.map(i => i.product.id),
+            content_type: 'product',
+            value: total,
+            currency: 'INR'
+          });
+        }
         clear();
         // Redirect to UPI payment page instead of success
         router.push(`/orders/pay?order=${res.orderNumber}&amount=${total}`);
