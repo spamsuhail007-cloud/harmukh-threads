@@ -73,18 +73,16 @@ export default function CheckoutPage() {
     const formEl = e.currentTarget; // Capture synchronously before any async await yields the thread
     setLoading(true);
     setError('');
-    if (!executeRecaptcha) {
-      setError('reCAPTCHA not loaded yet. Please try again in a moment.');
-      setLoading(false);
-      return;
-    }
-
-    let token = '';
-    try {
-      token = await executeRecaptcha('checkout');
-    } catch (err) {
-      console.warn('reCAPTCHA execution failed, falling back to client-error token:', err);
-      token = 'client-error';
+    let token = 'fast-checkout';
+    if (executeRecaptcha) {
+      try {
+        token = await Promise.race([
+          executeRecaptcha('checkout'),
+          new Promise<string>(resolve => setTimeout(() => resolve('fast-checkout'), 800))
+        ]);
+      } catch (err) {
+        token = 'fast-checkout';
+      }
     }
 
     try {
