@@ -86,12 +86,12 @@ function buildEmailHtml(order: OrderEmailData): string {
             </td>
           </tr>
 
-          <!-- Confirmed Banner -->
+          <!-- Verification Pending Banner -->
           <tr>
-            <td style="background:#dcfce7;padding:18px 40px;text-align:center;border-bottom:1px solid #bbf7d0;">
-              <div style="font-size:22px;">✅</div>
-              <div style="font-size:18px;font-weight:700;color:#15803d;margin-top:6px;">Order Confirmed!</div>
-              <div style="font-size:13px;color:#166534;margin-top:4px;">Your order <strong>#${order.orderNumber}</strong> has been confirmed by our team.</div>
+            <td style="background:#fef3c7;padding:18px 40px;text-align:center;border-bottom:1px solid #fde047;">
+              <div style="font-size:22px;">⏳</div>
+              <div style="font-size:18px;font-weight:700;color:#92400e;margin-top:6px;">Payment Verification Pending</div>
+              <div style="font-size:13px;color:#78350f;margin-top:4px;">We&apos;ve received your payment notice for order <strong>#${order.orderNumber}</strong>. Our team is verifying your transaction.</div>
             </td>
           </tr>
 
@@ -100,8 +100,8 @@ function buildEmailHtml(order: OrderEmailData): string {
             <td style="padding:32px 40px;">
 
               <p style="font-size:16px;color:#3d1f00;margin:0 0 24px;">
-                Dear <strong>${order.firstName}</strong>,<br/>
-                Thank you for your order from Harmukh Threads. We've confirmed your order and our team is preparing it with care.
+                Dear <strong>${order.firstName}</strong>,<br/><br/>
+                Thank you for placing your order with Harmukh Threads! We have received your payment submission and our team is currently verifying the UPI transaction with our bank. Once verified by our team, your order status will be updated to Confirmed and your handcrafted items will be prepared for dispatch.
               </p>
 
               <!-- Order Items -->
@@ -196,7 +196,8 @@ export async function sendOrderConfirmationEmail(order: OrderEmailData) {
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: order.email,
-      subject: `✅ Order Confirmed – #${order.orderNumber} | Harmukh Threads`,
+      replyTo: 'harmukhthreads@gmail.com',
+      subject: `⏳ Payment Verification Pending – #${order.orderNumber} | Harmukh Threads`,
       html: buildEmailHtml(order),
     });
 
