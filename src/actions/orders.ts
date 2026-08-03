@@ -88,25 +88,45 @@ export async function createOrder(data: unknown) {
       console.error('Failed to send admin order notification email:', e);
     }
 
-    try {
-      const itemSummary = items.map(i => `  • ${i.name} ×${i.qty}`).join('\n');
-      await sendTelegramAlert(
-        `🛒 <b>NEW ORDER</b> #${orderNumber}\n` +
-        `👤 ${customerData.firstName} ${customerData.lastName}\n` +
-        `📞 ${customerData.phone}\n` +
-        `💰 ₹${subtotal.toLocaleString('en-IN')}\n\n` +
-        `${itemSummary}\n\n` +
-        `🔗 <a href="https://harmukhthreads.com/admin/orders">View in Admin</a>`
-      );
-    } catch (e) {
-      console.error('Failed to send Telegram alert:', e);
-    }
+    // Telegram alert intentionally NOT sent here.
+    // It fires only after the customer confirms payment by clicking
+    // "I've Paid" on the /orders/pay page — see pay/page.tsx.
 
     revalidatePath('/admin/orders');
     return { success: true, orderNumber: order.orderNumber, orderId: order.id };
   } catch (err: any) {
     console.error('Order creation critical error:', err);
     return { success: false, error: err.message || 'An unexpected error occurred while placing the order' };
+  }
+}
+
+// Called from /orders/pay when customer clicks "I've Paid — Notify via WhatsApp"
+export async function sendPaymentConfirmedAlert(orderNumber: string, amount: number) {
+  try {
+    // Fetch order details from DB to include customer name + items
+    const order = await db.order.findUnique({
+      where: { orderNumber },
+      include: { items: true },
+    });
+
+    const name  = order ? `${order.firstName} ${order.lastName}` : 'Customer';
+    const phone = order?.phone || 'N/A';
+    const itemSummary = order?.items.map(i => `  • ${i.name} ×${i.qty}`).join('\n') || '';
+    const total = amount || order?.total || 0;
+
+    await sendTelegramAlert(
+      `💰 <b>PAYMENT CONFIRMED</b> #${orderNumber}\n` +
+      `👤 ${name}\n` +
+      `📞 ${phone}\n` +
+      `💵 ₹${total.toLocaleString('en-IN')}\n\n` +
+      `${itemSummary}\n\n` +
+      `✅ Customer clicked "I've Paid" — verify UPI and confirm order.\n` +
+      `🔗 <a href="https://harmukhthreads.com/admin/orders">View in Admin</a>`
+    );
+    return { ok: true };
+  } catch (e) {
+    console.error('Failed to send payment confirmed Telegram alert:', e);
+    return { ok: false };
   }
 }
 
