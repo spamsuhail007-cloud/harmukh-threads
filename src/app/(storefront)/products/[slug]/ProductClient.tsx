@@ -8,6 +8,7 @@ import { useCart } from '@/components/providers/CartProvider';
 import { type Product, type Review } from '@prisma/client';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { EnquiryModal } from '@/components/ui/EnquiryModal';
+import { SizeGuideModal } from '@/components/ui/SizeGuideModal';
 
 type ProductClientProps = {
   product: Product & { reviews: Review[] };
@@ -143,6 +144,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
   const [mainIdx, setMainIdx] = useState(0);
   const [added, setAdded] = useState(false);
   const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const { add } = useCart();
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -317,6 +319,33 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
           {product.stock > 0 && product.stock <= 5 && (
             <p className="pdp-low-stock">⚡ Only {product.stock} left — order soon!</p>
           )}
+
+          {/* Visual Size & Room Fit Guide Trigger */}
+          <div style={{ marginBottom: 'var(--space-md)' }}>
+            <button
+              type="button"
+              onClick={() => setSizeGuideOpen(true)}
+              style={{
+                background: 'var(--surface-container-low)',
+                border: '1px solid var(--outline-variant)',
+                padding: '10px 16px',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--primary)',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                width: '100%',
+                justifyContent: 'center',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <span>📐</span>
+              <span>Need help with dimensions? Open Visual Size &amp; Room Fit Guide</span>
+            </button>
+          </div>
 
           {/* CTA */}
           {product.stock > 0 ? (
@@ -548,6 +577,12 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
           onClose={() => setEnquiryOpen(false)}
         />
       )}
+
+      {/* ── Visual Size & Room Fit Guide Modal ── */}
+      <SizeGuideModal
+        isOpen={sizeGuideOpen}
+        onClose={() => setSizeGuideOpen(false)}
+      />
     </div>
   );
 }
