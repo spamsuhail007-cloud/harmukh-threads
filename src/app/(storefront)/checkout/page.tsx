@@ -79,20 +79,9 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formEl = e.currentTarget; // Capture synchronously before any async await yields the thread
+    const formEl = e.currentTarget;
     setLoading(true);
     setError('');
-    let token = 'fast-checkout';
-    if (executeRecaptcha) {
-      try {
-        token = await Promise.race([
-          executeRecaptcha('checkout'),
-          new Promise<string>(resolve => setTimeout(() => resolve('fast-checkout'), 800))
-        ]);
-      } catch (err) {
-        token = 'fast-checkout';
-      }
-    }
 
     try {
       const fd = new FormData(formEl);
@@ -112,21 +101,19 @@ export default function CheckoutPage() {
           price: i.product.price,
           qty: i.qty,
         })),
-        token,
       };
 
       const res = await createOrder(data);
 
       if (res.success && res.orderNumber) {
         clear();
-        // Redirect to UPI payment page
         router.push(`/orders/pay?order=${res.orderNumber}&amount=${total}`);
       } else {
         setError(res.error || 'Failed to place order.');
+        setLoading(false);
       }
     } catch (err: any) {
       setError(err?.message || 'An error occurred placing your order. Please try again.');
-    } finally {
       setLoading(false);
     }
   }

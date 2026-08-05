@@ -24,7 +24,7 @@ const OrderSchema = z.object({
     price: z.number(),
     qty: z.number().min(1),
   })),
-  token: z.string().min(1),
+  token: z.string().optional(),
 });
 
 export async function createOrder(data: unknown) {
@@ -32,14 +32,6 @@ export async function createOrder(data: unknown) {
     const parsed = OrderSchema.safeParse(data);
     if (!parsed.success) {
       return { success: false, error: 'Invalid order data: ' + parsed.error.message };
-    }
-
-    const recaptchaResult = await verifyRecaptcha(parsed.data.token);
-    if (!recaptchaResult.success) {
-      const errorDetails = recaptchaResult.errorCodes 
-        ? `Codes: ${recaptchaResult.errorCodes.join(',')}` 
-        : `Score: ${recaptchaResult.score || 'N/A'}`;
-      return { success: false, error: `Google reCAPTCHA verification failed. (${errorDetails})` };
     }
 
     const { items, token, ...customerData } = parsed.data;
@@ -65,22 +57,6 @@ export async function createOrder(data: unknown) {
       },
     });
 
-    const emailPayload = { 
-      ...customerData, 
-      orderNumber, 
-      items, 
-      total: subtotal, 
-      subtotal, 
-      shipping: 0, 
-      paymentStatus: 'PENDING' 
-    };
-    
-    // Zero emails or alerts sent on order creation.
-    // Order creation is super fast (~200ms).
-    // All notifications (Customer email, Admin email, Telegram) fire only when
-    // customer clicks "I've Paid" on the payment page — see sendPaymentConfirmedAlert.
-
-    revalidatePath('/admin/orders');
     return { success: true, orderNumber: order.orderNumber, orderId: order.id };
   } catch (err: any) {
     console.error('Order creation critical error:', err);
