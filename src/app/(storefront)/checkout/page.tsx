@@ -1,19 +1,41 @@
 'use client';
+
 import { useState, FormEvent, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/components/providers/CartProvider';
 import { formatPrice } from '@/lib/utils';
 import { createOrder } from '@/actions/orders';
 import { saveAbandonedCart } from '@/actions/abandonedCarts';
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { INDIAN_STATES } from '@/data/indianLocations';
+
+type FieldErrors = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  state?: string;
+  city?: string;
+  pincode?: string;
+};
 
 export default function CheckoutPage() {
   const { items, total, clear } = useCart();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+  // Form states
+  const [selectedState, setSelectedState] = useState('Jammu & Kashmir');
+  const [selectedCity, setSelectedCity] = useState('Srinagar');
+  const [customCity, setCustomCity] = useState('');
+  const [phone, setPhone] = useState('');
+
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Get available cities for currently selected state
+  const availableCities = INDIAN_STATES.find(s => s.state === selectedState)?.cities || [];
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).fbq && items.length > 0) {
@@ -27,6 +49,21 @@ export default function CheckoutPage() {
     }
   }, []);
 
+  // Update default city when state changes
+  const handleStateChange = (stateName: string) => {
+    setSelectedState(stateName);
+    const newCities = INDIAN_STATES.find(s => s.state === stateName)?.cities || [];
+    setSelectedCity(newCities[0] || 'Other');
+    setCustomCity('');
+    if (fieldErrors.state) setFieldErrors(prev => ({ ...prev, state: undefined }));
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 10);
+    setPhone(digitsOnly);
+    if (fieldErrors.phone) setFieldErrors(prev => ({ ...prev, phone: undefined }));
+  };
+
   const triggerDebouncedAutoSave = () => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
@@ -36,12 +73,12 @@ export default function CheckoutPage() {
       const firstName = (fd.get('firstName') as string || '').trim();
       const lastName  = (fd.get('lastName') as string || '').trim();
       const email     = (fd.get('email') as string || '').trim();
-      const phone     = (fd.get('phone') as string || '').trim();
+      const rawPhone  = phone.trim();
       const address   = (fd.get('address') as string || '').trim();
-      const city      = (fd.get('city') as string || '').trim();
+      const effectiveCity = selectedCity === 'Other' ? customCity.trim() : selectedCity;
       const pincode   = (fd.get('pincode') as string || '').trim();
 
-      if (!phone && !email) return;
+      if (!rawPhone && !email) return;
 
       let sessionId = typeof window !== 'undefined' ? sessionStorage.getItem('ht_checkout_session') : null;
       if (!sessionId && typeof window !== 'undefined') {
@@ -54,9 +91,9 @@ export default function CheckoutPage() {
         firstName: firstName || 'Prospect',
         lastName,
         email,
-        phone,
-        address,
-        city,
+        phone: rawPhone ? `+91 ${rawPhone}` : '',
+        address: `${address}${selectedState ? `, ${selectedState}` : ''}`,
+        city: effectiveCity,
         pincode,
         items: items.map(i => ({
           name: i.product.name,
@@ -79,23 +116,89 @@ export default function CheckoutPage() {
     );
   }
 
+  const validateForm = (fd: FormData): FieldErrors => {
+    const errs: FieldErrors = {};
+    const firstName = (fd.get('firstName') as string || '').trim();
+    const lastName  = (fd.get('lastName') as string || '').trim();
+    const email     = (fd.get('email') as string || '').trim();
+    const address   = (fd.get('address') as string || '').trim();
+    const pincode   = (fd.get('pincode') as string || '').trim();
+    const effectiveCity = selectedCity === 'Other' ? customCity.trim() : selectedCity;
+
+    if (!firstName || firstName.length < 2) {
+      errs.firstName = 'Please enter a valid first name (at least 2 letters)';
+    }
+
+    if (!lastName || lastName.length < 1) {
+      errs.lastName = 'Please enter your last name';
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      errs.email = 'Please enter a valid email address (e.g. name@example.com)';
+    }
+
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phone || !phoneRegex.test(phone)) {
+      errs.phone = 'Please enter a valid 10-digit Indian mobile number (e.g. 8491006127)';
+    }
+
+    if (!address || address.length < 5) {
+      errs.address = 'Please enter a complete street address (at least 5 characters)';
+    }
+
+    if (!selectedState) {
+      errs.state = 'Please select your state';
+    }
+
+    if (!effectiveCity || effectiveCity.length < 2) {
+      errs.city = 'Please select or type your city name';
+    }
+
+    const pincodeRegex = /^\d{6}$/;
+    if (!pincode || !pincodeRegex.test(pincode)) {
+      errs.pincode = 'Please enter a valid 6-digit Indian PIN code';
+    }
+
+    return errs;
+  };
+
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     const formEl = e.currentTarget;
+    const fd = new FormData(formEl);
+
+    // Form validation check
+    const validationErrors = validateForm(fd);
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors);
+      setError('⚠️ Please fix the highlighted fields in the form to proceed.');
+      
+      // Scroll smoothly to first invalid field
+      const firstKey = Object.keys(validationErrors)[0];
+      const el = document.getElementById(firstKey);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.focus();
+      }
+      return;
+    }
+
+    setFieldErrors({});
     setLoading(true);
     setError('');
 
     try {
-      const fd = new FormData(formEl);
+      const effectiveCity = selectedCity === 'Other' ? customCity.trim() : selectedCity;
       const data = {
-        firstName: fd.get('firstName'),
-        lastName: fd.get('lastName'),
-        email: fd.get('email'),
-        phone: fd.get('phone'),
-        address: fd.get('address'),
-        city: fd.get('city'),
-        pincode: fd.get('pincode'),
+        firstName: (fd.get('firstName') as string).trim(),
+        lastName: (fd.get('lastName') as string).trim(),
+        email: (fd.get('email') as string).trim(),
+        phone: `+91${phone.trim()}`,
+        address: `${(fd.get('address') as string).trim()}, ${selectedState}`,
+        city: effectiveCity,
+        pincode: (fd.get('pincode') as string).trim(),
         paymentMethod: 'UPI',
         items: items.map(i => ({
           productId: i.product.id,
@@ -128,45 +231,220 @@ export default function CheckoutPage() {
         
         <div className="grid-checkout-layout">
           
-          <form onSubmit={handleSubmit} id="checkout-form" onChange={triggerDebouncedAutoSave}>
+          <form onSubmit={handleSubmit} id="checkout-form" onChange={triggerDebouncedAutoSave} noValidate>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-lg)' }}>Shipping Information</h2>
             
             <div className="form-row">
+              {/* First Name */}
               <div className="form-group">
-                <label className="form-label" htmlFor="firstName">First Name</label>
-                <input required type="text" id="firstName" name="firstName" className="form-input" />
+                <label className="form-label" htmlFor="firstName">First Name *</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  className={`form-input${fieldErrors.firstName ? ' input-error' : ''}`}
+                  placeholder="e.g. Rahul"
+                  onChange={() => {
+                    if (fieldErrors.firstName) setFieldErrors(prev => ({ ...prev, firstName: undefined }));
+                  }}
+                />
+                {fieldErrors.firstName && (
+                  <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '4px', fontWeight: 600 }}>
+                    ⚠️ {fieldErrors.firstName}
+                  </div>
+                )}
               </div>
+
+              {/* Last Name */}
               <div className="form-group">
-                <label className="form-label" htmlFor="lastName">Last Name</label>
-                <input required type="text" id="lastName" name="lastName" className="form-input" />
+                <label className="form-label" htmlFor="lastName">Last Name *</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  className={`form-input${fieldErrors.lastName ? ' input-error' : ''}`}
+                  placeholder="e.g. Sharma"
+                  onChange={() => {
+                    if (fieldErrors.lastName) setFieldErrors(prev => ({ ...prev, lastName: undefined }));
+                  }}
+                />
+                {fieldErrors.lastName && (
+                  <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '4px', fontWeight: 600 }}>
+                    ⚠️ {fieldErrors.lastName}
+                  </div>
+                )}
               </div>
             </div>
 
             <div className="form-row">
+              {/* Email */}
               <div className="form-group">
-                <label className="form-label" htmlFor="email">Email</label>
-                <input required type="email" id="email" name="email" className="form-input" />
+                <label className="form-label" htmlFor="email">Email Address *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className={`form-input${fieldErrors.email ? ' input-error' : ''}`}
+                  placeholder="you@example.com"
+                  onChange={() => {
+                    if (fieldErrors.email) setFieldErrors(prev => ({ ...prev, email: undefined }));
+                  }}
+                />
+                {fieldErrors.email && (
+                  <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '4px', fontWeight: 600 }}>
+                    ⚠️ {fieldErrors.email}
+                  </div>
+                )}
               </div>
+
+              {/* Phone Number with +91 Badge */}
               <div className="form-group">
-                <label className="form-label" htmlFor="phone">Phone</label>
-                <input required type="tel" id="phone" name="phone" className="form-input" />
+                <label className="form-label" htmlFor="phone">Phone Number (WhatsApp) *</label>
+                <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                  <div style={{
+                    background: 'var(--surface-container-high)',
+                    border: `1px solid ${fieldErrors.phone ? '#dc2626' : 'var(--outline-variant)'}`,
+                    borderRight: 'none',
+                    borderTopLeftRadius: 'var(--radius-sm)',
+                    borderBottomLeftRadius: 'var(--radius-sm)',
+                    padding: '0 12px',
+                    height: '46px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '0.9rem',
+                    fontWeight: 700,
+                    color: 'var(--on-surface)',
+                    flexShrink: 0
+                  }}>
+                    <span>🇮🇳</span>
+                    <span>+91</span>
+                  </div>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    className={`form-input${fieldErrors.phone ? ' input-error' : ''}`}
+                    placeholder="9876543210"
+                    maxLength={10}
+                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0, height: '46px' }}
+                  />
+                </div>
+                {fieldErrors.phone && (
+                  <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '4px', fontWeight: 600 }}>
+                    ⚠️ {fieldErrors.phone}
+                  </div>
+                )}
               </div>
             </div>
 
+            {/* Address */}
             <div className="form-group">
-              <label className="form-label" htmlFor="address">Address</label>
-              <input required type="text" id="address" name="address" className="form-input" />
+              <label className="form-label" htmlFor="address">Street Address / House No. / Landmark *</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                className={`form-input${fieldErrors.address ? ' input-error' : ''}`}
+                placeholder="e.g. House No. 42, Malabagh, Near Naseem Bagh"
+                onChange={() => {
+                  if (fieldErrors.address) setFieldErrors(prev => ({ ...prev, address: undefined }));
+                }}
+              />
+              {fieldErrors.address && (
+                <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '4px', fontWeight: 600 }}>
+                  ⚠️ {fieldErrors.address}
+                </div>
+              )}
             </div>
 
+            {/* State & City Dropdowns */}
             <div className="form-row">
+              {/* State Dropdown */}
               <div className="form-group">
-                <label className="form-label" htmlFor="city">City</label>
-                <input required type="text" id="city" name="city" className="form-input" />
+                <label className="form-label" htmlFor="state">State / UT *</label>
+                <select
+                  id="state"
+                  name="state"
+                  value={selectedState}
+                  onChange={(e) => handleStateChange(e.target.value)}
+                  className={`form-select${fieldErrors.state ? ' input-error' : ''}`}
+                  style={{ height: '46px' }}
+                >
+                  {INDIAN_STATES.map(s => (
+                    <option key={s.state} value={s.state}>{s.state}</option>
+                  ))}
+                </select>
+                {fieldErrors.state && (
+                  <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '4px', fontWeight: 600 }}>
+                    ⚠️ {fieldErrors.state}
+                  </div>
+                )}
               </div>
+
+              {/* City Dropdown */}
               <div className="form-group">
-                <label className="form-label" htmlFor="pincode">Pincode</label>
-                <input required type="text" id="pincode" name="pincode" className="form-input" />
+                <label className="form-label" htmlFor="city">City / District *</label>
+                <select
+                  id="city"
+                  name="city"
+                  value={selectedCity}
+                  onChange={(e) => {
+                    setSelectedCity(e.target.value);
+                    if (fieldErrors.city) setFieldErrors(prev => ({ ...prev, city: undefined }));
+                  }}
+                  className={`form-select${fieldErrors.city ? ' input-error' : ''}`}
+                  style={{ height: '46px' }}
+                >
+                  {availableCities.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                  <option value="Other">Other City...</option>
+                </select>
+                {fieldErrors.city && (
+                  <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '4px', fontWeight: 600 }}>
+                    ⚠️ {fieldErrors.city}
+                  </div>
+                )}
               </div>
+            </div>
+
+            {/* Custom City input if Other selected */}
+            {selectedCity === 'Other' && (
+              <div className="form-group" style={{ marginTop: '-8px', marginBottom: 'var(--space-md)' }}>
+                <label className="form-label" htmlFor="customCity">Type Your City Name *</label>
+                <input
+                  type="text"
+                  id="customCity"
+                  value={customCity}
+                  onChange={(e) => setCustomCity(e.target.value)}
+                  className="form-input"
+                  placeholder="Enter your city/town name"
+                />
+              </div>
+            )}
+
+            {/* Pincode */}
+            <div className="form-group">
+              <label className="form-label" htmlFor="pincode">PIN Code (6 digits) *</label>
+              <input
+                type="text"
+                id="pincode"
+                name="pincode"
+                maxLength={6}
+                className={`form-input${fieldErrors.pincode ? ' input-error' : ''}`}
+                placeholder="e.g. 190006"
+                onChange={() => {
+                  if (fieldErrors.pincode) setFieldErrors(prev => ({ ...prev, pincode: undefined }));
+                }}
+              />
+              {fieldErrors.pincode && (
+                <div style={{ color: '#dc2626', fontSize: '0.78rem', marginTop: '4px', fontWeight: 600 }}>
+                  ⚠️ {fieldErrors.pincode}
+                </div>
+              )}
             </div>
 
             {/* Payment info banner */}
@@ -183,14 +461,28 @@ export default function CheckoutPage() {
               <div>
                 <div style={{ fontWeight: 700, marginBottom: '4px', color: '#713f12' }}>Pay via UPI after placing order</div>
                 <div style={{ fontSize: '0.85rem', color: '#92400e', lineHeight: 1.6 }}>
-                  After submitting your details, you'll be taken to a secure UPI payment page.
+                  After submitting your details, you&apos;ll be taken to a secure UPI payment page.
                   Pay with any UPI app — Google Pay, PhonePe, Paytm, or your bank app.
                   Your order will be confirmed once payment is verified.
                 </div>
               </div>
             </div>
 
-            {error && <div className="form-error" style={{ marginBottom: 'var(--space-md)' }}>{error}</div>}
+            {/* Form Error Banner */}
+            {error && (
+              <div className="form-error" style={{
+                marginBottom: 'var(--space-md)',
+                padding: '12px 16px',
+                background: '#fee2e2',
+                border: '1px solid #fca5a5',
+                color: '#991b1b',
+                borderRadius: 'var(--radius-sm)',
+                fontWeight: 600,
+                fontSize: '0.9rem'
+              }}>
+                {error}
+              </div>
+            )}
 
             <button
               type="submit"
@@ -202,9 +494,6 @@ export default function CheckoutPage() {
             </button>
             <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'var(--on-surface-variant)', marginTop: '10px' }}>
               🔒 Your information is secure and encrypted
-            </p>
-            <p style={{ fontSize: '11px', color: '#a08060', textAlign: 'center', marginTop: '16px', lineHeight: '1.4' }}>
-              This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'underline'}}>Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'underline'}}>Terms of Service</a> apply.
             </p>
           </form>
 
