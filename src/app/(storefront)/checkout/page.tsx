@@ -1,5 +1,5 @@
 'use client';
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/components/providers/CartProvider';
 import { formatPrice } from '@/lib/utils';
@@ -13,6 +13,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).fbq && items.length > 0) {
@@ -26,45 +27,46 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  const handleAutoSave = () => {
-    const formEl = document.getElementById('checkout-form') as HTMLFormElement | null;
-    if (!formEl) return;
-    const fd = new FormData(formEl);
-    const firstName = (fd.get('firstName') as string || '').trim();
-    const lastName  = (fd.get('lastName') as string || '').trim();
-    const email     = (fd.get('email') as string || '').trim();
-    const phone     = (fd.get('phone') as string || '').trim();
-    const address   = (fd.get('address') as string || '').trim();
-    const city      = (fd.get('city') as string || '').trim();
-    const pincode   = (fd.get('pincode') as string || '').trim();
+  const triggerDebouncedAutoSave = () => {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      const formEl = document.getElementById('checkout-form') as HTMLFormElement | null;
+      if (!formEl) return;
+      const fd = new FormData(formEl);
+      const firstName = (fd.get('firstName') as string || '').trim();
+      const lastName  = (fd.get('lastName') as string || '').trim();
+      const email     = (fd.get('email') as string || '').trim();
+      const phone     = (fd.get('phone') as string || '').trim();
+      const address   = (fd.get('address') as string || '').trim();
+      const city      = (fd.get('city') as string || '').trim();
+      const pincode   = (fd.get('pincode') as string || '').trim();
 
-    // Only save when customer has entered at least a phone number or email address
-    if (!phone && !email) return;
+      if (!phone && !email) return;
 
-    // Retrieve or create a single session ID for this browser checkout
-    let sessionId = typeof window !== 'undefined' ? sessionStorage.getItem('ht_checkout_session') : null;
-    if (!sessionId && typeof window !== 'undefined') {
-      sessionId = `ac_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-      sessionStorage.setItem('ht_checkout_session', sessionId);
-    }
+      let sessionId = typeof window !== 'undefined' ? sessionStorage.getItem('ht_checkout_session') : null;
+      if (!sessionId && typeof window !== 'undefined') {
+        sessionId = `ac_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+        sessionStorage.setItem('ht_checkout_session', sessionId);
+      }
 
-    saveAbandonedCart({
-      sessionId: sessionId || undefined,
-      firstName: firstName || 'Prospect',
-      lastName,
-      email,
-      phone,
-      address,
-      city,
-      pincode,
-      items: items.map(i => ({
-        name: i.product.name,
-        image: i.product.images[0],
-        price: i.product.price,
-        qty: i.qty,
-      })),
-      total,
-    }).catch(err => console.error('Failed to auto-save abandoned cart lead:', err));
+      saveAbandonedCart({
+        sessionId: sessionId || undefined,
+        firstName: firstName || 'Prospect',
+        lastName,
+        email,
+        phone,
+        address,
+        city,
+        pincode,
+        items: items.map(i => ({
+          name: i.product.name,
+          image: i.product.images[0],
+          price: i.product.price,
+          qty: i.qty,
+        })),
+        total,
+      }).catch(err => console.error('Failed to auto-save abandoned cart lead:', err));
+    }, 2000);
   };
 
   if (items.length === 0) {
@@ -79,6 +81,7 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     const formEl = e.currentTarget;
     setLoading(true);
     setError('');
@@ -125,44 +128,44 @@ export default function CheckoutPage() {
         
         <div className="grid-checkout-layout">
           
-          <form onSubmit={handleSubmit} id="checkout-form" onChange={handleAutoSave}>
+          <form onSubmit={handleSubmit} id="checkout-form" onChange={triggerDebouncedAutoSave}>
             <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: 'var(--space-lg)' }}>Shipping Information</h2>
             
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="firstName">First Name</label>
-                <input required type="text" id="firstName" name="firstName" className="form-input" onBlur={handleAutoSave} />
+                <input required type="text" id="firstName" name="firstName" className="form-input" />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="lastName">Last Name</label>
-                <input required type="text" id="lastName" name="lastName" className="form-input" onBlur={handleAutoSave} />
+                <input required type="text" id="lastName" name="lastName" className="form-input" />
               </div>
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="email">Email</label>
-                <input required type="email" id="email" name="email" className="form-input" onBlur={handleAutoSave} />
+                <input required type="email" id="email" name="email" className="form-input" />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="phone">Phone</label>
-                <input required type="tel" id="phone" name="phone" className="form-input" onBlur={handleAutoSave} />
+                <input required type="tel" id="phone" name="phone" className="form-input" />
               </div>
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="address">Address</label>
-              <input required type="text" id="address" name="address" className="form-input" onBlur={handleAutoSave} />
+              <input required type="text" id="address" name="address" className="form-input" />
             </div>
 
             <div className="form-row">
               <div className="form-group">
                 <label className="form-label" htmlFor="city">City</label>
-                <input required type="text" id="city" name="city" className="form-input" onBlur={handleAutoSave} />
+                <input required type="text" id="city" name="city" className="form-input" />
               </div>
               <div className="form-group">
                 <label className="form-label" htmlFor="pincode">Pincode</label>
-                <input required type="text" id="pincode" name="pincode" className="form-input" onBlur={handleAutoSave} />
+                <input required type="text" id="pincode" name="pincode" className="form-input" />
               </div>
             </div>
 
