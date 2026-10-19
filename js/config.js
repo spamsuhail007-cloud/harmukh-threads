@@ -13,13 +13,14 @@ window.HT_CONFIG = (() => {
     apiUrl: 'http://localhost:6100',
     merchantKey: '00000000-0000-0000-0000-000000000001',
     merchantName: 'Harmukh Threads',
-    merchantVpa: 'sofisuhail007@ibl',
+    merchantVpa: '9796381311@axl',
     currency: 'INR',
     whatsappOtpEnabled: true,
     codEnabled: false, // Strict: COD is completely disabled
     simulationMode: false,
     upiAccounts: [
-      { id: 'acc_1', upiId: 'sofisuhail007@ibl', payeeName: 'Harmukh Threads', isActive: true }
+      { id: 'acc_1', upiId: '9796381311@axl', payeeName: 'Harmukh Threads', isActive: true },
+      { id: 'acc_2', upiId: 'sofisuhail007@ibl', payeeName: 'Harmukh Threads (Backup)', isActive: false }
     ]
   };
 
@@ -29,6 +30,10 @@ window.HT_CONFIG = (() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       current = { ...current, ...JSON.parse(saved) };
+      // Migrate old default if needed
+      if (current.merchantVpa === 'sofisuhail007@ibl') {
+        current.merchantVpa = '9796381311@axl';
+      }
       // Ensure COD stays disabled even if old config had it true
       current.codEnabled = false;
     }

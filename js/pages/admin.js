@@ -351,7 +351,7 @@ Need help? We're happy to assist!`);
     <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:var(--space-lg);margin-bottom:var(--space-2xl);">
       <div style="background:var(--surface-container-lowest);border:1px solid var(--outline-variant);border-radius:var(--radius-md);padding:var(--space-lg);box-shadow:var(--shadow-ambient);">
         <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--secondary);margin-bottom:6px;">Active Receiving VPA</div>
-        <div id="active-vpa-display" style="font-family:monospace;font-size:1.15rem;font-weight:700;color:var(--primary);">sofisuhail007@ibl</div>
+        <div id="active-vpa-display" style="font-family:monospace;font-size:1.15rem;font-weight:700;color:var(--primary);">9796381311@axl</div>
         <div style="font-size:0.75rem;color:var(--on-surface-variant);margin-top:6px;">Direct NPCI settlement to merchant account</div>
       </div>
 
@@ -386,7 +386,7 @@ Need help? We're happy to assist!`);
         <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--space-md);align-items:flex-end;">
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" for="edit-upi-vpa">Receiving UPI ID (VPA)</label>
-            <input class="form-input" id="edit-upi-vpa" type="text" placeholder="sofisuhail007@ibl" style="font-family:monospace;font-weight:600;">
+            <input class="form-input" id="edit-upi-vpa" type="text" placeholder="9796381311@axl" style="font-family:monospace;font-weight:600;">
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" for="edit-upi-payee">Payee / Account Name</label>
@@ -509,12 +509,12 @@ Need help? We're happy to assist!`);
     // ── UPI Accounts Management Logic ────────────────────────
     function renderUpiAccounts() {
       const cfg = window.HT_CONFIG ? window.HT_CONFIG.get() : {
-        merchantVpa: 'sofisuhail007@ibl',
+        merchantVpa: '9796381311@axl',
         merchantName: 'Harmukh Threads',
-        upiAccounts: [{ id: 'acc_1', upiId: 'sofisuhail007@ibl', payeeName: 'Harmukh Threads', isActive: true }]
+        upiAccounts: [{ id: 'acc_1', upiId: '9796381311@axl', payeeName: 'Harmukh Threads', isActive: true }]
       };
 
-      const activeVpa = cfg.merchantVpa || 'sofisuhail007@ibl';
+      const activeVpa = cfg.merchantVpa || '9796381311@axl';
       const accounts = (cfg.upiAccounts && cfg.upiAccounts.length > 0)
         ? cfg.upiAccounts
         : [{ id: 'acc_1', upiId: activeVpa, payeeName: cfg.merchantName || 'Harmukh Threads', isActive: true }];
@@ -570,7 +570,7 @@ Need help? We're happy to assist!`);
         const payee = (payeeInput?.value || '').trim() || 'Harmukh Threads';
 
         if (!vpa || !vpa.includes('@')) {
-          if (feedback) feedback.innerHTML = '<span style="color:var(--error);font-weight:600;">⚠️ Invalid UPI ID format. Expected format: username@bank (e.g. sofisuhail007@ibl)</span>';
+          if (feedback) feedback.innerHTML = '<span style="color:var(--error);font-weight:600;">⚠️ Invalid UPI ID format. Expected format: username@bank (e.g. 9796381311@axl)</span>';
           return;
         }
 

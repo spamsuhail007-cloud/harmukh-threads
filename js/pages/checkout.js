@@ -2,7 +2,7 @@
    PAGE: Checkout — Harmukh Threads × YouPI PG Sovereign Gateway
    Features:
      • YouPI PG V2 Universal Integration (Instant Prepaid UPI)
-     • Receiving UPI ID: sofisuhail007@ibl (Direct-to-bank settlement)
+     • Receiving UPI ID: 9796381311@axl (Direct-to-bank settlement)
      • COD is strictly disabled
      • Dynamic vector SVG QR codes, 1-tap mobile deep links (GPay, PhonePe, Paytm, CRED)
      • WhatsApp pre-checkout verification
@@ -20,10 +20,10 @@ Router.register('checkout', () => {
     apiUrl: 'http://localhost:6100',
     merchantKey: '00000000-0000-0000-0000-000000000001',
     merchantName: 'Harmukh Threads',
-    merchantVpa: 'sofisuhail007@ibl'
+    merchantVpa: '9796381311@axl'
   };
 
-  const currentVpa = config.merchantVpa || 'sofisuhail007@ibl';
+  const currentVpa = config.merchantVpa || '9796381311@axl';
 
   const page = document.createElement('div');
   page.style.cssText = 'padding:var(--space-2xl) 0;background:var(--surface-container-low);min-height:80vh;';
