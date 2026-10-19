@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useCallback, useEffect, Suspense } from 'react';
 import { formatPrice } from '@/lib/utils';
-import { sendPaymentConfirmedAlert } from '@/actions/orders';
+import { sendPaymentConfirmedAlert, getYoupiCheckoutUrl } from '@/actions/orders';
 
 // ─── UPI config ───────────────────────────────────────────────────────────
 const UPI_ID = '9796381311@axl';
@@ -45,6 +45,15 @@ function PayContent() {
       if (!orderNumber || !amount) return;
       try {
         setGatewayLoading(true);
+        // 1. Try server-side action (zero CORS issues)
+        const url = await getYoupiCheckoutUrl(orderNumber, amount);
+        if (cancelled) return;
+        if (url) {
+          setCheckoutUrl(url);
+          return;
+        }
+
+        // 2. Direct client fallback
         const res = await fetch(`${GATEWAY_BASE}/api/v1/payments`, {
           method: 'POST',
           headers: {

@@ -196,3 +196,34 @@ export async function markOrdersAsRead() {
     data: { isRead: true },
   });
 }
+
+export async function getYoupiCheckoutUrl(orderNumber: string, amount: number) {
+  try {
+    const res = await fetch('https://harmukh-pay.onrender.com/api/v1/payments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Merchant-Id': '00000000-0000-0000-0000-000000000001'
+      },
+      body: JSON.stringify({
+        orderId: orderNumber,
+        amount: amount,
+        currency: 'INR',
+        description: `Harmukh Order #${orderNumber}`
+      }),
+      cache: 'no-store'
+    });
+
+    if (!res.ok) {
+      console.error('YouPI payment creation failed:', res.status, await res.text());
+      return null;
+    }
+
+    const data = await res.json();
+    return data.checkoutUrl || (data.paymentId ? `https://harmukh-pay.onrender.com/checkout/${data.paymentId}` : null);
+  } catch (err: any) {
+    console.error('YouPI gateway server action error:', err.message);
+    return null;
+  }
+}
+
