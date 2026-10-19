@@ -6,7 +6,7 @@ import { formatPrice } from '@/lib/utils';
 import { sendPaymentConfirmedAlert } from '@/actions/orders';
 
 // ─── UPI config from env ───────────────────────────────────────────────────
-const UPI_ID = process.env.NEXT_PUBLIC_UPI_ID || 'yourname@upi';
+const UPI_ID = process.env.NEXT_PUBLIC_UPI_ID || '9796381311@axl';
 const UPI_NAME = process.env.NEXT_PUBLIC_UPI_NAME || 'Harmukh Threads';
 const WHATSAPP_NUMBER = '918491006127';
 
