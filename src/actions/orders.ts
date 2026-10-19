@@ -199,6 +199,18 @@ export async function markOrdersAsRead() {
 
 export async function getYoupiCheckoutUrl(orderNumber: string, amount: number) {
   try {
+    const order = await db.order.findUnique({
+      where: { orderNumber },
+      select: { firstName: true, lastName: true, email: true, phone: true }
+    });
+
+    const cleanPhone = order?.phone?.replace(/[^0-9]/g, '').slice(-10) || '9796381311';
+    const customer = order ? {
+      name: `${order.firstName} ${order.lastName}`.trim() || 'Harmukh Customer',
+      email: order.email || 'orders@harmukhthreads.com',
+      mobileNumber: cleanPhone
+    } : undefined;
+
     const res = await fetch('https://harmukh-pay.onrender.com/api/v1/payments', {
       method: 'POST',
       headers: {
@@ -209,7 +221,9 @@ export async function getYoupiCheckoutUrl(orderNumber: string, amount: number) {
         orderId: orderNumber,
         amount: amount,
         currency: 'INR',
-        description: `Harmukh Order #${orderNumber}`
+        description: `Harmukh Order #${orderNumber}`,
+        autoActivate: true,
+        customer
       }),
       cache: 'no-store'
     });
