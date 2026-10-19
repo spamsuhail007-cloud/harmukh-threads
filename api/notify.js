@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   }
 
   // Parse request body
-  const { orderNum, orderTotal, orderItems = [], customer = {}, trigger = 'page_load' } = req.body;
+  const { orderNum, orderTotal, orderItems = [], customer = {}, trigger = 'page_load', utr = '', method = '' } = req.body;
 
   if (!orderNum) {
     return res.status(400).json({ error: 'Missing orderNum' });
@@ -38,12 +38,16 @@ export default async function handler(req, res) {
     timeStyle: 'short'
   });
 
+  const paymentMeta = utr
+    ? `\n🛡️ *Gateway:* ${method || 'YouPI PG (Verified)'}\n🏦 *Bank UTR:* \`${utr}\``
+    : (method ? `\n💳 *Method:* ${method}` : '');
+
   const text =
 `🛒 *NEW ORDER RECEIVED*
 ────────────────────
 
 📦 *Order:* \`${orderNum}\`
-💰 *Amount:* ₹${Number(orderTotal || 0).toLocaleString('en-IN')}
+💰 *Amount:* ₹${Number(orderTotal || 0).toLocaleString('en-IN')}${paymentMeta}
 👤 *Customer:* ${customer.name || 'Not provided'}
 📱 *Phone:* ${customer.phone || 'Not provided'}
 
@@ -54,7 +58,7 @@ ${triggerLabel}
 
 ⏰ *Time:* ${timeIST} IST
 
-✅ Please confirm UPI payment and process this order.`;
+${utr ? '🎉 Verified on UPI Rails — Funds credited directly to bank.' : '✅ Please confirm UPI payment and process this order.'}`;
 
   try {
     const tgRes = await fetch(

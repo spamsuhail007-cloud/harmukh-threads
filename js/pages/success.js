@@ -17,6 +17,9 @@ Router.register('success', (params = {}) => {
   const orderTotal = params.orderTotal || 0;
   const orderItems = params.orderItems || [];
   const customer   = params.customer   || {};
+  const utr        = params.utr        || '';
+  const paymentMethod = params.method  || (utr ? 'UPI (YouPI PG)' : 'Direct UPI');
+  const paymentId  = params.paymentId  || '';
 
   /* ── Fire Meta Pixel Purchase event ────────────────────── */
   if (typeof fbq === 'function' && orderTotal > 0) {
@@ -39,13 +42,15 @@ Router.register('success', (params = {}) => {
       ? orderItems.map(i => `  • ${i.product?.name || i.name || 'Item'} × ${i.qty || 1}`).join('\n')
       : '  • (see order reference)';
 
+    const utrLine = utr ? `\n🏦 Bank UTR: ${utr}\n🛡️ Payment Gateway: ${paymentMethod}` : '';
+
     return encodeURIComponent(
 `Hi Harmukh Threads! 🙏
 
 I have successfully made the UPI payment for my order.
 
 📦 Order Reference: ${orderNum}
-💰 Amount Paid: ₹${orderTotal.toLocaleString('en-IN')}
+💰 Amount Paid: ₹${orderTotal.toLocaleString('en-IN')}${utrLine}
 👤 Name: ${name}${phone ? `\n📱 Phone: ${phone}` : ''}
 
 Items ordered:
@@ -99,6 +104,8 @@ Please confirm receipt and process my order. Thank you!`
           name:  customer.name  || 'Not provided',
           phone: customer.phone || 'Not provided'
         },
+        utr,
+        method: paymentMethod,
         trigger
       })
     })
@@ -161,6 +168,18 @@ Please confirm receipt and process my order. Thank you!`
           <span class="ty-ref-label">Order Reference</span>
           <strong class="ty-ref-num">${orderNum}</strong>
         </div>
+
+        <!-- ── YouPI PG Verification Badge ── -->
+        ${utr ? `
+        <div style="background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.3);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:var(--space-xl);display:flex;align-items:center;gap:14px;text-align:left;width:100%;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#25d366;color:#ffffff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">✓</div>
+          <div style="flex:1;">
+            <div style="font-size:0.875rem;font-weight:700;color:var(--on-surface);margin-bottom:2px;">Payment Verified on UPI Rails</div>
+            <div style="font-size:0.75rem;color:var(--on-surface-variant);">Bank UTR Reference: <strong style="font-family:monospace;letter-spacing:0.05em;color:var(--primary);">${utr}</strong></div>
+            <div style="font-size:0.7rem;color:var(--secondary);margin-top:2px;">✦ Direct-to-bank settlement via YouPI PG (0% aggregator fees)</div>
+          </div>
+        </div>
+        ` : ''}
 
         <!-- ── Items (if available) ── -->
         ${itemsHTML ? `

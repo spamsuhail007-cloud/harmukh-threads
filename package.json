@@ -1,8 +1,19 @@
 {
   "name": "harmukh-threads-prototype",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
+    "start": "npx serve -l 3000 .",
+    "dev:app": "npx serve -l 3000 .",
+    "gateway:clone": "git clone https://github.com/youpi-pg/YouPI-PG.git youpi-gateway",
+    "gateway:install": "npm --prefix youpi-gateway install",
+    "gateway:setup": "npm --prefix youpi-gateway run db:setup",
+    "gateway:dev": "npm --prefix youpi-gateway run dev",
+    "gateway:start": "npm --prefix youpi-gateway run start",
+    "gateway:test": "npm --prefix youpi-gateway test",
+    "test:webhook": "node scripts/test-webhook.js",
+    "test:unit": "node scripts/test-webhook-unit.mjs",
     "build": "echo 'No build step required'",
     "vercel-build": "echo 'No build step required'"
   }

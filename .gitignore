@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+youpi-gateway/node_modules/
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+youpi-gateway/.env
+
+# Database & SQLite files
+youpi-gateway/data/
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# Build & Logs
+dist/
+build/
+youpi-gateway/dist/
+youpi-gateway/logs/
+*.log
+npm-debug.log*
+
+# Vercel & IDE
+.vercel/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+youpi-gateway/
