@@ -1,17 +1,17 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useCallback, Suspense } from 'react';
+import { useState, useCallback, useEffect, Suspense } from 'react';
 import { formatPrice } from '@/lib/utils';
 import { sendPaymentConfirmedAlert } from '@/actions/orders';
 
-// ─── UPI config from env ───────────────────────────────────────────────────
+// ─── UPI config ───────────────────────────────────────────────────────────
 const UPI_ID = '9796381311@axl';
-const UPI_NAME = process.env.NEXT_PUBLIC_UPI_NAME || 'Harmukh Threads';
+const UPI_NAME = 'Harmukh Threads';
 const WHATSAPP_NUMBER = '918491006127';
+const GATEWAY_BASE = 'https://harmukh-pay.onrender.com';
 
 function buildUpiUrl(amountRupees: number, orderNumber: string) {
-  // Prices are stored as plain rupees (integer). UPI spec requires amount in rupees with 2 decimal places.
   const amountStr = amountRupees.toFixed(2);
   const note = `HT-${orderNumber}`;
   return `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_NAME)}&am=${amountStr}&cu=INR&tn=${encodeURIComponent(note)}`;
@@ -33,7 +33,63 @@ function PayContent() {
   const orderNumber = params.get('order') || '';
   const amount = Number(params.get('amount') || 0);
   const [notifying, setNotifying] = useState(false);
-  const [notified, setNotified]   = useState(false);
+  const [notified, setNotified] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [gatewayLoading, setGatewayLoading] = useState(true);
+  const [showManual, setShowManual] = useState(false);
+
+  // Initialize YouPI Payment Session
+  useEffect(() => {
+    let cancelled = false;
+    async function initYoupiSession() {
+      if (!orderNumber || !amount) return;
+      try {
+        setGatewayLoading(true);
+        const res = await fetch(`${GATEWAY_BASE}/api/v1/payments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Merchant-Id': '00000000-0000-0000-0000-000000000001'
+          },
+          body: JSON.stringify({
+            orderId: orderNumber,
+            amount: amount,
+            currency: 'INR',
+            description: `Harmukh Order #${orderNumber}`
+          })
+        });
+        if (cancelled) return;
+        if (res.ok) {
+          const data = await res.json();
+          if (data.checkoutUrl) {
+            setCheckoutUrl(data.checkoutUrl);
+          } else if (data.paymentId) {
+            setCheckoutUrl(`${GATEWAY_BASE}/checkout/${data.paymentId}`);
+          }
+        }
+      } catch (err) {
+        console.warn('YouPI Gateway connection notice:', err);
+      } finally {
+        if (!cancelled) setGatewayLoading(false);
+      }
+    }
+    initYoupiSession();
+    return () => { cancelled = true; };
+  }, [orderNumber, amount]);
+
+  // Listen for YouPI postMessage verification events
+  useEffect(() => {
+    function handleGatewayMessage(event: MessageEvent) {
+      if (typeof event.data !== 'object' || !event.data) return;
+      const evName = event.data.event;
+      if (evName === 'youpi.payment_success' || evName === 'youpi.payment_successful' || evName === 'youpi.success') {
+        sendPaymentConfirmedAlert(orderNumber, amount).catch(() => {});
+        router.push(`/orders/success?order=${orderNumber}&amount=${amount}`);
+      }
+    }
+    window.addEventListener('message', handleGatewayMessage);
+    return () => window.removeEventListener('message', handleGatewayMessage);
+  }, [orderNumber, amount, router]);
 
   const upiUrl = buildUpiUrl(amount, orderNumber);
   const qrUrl = buildQrUrl(upiUrl);
@@ -97,122 +153,173 @@ function PayContent() {
           </div>
         </div>
 
-        {/* QR + Pay Now card */}
-        <div style={{
-          background: '#fff', borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-xl)', marginBottom: 'var(--space-lg)',
-          boxShadow: '0 4px 24px rgba(0,0,0,0.08)', textAlign: 'center'
-        }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 'var(--space-md)' }}>
-            Scan with any UPI app
-          </div>
-
-          {/* QR Code */}
+        {/* YouPI Autonomous Gateway Frame */}
+        {checkoutUrl ? (
           <div style={{
-            display: 'inline-block', padding: '12px',
-            border: '2px solid var(--outline-variant)',
-            borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-md)',
-            background: '#fef9f5'
+            background: '#fff', borderRadius: 'var(--radius-lg)',
+            overflow: 'hidden', marginBottom: 'var(--space-lg)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.12)', border: '1px solid var(--outline-variant)'
           }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={qrUrl}
-              alt="UPI QR Code"
-              width={200}
-              height={200}
-              style={{ display: 'block' }}
+            <iframe
+              src={checkoutUrl}
+              title="YouPI Secure Checkout"
+              style={{
+                width: '100%',
+                height: '680px',
+                border: 'none',
+                display: 'block'
+              }}
             />
           </div>
-
-          {/* UPI ID */}
-          <div style={{ marginBottom: 'var(--space-md)' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginBottom: '4px' }}>UPI ID</div>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              background: 'var(--surface-container-low)', padding: '8px 16px',
-              borderRadius: '99px', fontWeight: 700, fontFamily: 'monospace', fontSize: '1rem'
-            }}>
-              {UPI_ID}
-              <button
-                onClick={() => navigator.clipboard.writeText(UPI_ID)}
-                title="Copy UPI ID"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--primary)' }}
-              >📋</button>
-            </div>
+        ) : gatewayLoading ? (
+          <div style={{
+            background: '#fff', borderRadius: 'var(--radius-lg)',
+            padding: 'var(--space-2xl)', marginBottom: 'var(--space-lg)',
+            textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)'
+          }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>⏳</div>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', marginBottom: '0.5rem' }}>
+              Initializing Secure YouPI Gateway...
+            </h3>
+            <p style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem' }}>
+              Connecting to Harmukh Autonomous Cloud Engine (0% Fee UPI)
+            </p>
           </div>
+        ) : null}
 
-          {/* Deep link for mobile */}
-          <a
-            href={upiUrl}
+        {/* Manual Fallback Toggle */}
+        <div style={{ textAlign: 'center', marginBottom: 'var(--space-md)' }}>
+          <button
+            onClick={() => setShowManual(prev => !prev)}
             style={{
-              display: 'block', padding: '14px',
-              background: 'var(--primary)', color: 'var(--on-primary)',
-              borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: '1.05rem',
-              textDecoration: 'none', marginBottom: '10px',
-              transition: 'opacity 0.2s'
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: 'var(--primary)', fontSize: '0.85rem', textDecoration: 'underline'
             }}
           >
-            📱 Open UPI App to Pay
-          </a>
-          <p style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)' }}>
-            Tap above on your phone to auto-open your UPI app with the amount pre-filled
-          </p>
+            {showManual ? '▲ Hide Direct UPI & WhatsApp Transfer' : '▼ Need alternative? Pay via Direct QR / WhatsApp'}
+          </button>
         </div>
 
-        {/* Instructions */}
-        <div style={{
-          background: '#fff', borderRadius: 'var(--radius-lg)',
-          padding: 'var(--space-lg)', marginBottom: 'var(--space-lg)',
-          boxShadow: '0 2px 12px rgba(0,0,0,0.06)'
-        }}>
-          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem', marginBottom: 'var(--space-md)', fontWeight: 700 }}>
-            How to pay
-          </h3>
-          {steps.map(s => (
-            <div key={s.n} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
-              <div style={{
-                width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0,
-                background: 'var(--surface-container-low)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)'
-              }}>{s.n}</div>
-              <div style={{ paddingTop: '4px', fontSize: '0.9rem', color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>
-                {s.icon} {s.text}
+        {/* QR + Pay Now card (Manual Backup) */}
+        {(showManual || (!checkoutUrl && !gatewayLoading)) && (
+          <>
+            <div style={{
+              background: '#fff', borderRadius: 'var(--radius-lg)',
+              padding: 'var(--space-xl)', marginBottom: 'var(--space-lg)',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.08)', textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 'var(--space-md)' }}>
+                Direct Scan Backup
               </div>
+
+              {/* QR Code */}
+              <div style={{
+                display: 'inline-block', padding: '12px',
+                border: '2px solid var(--outline-variant)',
+                borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-md)',
+                background: '#fef9f5'
+              }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={qrUrl}
+                  alt="UPI QR Code"
+                  width={200}
+                  height={200}
+                  style={{ display: 'block' }}
+                />
+              </div>
+
+              {/* UPI ID */}
+              <div style={{ marginBottom: 'var(--space-md)' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginBottom: '4px' }}>UPI ID</div>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  background: 'var(--surface-container-low)', padding: '8px 16px',
+                  borderRadius: '99px', fontWeight: 700, fontFamily: 'monospace', fontSize: '1rem'
+                }}>
+                  {UPI_ID}
+                  <button
+                    onClick={() => navigator.clipboard.writeText(UPI_ID)}
+                    title="Copy UPI ID"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--primary)' }}
+                  >📋</button>
+                </div>
+              </div>
+
+              {/* Deep link for mobile */}
+              <a
+                href={upiUrl}
+                style={{
+                  display: 'block', padding: '14px',
+                  background: 'var(--primary)', color: 'var(--on-primary)',
+                  borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: '1.05rem',
+                  textDecoration: 'none', marginBottom: '10px',
+                  transition: 'opacity 0.2s'
+                }}
+              >
+                📱 Open UPI App to Pay
+              </a>
+              <p style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)' }}>
+                Tap above on your phone to auto-open your UPI app with the amount pre-filled
+              </p>
             </div>
-          ))}
-        </div>
 
-        {/* Important note */}
-        <div style={{
-          background: '#fef9c3', border: '1px solid #fde047',
-          borderRadius: 'var(--radius-md)', padding: 'var(--space-md)',
-          marginBottom: 'var(--space-lg)', fontSize: '0.85rem', color: '#713f12'
-        }}>
-          <strong>Important:</strong> Please mention <strong>#{orderNumber}</strong> in the UPI payment note/remarks. This helps us match your payment to your order instantly.
-        </div>
+            {/* Instructions */}
+            <div style={{
+              background: '#fff', borderRadius: 'var(--radius-lg)',
+              padding: 'var(--space-lg)', marginBottom: 'var(--space-lg)',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.06)'
+            }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1rem', marginBottom: 'var(--space-md)', fontWeight: 700 }}>
+                Manual Payment Steps
+              </h3>
+              {steps.map(s => (
+                <div key={s.n} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+                  <div style={{
+                    width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0,
+                    background: 'var(--surface-container-low)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)'
+                  }}>{s.n}</div>
+                  <div style={{ paddingTop: '4px', fontSize: '0.9rem', color: 'var(--on-surface-variant)', lineHeight: 1.5 }}>
+                    {s.icon} {s.text}
+                  </div>
+                </div>
+              ))}
+            </div>
 
-        {/* I've Paid CTA */}
-        <button
-          onClick={handleIPaid}
-          disabled={notifying}
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            gap: '10px', padding: '16px', width: '100%',
-            background: notified ? '#16a34a' : '#25D366',
-            color: '#fff',
-            borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: '1.05rem',
-            border: 'none', cursor: notifying ? 'wait' : 'pointer',
-            marginBottom: 'var(--space-md)',
-            boxShadow: '0 4px 16px rgba(37,211,102,0.35)',
-            transition: 'background 0.2s, transform 0.15s'
-          }}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          {notifying ? 'Notifying…' : notified ? '✅ Notified — Tap to message again' : "I've Paid — Notify via WhatsApp"}
-        </button>
+            {/* Important note */}
+            <div style={{
+              background: '#fef9c3', border: '1px solid #fde047',
+              borderRadius: 'var(--radius-md)', padding: 'var(--space-md)',
+              marginBottom: 'var(--space-lg)', fontSize: '0.85rem', color: '#713f12'
+            }}>
+              <strong>Important:</strong> Please mention <strong>#{orderNumber}</strong> in the UPI payment note/remarks.
+            </div>
+
+            {/* I've Paid CTA */}
+            <button
+              onClick={handleIPaid}
+              disabled={notifying}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                gap: '10px', padding: '16px', width: '100%',
+                background: notified ? '#16a34a' : '#25D366',
+                color: '#fff',
+                borderRadius: 'var(--radius-md)', fontWeight: 700, fontSize: '1.05rem',
+                border: 'none', cursor: notifying ? 'wait' : 'pointer',
+                marginBottom: 'var(--space-md)',
+                boxShadow: '0 4px 16px rgba(37,211,102,0.35)',
+                transition: 'background 0.2s, transform 0.15s'
+              }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              {notifying ? 'Notifying…' : notified ? '✅ Notified — Tap to message again' : "I've Paid — Notify via WhatsApp"}
+            </button>
+          </>
+        )}
 
         <button
           onClick={() => router.push('/')}
