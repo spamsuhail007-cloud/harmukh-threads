@@ -6,7 +6,7 @@ import { formatPrice } from '@/lib/utils';
 
 type OrderWithItems = Order & { items: OrderItem[] };
 
-const UPI_ID = process.env.NEXT_PUBLIC_UPI_ID || 'yourname@upi';
+const UPI_ID = '9796381311@axl';
 const UPI_NAME = process.env.NEXT_PUBLIC_UPI_NAME || 'Harmukh Threads';
 
 function buildUpiUrl(amountRupees: number, orderNumber: string) {

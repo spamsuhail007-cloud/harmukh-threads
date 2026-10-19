@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 const ADMIN_EMAIL = 'harmukhthreads@gmail.com';
-const UPI_ID = process.env.NEXT_PUBLIC_UPI_ID || '9796381311@axl';
+const UPI_ID = '9796381311@axl';
 
 type OrderItem = {
   name: string;
