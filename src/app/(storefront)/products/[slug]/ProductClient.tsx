@@ -266,21 +266,23 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
 
         {/* ══ Info panel ══ */}
         <div className="pdp-info">
-          {article && (
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              background: '#f4ede4', border: '1px solid #e2d7c9',
-              padding: '4px 12px', borderRadius: '6px',
-              fontSize: '0.82rem', fontWeight: 700, letterSpacing: '0.04em',
-              color: '#3d2b1f', marginBottom: '10px'
-            }}>
-              <span>🏷️ Article Code: #{article.code}</span>
-              {article.stock === 1 && (
-                <span style={{ color: '#b45309', fontWeight: 600 }}>· 1 of 1 Edition</span>
-              )}
-            </div>
-          )}
-          <p className="pdp-category">{product.category}</p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap', marginBottom: '10px' }}>
+            <p className="pdp-category" style={{ margin: 0 }}>{product.category}</p>
+            {article && (
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                background: '#f4ede4', border: '1px solid #dfd3c3',
+                padding: '4px 10px', borderRadius: '4px',
+                fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.04em',
+                color: '#3d2b1f',
+              }}>
+                <span>🏷️ Article #{article.code}</span>
+                {article.stock === 1 && (
+                  <span style={{ color: '#b45309', fontWeight: 600 }}>· 1 of 1 Edition</span>
+                )}
+              </div>
+            )}
+          </div>
           <h1 className="pdp-title">{product.name}</h1>
 
           {product.reviews.length > 0 && (
@@ -371,7 +373,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.04-1.077-.07-.35-.1-.775-.246-1.336-.489-2.355-1.02-3.882-3.412-4.001-3.568-.116-.157-.942-1.255-.942-2.392 0-1.137.595-1.696.808-1.93.212-.234.463-.292.617-.292.155 0 .31.002.443.009.141.008.33-.054.516.395.195.474.664 1.62.723 1.737.058.118.098.256.02.411-.077.156-.117.253-.233.39-.116.136-.245.305-.35.41-.118.117-.242.245-.104.482.138.236.611 1.009 1.31 1.632.9.803 1.66 1.052 1.896 1.17.236.117.373.1.51-.059.138-.157.595-.693.754-.93.158-.236.316-.197.533-.118.218.079 1.38.651 1.616.769.237.118.396.177.455.276.059.098.059.57-.085.975z"/>
                   </svg>
-                  <span>Order on WhatsApp (#{article.code})</span>
+                  <span>Order on WhatsApp (#{article.code}) →</span>
                 </a>
               )}
             </>

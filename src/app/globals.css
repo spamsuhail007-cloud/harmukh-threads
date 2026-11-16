@@ -866,6 +866,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  padding-top: var(--navbar-height);
 }
 
 /* Breadcrumb */
@@ -1161,14 +1162,18 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 .pdp-low-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: #fff7ed;
   border: 1px solid #fed7aa;
   color: #c2410c;
   border-radius: var(--radius-sm);
-  padding: 10px var(--space-md);
+  padding: 8px 14px;
   font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: var(--space-md);
+  width: fit-content;
 }
 
 /* CTA buttons */
