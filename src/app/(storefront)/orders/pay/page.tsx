@@ -127,7 +127,7 @@ function PayContent() {
 
           {/* UPI ID */}
           <div style={{ marginBottom: 'var(--space-md)' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginBottom: '4px' }}>UPI ID (Harmukh Threads)</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', marginBottom: '4px' }}>UPI ID ({HARMUKH_UPI_NAME})</div>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               background: 'var(--surface-container-low)', padding: '8px 16px',

@@ -218,8 +218,8 @@ export const ARTICLES_MAP: Record<string, ArticleInfo> = {
 };
 
 export const HARMUKH_WHATSAPP_NUMBER = '918491006127';
-export const HARMUKH_UPI_ID = '9796381311@axl';
-export const HARMUKH_UPI_NAME = 'Harmukh Threads';
+export const HARMUKH_UPI_ID = 'sofisuhail007@ybl';
+export const HARMUKH_UPI_NAME = 'Suhail Skindar Sofi';
 
 export function getArticleBySlug(slug: string): ArticleInfo | null {
   return ARTICLES_MAP[slug] || null;
