@@ -8,6 +8,7 @@ import { useCart } from '@/components/providers/CartProvider';
 import { type Product, type Review } from '@prisma/client';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { EnquiryModal } from '@/components/ui/EnquiryModal';
+import { getArticleBySlug, getWhatsAppOrderUrl } from '@/lib/articles';
 
 type ProductClientProps = {
   product: Product & { reviews: Review[] };
@@ -168,6 +169,7 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
     star: n,
     count: product.reviews.filter(r => r.rating === n).length,
   }));
+  const article = getArticleBySlug(product.slug);
 
   const handleAdd = () => {
     add(product);
@@ -264,6 +266,20 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
 
         {/* ══ Info panel ══ */}
         <div className="pdp-info">
+          {article && (
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              background: '#f4ede4', border: '1px solid #e2d7c9',
+              padding: '4px 12px', borderRadius: '6px',
+              fontSize: '0.82rem', fontWeight: 700, letterSpacing: '0.04em',
+              color: '#3d2b1f', marginBottom: '10px'
+            }}>
+              <span>🏷️ Article Code: #{article.code}</span>
+              {article.stock === 1 && (
+                <span style={{ color: '#b45309', fontWeight: 600 }}>· 1 of 1 Edition</span>
+              )}
+            </div>
+          )}
           <p className="pdp-category">{product.category}</p>
           <h1 className="pdp-title">{product.name}</h1>
 
@@ -320,21 +336,45 @@ export function ProductClient({ product, relatedProducts }: ProductClientProps) 
 
           {/* CTA */}
           {product.stock > 0 ? (
-            <div className="pdp-cta-group">
-              <button className="btn btn-primary pdp-btn-add" onClick={handleAdd}>
-                {added ? '✓ Added to Bag!' : (
-                  <>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                      <line x1="3" y1="6" x2="21" y2="6"/>
-                      <path d="M16 10a4 4 0 01-8 0"/>
-                    </svg>
-                    Add to Bag
-                  </>
-                )}
-              </button>
-              <button className="btn btn-secondary pdp-btn-enquire" onClick={() => setEnquiryOpen(true)}>Enquire</button>
-            </div>
+            <>
+              <div className="pdp-cta-group">
+                <button className="btn btn-primary pdp-btn-add" onClick={handleAdd}>
+                  {added ? '✓ Added to Bag!' : (
+                    <>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 01-8 0"/>
+                      </svg>
+                      Add to Bag
+                    </>
+                  )}
+                </button>
+                <button className="btn btn-secondary pdp-btn-enquire" onClick={() => setEnquiryOpen(true)}>Enquire</button>
+              </div>
+              {article && (
+                <a
+                  href={getWhatsAppOrderUrl(product.name, article.code, product.price)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-whatsapp-order"
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                    background: '#25D366', color: '#ffffff',
+                    padding: '13px 20px', borderRadius: 'var(--radius-md, 8px)',
+                    fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none',
+                    marginTop: '10px', width: '100%',
+                    boxShadow: '0 4px 14px rgba(37, 211, 102, 0.25)',
+                    transition: 'background 0.2s, transform 0.1s'
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.04-1.077-.07-.35-.1-.775-.246-1.336-.489-2.355-1.02-3.882-3.412-4.001-3.568-.116-.157-.942-1.255-.942-2.392 0-1.137.595-1.696.808-1.93.212-.234.463-.292.617-.292.155 0 .31.002.443.009.141.008.33-.054.516.395.195.474.664 1.62.723 1.737.058.118.098.256.02.411-.077.156-.117.253-.233.39-.116.136-.245.305-.35.41-.118.117-.242.245-.104.482.138.236.611 1.009 1.31 1.632.9.803 1.66 1.052 1.896 1.17.236.117.373.1.51-.059.138-.157.595-.693.754-.93.158-.236.316-.197.533-.118.218.079 1.38.651 1.616.769.237.118.396.177.455.276.059.098.059.57-.085.975z"/>
+                  </svg>
+                  <span>Order on WhatsApp (#{article.code})</span>
+                </a>
+              )}
+            </>
           ) : (
             <div style={{ marginBottom: 'var(--space-lg)' }}>
               <button className="btn btn-primary pdp-btn-add" disabled style={{ width: '100%', opacity: 0.5 }}>
