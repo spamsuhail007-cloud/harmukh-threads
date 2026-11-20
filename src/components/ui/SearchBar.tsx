@@ -102,6 +102,7 @@ function SearchBarInner({
         ref={inputRef}
         type="search"
         id="product-search"
+        aria-label="Search Kashmiri rugs and cushion covers"
         placeholder={searchMode ? 'Search our collection…' : 'Search rugs, cushion covers…'}
         value={value}
         onChange={e => setValue(e.target.value)}

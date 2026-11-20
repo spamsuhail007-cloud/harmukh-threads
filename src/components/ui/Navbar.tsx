@@ -58,7 +58,7 @@ export function Navbar() {
     <header className={`navbar${scrolled ? ' scrolled' : ''}`}>
       <div className="navbar-inner">
         <Link href="/" className="navbar-logo" style={{ display: 'flex', alignItems: 'center' }}>
-          <Image src="/harmukhlogo.png" alt="Harmukh Threads" width={150} height={40} style={{ objectFit: 'contain', width: 'auto', height: '40px' }} priority />
+          <Image src="/harmukhlogo.webp" alt="Harmukh Threads" width={150} height={40} style={{ objectFit: 'contain', width: 'auto', height: '40px' }} priority />
         </Link>
 
         <nav className="navbar-nav" aria-label="Main navigation">

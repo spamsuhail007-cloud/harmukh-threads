@@ -25,9 +25,14 @@ export default async function HomePage() {
     <>
       <section className="hero">
         <img
-          src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=1600&q=80"
+          src="/hero-loom.webp"
           alt="Luxury Kashmiri Loom"
           className="hero-bg"
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          width="1400"
+          height="933"
         />
         <div className="hero-overlay"></div>
         <div className="container hero-content">
@@ -136,13 +141,13 @@ export default async function HomePage() {
             <CollectionCard
               title="Hand-knotted Rugs"
               count={`${rugsCount}`}
-              image="https://images.unsplash.com/photo-1600166898405-da9535204843?w=600&q=80"
+              image="/collection-rugs.webp"
               category="Rugs"
             />
             <CollectionCard
               title="Cushion Covers"
               count={`${cushionsCount}`}
-              image="/kashmiri-cushion.png"
+              image="/kashmiri-cushion.webp"
               category="Cushion Covers"
             />
           </div>

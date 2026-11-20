@@ -6,6 +6,14 @@ import { ShopFilters } from '@/components/ui/ShopFilters';
 
 export const dynamic = 'force-dynamic'; // search needs to be dynamic
 
+export const metadata = {
+  title: 'All Collections — Hand-knotted Kashmir Rugs & Cushion Covers',
+  description: 'Explore the full collection of authentic Kashmir hand-knotted silk and wool rugs and chain-stitch cushion covers from Harmukh Threads.',
+  alternates: {
+    canonical: '/collections',
+  },
+};
+
 export default async function CollectionsPage({
   searchParams,
 }: {

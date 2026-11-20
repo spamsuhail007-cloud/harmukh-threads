@@ -23,19 +23,25 @@ export const CATEGORIES = ['Rugs', 'Cushion Covers'] as const;
 export type Category = typeof CATEGORIES[number];
 
 /**
- * Automatically injects Cloudinary optimization parameters (f_auto, q_auto)
+ * Automatically injects Cloudinary optimization parameters (f_auto, q_auto, optional width)
  * into Cloudinary URLs.
  */
-export function optimizeCloudinaryUrl(url: string): string {
+export function optimizeCloudinaryUrl(url: string, width?: number): string {
   if (!url || !url.includes('cloudinary.com')) return url;
   
+  const transform = width ? `f_auto,q_auto,w_${width},c_limit` : 'f_auto,q_auto';
+
   // For images
   if (url.includes('/image/upload/')) {
-    return url.replace('/image/upload/', '/image/upload/f_auto,q_auto/');
+    if (url.includes('/image/upload/f_auto,q_auto/')) {
+      return width ? url.replace('/image/upload/f_auto,q_auto/', `/image/upload/${transform}/`) : url;
+    }
+    return url.replace('/image/upload/', `/image/upload/${transform}/`);
   }
   
   // For videos
   if (url.includes('/video/upload/')) {
+    if (url.includes('/video/upload/f_auto,q_auto/')) return url;
     return url.replace('/video/upload/', '/video/upload/f_auto,q_auto/');
   }
   

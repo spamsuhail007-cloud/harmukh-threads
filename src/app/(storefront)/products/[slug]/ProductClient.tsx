@@ -67,6 +67,7 @@ function NotifyForm({ productId }: { productId: string }) {
         <input
           type="email"
           className="form-input notify-input"
+          aria-label="Email address for back-in-stock notification"
           placeholder="your@email.com"
           value={email}
           onChange={e => setEmail(e.target.value)}

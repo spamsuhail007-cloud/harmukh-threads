@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: __dirname,
+  },
   images: {
     // Setting unoptimized to true stops Vercel from processing images through their servers.
     // Since we now use Cloudinary (with f_auto/q_auto), Cloudinary handles all optimization

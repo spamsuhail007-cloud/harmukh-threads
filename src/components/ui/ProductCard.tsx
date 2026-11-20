@@ -11,10 +11,11 @@ export function ProductCard({ product }: { product: Product }) {
     <Link href={`/products/${product.slug}`} className="product-card">
       <div className="product-card-image">
         <Image
-          src={optimizeCloudinaryUrl(product.images[0])}
+          src={optimizeCloudinaryUrl(product.images[0], 600)}
           alt={product.name}
           width={400}
           height={400}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
           priority={false}
         />
         {article && (

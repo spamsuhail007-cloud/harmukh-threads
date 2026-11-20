@@ -8,7 +8,7 @@ export function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <Link href="/" style={{ display: 'inline-block', marginBottom: 'var(--space-md)' }}>
-              <Image src="/harmukhlogo.png" alt="Harmukh Threads" width={150} height={40} style={{ objectFit: 'contain', width: 'auto', height: '40px' }} />
+              <Image src="/harmukhlogo.webp" alt="Harmukh Threads" width={150} height={40} style={{ objectFit: 'contain', width: 'auto', height: '40px' }} />
             </Link>
             <p>Custodians of 600 years of Kashmiri craft — connecting master weavers with discerning homes across the world.</p>
           </div>

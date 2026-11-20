@@ -54,8 +54,9 @@ import { optimizeCloudinaryUrl } from '@/lib/utils';
         ref={videoRef}
         src={optimizedUrl}
         poster={posterUrl}
+        aria-label={`${product.name} video demonstration`}
         autoPlay
-        preload="auto"
+        preload="none"
         muted
         loop
         playsInline

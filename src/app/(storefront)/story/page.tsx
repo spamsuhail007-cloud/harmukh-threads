@@ -37,9 +37,13 @@ export default function StoryPage() {
             </p>
           </div>
           <img
-            src="https://images.unsplash.com/photo-1600166898405-da9535204843?w=800&q=80"
+            src="/collection-rugs.webp"
             alt="Hand knotting process"
             className="artisan-img"
+            width="600"
+            height="900"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </section>
@@ -64,9 +68,13 @@ export default function StoryPage() {
       <section className="container artisan-section" id="artisans">
         <div className="artisan-grid">
           <img
-            src="/cusioncover.png"
+            src="/cusioncover.webp"
             alt="Handcrafted Kashmiri Cushion Cover"
             className="artisan-img"
+            width="600"
+            height="654"
+            loading="lazy"
+            decoding="async"
           />
           <div>
             <div className="section-kicker">Our Commitment</div>
