@@ -226,6 +226,9 @@ export function getArticleBySlug(slug: string): ArticleInfo | null {
 }
 
 export function getWhatsAppOrderUrl(productName: string, articleCode: string, price: number): string {
-  const message = `Hi Harmukh Threads, I want to order Article #${articleCode} (${productName} - ₹${price.toLocaleString('en-IN')}). Please confirm availability & dispatch.`;
+  const isCushion = articleCode && articleCode.startsWith('HT-C');
+  const message = isCushion
+    ? `Hi Harmukh Threads, I want to order Article #${articleCode} (${productName} - Pair of 2 pcs @ ₹${(price * 2).toLocaleString('en-IN')}). Please confirm availability & dispatch.`
+    : `Hi Harmukh Threads, I want to order Article #${articleCode} (${productName} - ₹${price.toLocaleString('en-IN')}). Please confirm availability & dispatch.`;
   return `https://wa.me/${HARMUKH_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }

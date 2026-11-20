@@ -146,7 +146,7 @@ export default async function SaleLandingPage() {
           <div style={{ width: '1px', height: '20px', background: '#dfc0b3' }} />
           <span style={{ fontSize: '0.8rem', color: '#574238', fontWeight: 500 }}>🏆 Trusted by homes across India, UAE & UK</span>
           <div style={{ width: '1px', height: '20px', background: '#dfc0b3' }} />
-          <span style={{ fontSize: '0.8rem', color: '#574238', fontWeight: 500 }}>📦 Same-day dispatch on most orders</span>
+          <span style={{ fontSize: '0.8rem', color: '#574238', fontWeight: 500 }}>📦 3-4 days artisan inspection before logistics dispatch (Delhivery / Speed Post)</span>
         </div>
       </div>
 

@@ -52,7 +52,7 @@ export function CartDrawer(_: CartDrawerProps) {
                     {item.product.category}
                     {((item.product.minOrderQty && item.product.minOrderQty > 1) || item.product.category === 'Cushion Covers') && (
                       <span style={{ color: 'var(--primary)', fontWeight: 600, marginLeft: '6px', fontSize: '0.72rem' }}>
-                        (Min. Qty: {item.product.minOrderQty || (item.product.category === 'Cushion Covers' ? 2 : 1)})
+                        (Min. Qty: {item.product.category === 'Cushion Covers' ? '2 pcs (Pair)' : `${item.product.minOrderQty || 1} pcs`})
                       </span>
                     )}
                   </div>

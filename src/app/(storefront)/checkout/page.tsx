@@ -513,7 +513,7 @@ export default function CheckoutPage() {
                         {item.product.category}
                         {(((item.product as any).minOrderQty && (item.product as any).minOrderQty > 1) || item.product.category === 'Cushion Covers') && (
                           <span style={{ fontSize: '0.72rem', color: 'var(--primary)', fontWeight: 600, display: 'block', marginTop: '2px' }}>
-                            Min. Order Qty: {(item.product as any).minOrderQty || (item.product.category === 'Cushion Covers' ? 2 : 1)} pcs
+                            Min. Order Qty: {item.product.category === 'Cushion Covers' ? '2 pcs (Pair)' : `${(item.product as any).minOrderQty || 1} pcs`}
                           </span>
                         )}
                       </div>

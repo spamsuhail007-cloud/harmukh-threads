@@ -29,8 +29,8 @@ const inspectionSteps = [
   {
     step: '04',
     icon: '📦',
-    title: 'Pre-Shipment Sign-Off',
-    desc: 'Only after a final sign-off by our senior quality lead is your order sealed, documented, and dispatched directly to your address.',
+    title: 'Pre-Shipment Sign-Off (3–4 Days)',
+    desc: 'Each rug undergoes 3–4 days of thorough artisan inspection, condition documentation, and protective packaging before dispatch via express logistics (Delhivery / Speed Post).',
   },
 ];
 
