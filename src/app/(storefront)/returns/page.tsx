@@ -230,7 +230,7 @@ export default function ReturnPolicyPage() {
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a
-              href="https://wa.me/918491006127"
+              href="https://wa.me/918715086355"
               target="_blank"
               rel="noopener noreferrer"
               style={{

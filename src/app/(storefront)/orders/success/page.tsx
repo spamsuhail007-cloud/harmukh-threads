@@ -152,8 +152,8 @@ export default async function SuccessPage({
             <div style={{ borderTop: '1px solid var(--outline-variant)', paddingTop: '20px', textAlign: 'center', fontSize: '0.8rem', color: 'var(--on-surface-variant)', lineHeight: 1.6 }}>
               Need help or have questions about your order?<br />
               Contact us on{' '}
-              <a href="https://wa.me/918491006127" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', fontWeight: 700, textDecoration: 'underline' }}>
-                WhatsApp (+91 84910 06127)
+              <a href="https://wa.me/918715086355" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', fontWeight: 700, textDecoration: 'underline' }}>
+                WhatsApp (+91 87150 86355)
               </a>{' '}
               or email <strong style={{ color: 'var(--on-surface)' }}>harmukhthreads@gmail.com</strong>
             </div>

@@ -37,7 +37,7 @@ export function Footer() {
               <li><Link href="/privacy">Privacy Policy</Link></li>
               <li><Link href="/terms">Terms of Service</Link></li>
               <li><a href="mailto:harmukhthreads@gmail.com">harmukhthreads@gmail.com</a></li>
-              <li><a href="tel:+91-849-100-6127">+91 84910 06127</a></li>
+              <li><a href="tel:+918715086355">+91 87150 86355</a></li>
             </ul>
           </div>
         </div>

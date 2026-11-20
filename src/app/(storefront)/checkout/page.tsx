@@ -140,7 +140,7 @@ export default function CheckoutPage() {
 
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phone || !phoneRegex.test(phone)) {
-      errs.phone = 'Please enter a valid 10-digit Indian mobile number (e.g. 8491006127)';
+      errs.phone = 'Please enter a valid 10-digit Indian mobile number (e.g. 8715086355)';
     }
 
     if (!address || address.length < 5) {

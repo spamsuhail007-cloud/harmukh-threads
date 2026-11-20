@@ -89,7 +89,7 @@ export default function StoryPage() {
           Want to know more about our weavers, inspect piece details, or enquire about custom sizing? Reach us directly via WhatsApp or Email.
         </p>
         <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="https://wa.me/918491006127" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+          <a href="https://wa.me/918715086355" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
             💬 Chat on WhatsApp
           </a>
           <a href="mailto:harmukhthreads@gmail.com" className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>

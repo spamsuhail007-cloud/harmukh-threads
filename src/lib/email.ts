@@ -170,7 +170,7 @@ function buildEmailHtml(order: OrderEmailData): string {
 
               <p style="font-size:13px;color:#a08060;margin-top:28px;line-height:1.7;text-align:center;">
                 Questions? Contact us on
-                <a href="https://wa.me/918491006127" style="color:#5c3d1e;">WhatsApp</a> — we're happy to help.<br/>
+                <a href="https://wa.me/918715086355" style="color:#5c3d1e;">WhatsApp</a> — we're happy to help.<br/>
                 Order reference: <strong>${order.orderNumber}</strong>
               </p>
             </td>
@@ -284,7 +284,7 @@ function buildStatusHtml(order: OrderEmailData, status: string): string {
               </div>
               <p style="font-size:13px;color:#a08060;margin-top:28px;line-height:1.7;text-align:center;">
                 Questions? Contact us on
-                <a href="https://wa.me/918491006127" style="color:#5c3d1e;">WhatsApp</a> — we're happy to help.<br/>
+                <a href="https://wa.me/918715086355" style="color:#5c3d1e;">WhatsApp</a> — we're happy to help.<br/>
                 Order reference: <strong>${order.orderNumber}</strong>
               </p>
             </td>

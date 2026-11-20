@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-const WA_NUMBER = '918491006127';
+const WA_NUMBER = '918715086355';
 const WA_MESSAGE = encodeURIComponent(
   "Hi! I'm interested in a product from Harmukh Threads. Can you help me? 🙏"
 );

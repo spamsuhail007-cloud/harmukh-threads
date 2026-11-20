@@ -217,7 +217,7 @@ export const ARTICLES_MAP: Record<string, ArticleInfo> = {
   },
 };
 
-export const HARMUKH_WHATSAPP_NUMBER = '918491006127';
+export const HARMUKH_WHATSAPP_NUMBER = '918715086355';
 export const HARMUKH_UPI_ID = 'sofisuhail007@ybl';
 export const HARMUKH_UPI_NAME = 'Suhail Skindar Sofi';
 

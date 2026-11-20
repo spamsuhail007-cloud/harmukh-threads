@@ -82,7 +82,7 @@ export default function ContactPage() {
               <div className="contact-info-icon">☎</div>
               <div>
                 <div className="contact-info-label">Phone / WhatsApp</div>
-                <a href="tel:+918491006127" className="contact-info-value contact-link">+91 84910 06127</a>
+                <a href="tel:+918715086355" className="contact-info-value contact-link">+91 87150 86355</a>
               </div>
             </div>
 
@@ -136,7 +136,7 @@ export default function ContactPage() {
                   </div>
                   <div className="form-group">
                     <label htmlFor="phone" className="form-label">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" className="form-input" placeholder="+91 84910..." required />
+                    <input type="tel" id="phone" name="phone" className="form-input" placeholder="+91 87150..." required />
                   </div>
                   <div className="form-group">
                     <label htmlFor="subject" className="form-label">Topic</label>

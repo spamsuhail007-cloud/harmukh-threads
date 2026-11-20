@@ -6,7 +6,7 @@ import { SaleProductCard } from './SaleProductCard';
 
 export const revalidate = 120;
 
-const WA_NUMBER = '918491006127';
+const WA_NUMBER = '918715086355';
 
 function waLink(message: string) {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
